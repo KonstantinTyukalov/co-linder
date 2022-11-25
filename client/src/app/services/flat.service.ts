@@ -48,7 +48,7 @@ export class FlatService {
     async getFlatById(id: string): Promise<Flat> {
         console.log('Trying to get flat by id:', id);
         const res = await this.pbService.PocketBaseInstance.collection('flats').getOne(id, {
-            expand: "interestedUsers,readyToLiveUsers"
+            expand: ["owner", "interestedUsers", "readyToLiveUsers"]
         }) as any;
 
         const flat: Flat = {
@@ -75,7 +75,7 @@ export class FlatService {
     async getFlats(): Promise<Flat[]> {
         console.log('Trying to get flats');
         return await this.pbService.PocketBaseInstance.collection('flats').getFullList(200, {
-            expand: "interestedUsers,readyToLiveUsers"
+            expand: ["owner", "interestedUsers", "readyToLiveUsers"]
         });
     }
 
@@ -99,9 +99,9 @@ export class FlatService {
             page,
             this.PER_PAGE,
             {
-                "filter": filterStr,
-                "sort": '-cost',
-                "expand": "interestedUsers,readyToLiveUsers"
+                filter: filterStr,
+                sort: '-cost',
+                expand: ["owner", "interestedUsers", "readyToLiveUsers"]
             }
         )
 

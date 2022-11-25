@@ -16,7 +16,8 @@ export interface Flat {
     created?: Date;
     updated?: Date;
     expand?: {
+        owner?: User;
         interestedUsers?: User[];
-        readyToLiveUsers: User[];
+        readyToLiveUsers?: User[];
     }
 }
