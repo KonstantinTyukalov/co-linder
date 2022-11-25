@@ -17,6 +17,8 @@ import { FlatEffects } from "./store/effects/flat.effects";
 import * as FlatStore from './store/reducers/flat.reducer';
 import { FlatService } from "./services/flat.service";
 import { PocketBaseService } from "./services/pb.service";
+import { FlatComponent } from './components/flat/flat.component';
+import { FlatCardComponent } from './components/flat-card/flat-card.component';
 
 @NgModule({
     declarations: [
@@ -25,7 +27,9 @@ import { PocketBaseService } from "./services/pb.service";
         RegistrationComponent,
         ApartmentsComponent,
         MenuComponent,
-        TestComponent
+        TestComponent,
+        FlatComponent,
+        FlatCardComponent
     ],
     imports: [
         BrowserModule,
