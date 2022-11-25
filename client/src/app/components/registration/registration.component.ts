@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { User } from "../../dto/user.dto";
 import { Store } from "@ngrx/store";
+import { COUNTRIES } from "../../utils/countries";
+import * as UserActions from "../../store/actions/user.actions";
 
 @Component({
     selector: 'app-registration',
@@ -8,7 +10,7 @@ import { Store } from "@ngrx/store";
     styleUrls: ['./registration.component.scss']
 })
 export class RegistrationComponent {
-    public aboba = ['Moscow', 'London', 'Paris']
+    public countries = COUNTRIES;
 
     public newUser: User = {
         email: '',
@@ -17,13 +19,19 @@ export class RegistrationComponent {
         age: 0,
         country: '',
         isWoman: true,
-        languages: ''
+        languages: '',
+        description: ''
     };
 
     constructor(private readonly store: Store) {
+
     }
 
-    public nameChanged(event: Event) {
-        console.log(this.newUser);
+    public registration() {
+        this.store.dispatch(UserActions.registrationUser({ user: this.newUser }));
+    }
+
+    public inputLanguages(event: string) {
+        this.newUser.languages = event;
     }
 }

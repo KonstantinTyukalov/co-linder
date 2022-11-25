@@ -1,12 +1,20 @@
 <div class="content">
     <h1 class="header">Some sheet</h1>
-    <input class="login" type="text" placeholder="login">
-    <input class="password" type="password" placeholder="password">
+    <input
+        class="login"
+        type="text"
+        placeholder="login"
+        [(ngModel)]="login">
+    <input
+        class="password"
+        type="password"
+        placeholder="password"
+        [(ngModel)]="password">
     <button class="login">
         <h2>Login</h2>
     </button>
     <h3 class="or-text">or</h3>
-    <button class="registration">
+    <button class="registration" (click)="redirectToRegistration()">
         <h2>Registration</h2>
     </button>
 </div>

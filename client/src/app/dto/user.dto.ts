@@ -7,4 +7,5 @@ export interface User {
     country: string;
     languages: string;
     password: string;
+    description?: string;
 }

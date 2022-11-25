@@ -8,8 +8,7 @@
         class="email"
         type="text"
         placeholder="Email"
-        [(ngModel)]="newUser.email"
-        (ngModelChange)="nameChanged($event)">
+        [(ngModel)]="newUser.email">
     <input
         class="password"
         type="password"
@@ -32,11 +31,19 @@
     </select>
     <select class="country" [(ngModel)]="newUser.country">
         <option value="">Select</option>
-        <option *ngFor="let sos of aboba" [value]="sos">{{sos}}</option>
+        <option *ngFor="let sos of countries" [value]="sos">{{sos}}</option>
     </select>
-    <input class="languages" type="text" placeholder="Languages">
-    <textarea style="margin-bottom: 1rem"></textarea>
-    <button class="registration">
+    <input
+        class="languages"
+        type="text"
+        placeholder="Type languages by comma"
+        [ngModel]="newUser.languages"
+        (ngModelChange)="inputLanguages($event)">
+    <textarea
+        class="description"
+        [(ngModel)]="newUser.description">
+    </textarea>
+    <button class="registration" (click)="registration()">
         <h3>Lest registration in this sheet</h3>
     </button>
 </div>

@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Store } from "@ngrx/store";
+import { Router } from "@angular/router";
 
 @Component({
     selector: 'app-login',
@@ -6,8 +8,16 @@ import { Component } from '@angular/core';
     styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
+    public login: string = '';
+    public password: string = '';
 
-    constructor() {
+    constructor(
+        private readonly store: Store,
+        private readonly router: Router
+    ) {
     }
 
+    public redirectToRegistration() {
+        
+    }
 }
