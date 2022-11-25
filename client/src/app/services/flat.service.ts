@@ -73,6 +73,16 @@ export class FlatService {
         return mapToFlat(res);
     }
 
+    async getFlatWithComments(id: string): Promise<Flat> {
+        console.log('Trying to get flat with comments by id:', id);
+        const flat = this.getFlatById(id)
+        const comments = this.getFlatCommentsById(id)
+
+        const result = mapToFlat(flat);
+        (await flat).comments = (await comments);
+        return result;
+    }
+
     async getFlatCommentsById(flatId: string): Promise<FlatComment[]> {
         console.log('Trying to get flat by id:', flatId);
         const result = await this.pbService.PocketBaseInstance.collection('flatComments').getFullList(200, {
