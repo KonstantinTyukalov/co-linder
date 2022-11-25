@@ -3,6 +3,10 @@ import { User } from "src/app/dto/user.dto";
 import { Flat } from "src/app/dto/flat.dto";
 import { pbService } from "./pb.service";
 
+export class FilterFlat {
+
+}
+
 @Injectable()
 export class FlatService {
     readonly PER_PAGE = 20;
@@ -25,12 +29,19 @@ export class FlatService {
         return await pbService.PocketBaseInstance.collection('flats').getOne(id);
     }
 
-    async searchFlat(page: number) { // TODO
-        
+    async getFlats(): Promise<Flat[]> {
+        console.log('Trying to get flast');
+        return await pbService.PocketBaseInstance.collection('flats').getFullList(200);
+    }
+
+    async searchFlat(page: number, filter: FilterFlat) { // TODO
         return await pbService.PocketBaseInstance.collection('flats').getList(
             page,
             this.PER_PAGE,
-            null
+            {
+                "filter": filter,
+                "sort": '-cost'
+            }
         )
     }
 }
