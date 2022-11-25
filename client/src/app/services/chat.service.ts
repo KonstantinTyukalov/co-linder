@@ -26,7 +26,7 @@ export class ChatService {
         const chatData = await chatCollection.getOne(chat.id!) as Chat;
 
         const users = [
-            ...chatData.users,
+            ...chatData.users!,
             loggedInUser
         ]
 
@@ -69,5 +69,32 @@ export class ChatService {
         console.log('Added new chat message ', res)
 
         return res;
+    }
+
+    async getChatById(chatId: string) {
+        const chatMessagesCollection = this.pbService.PocketBaseInstance.collection('chatMessages');
+
+        const res = await chatMessagesCollection.getOne(chatId)
+        Logger.SuccessfulQueryLog(res)
+
+        return res;
+    }
+
+    async leaveChat(user: User, chatIdToLeave: string) {
+        const chatCollection = this.pbService.PocketBaseInstance.collection('chats');
+
+        const chat = await chatCollection.getOne(chatIdToLeave) as Chat;
+
+        const userIds = chat.users?.map(user => user.id);
+        const newChatState = {
+            ...chat,
+            users: [
+                ...userIds!.filter(userId => user.id)
+            ],
+        }
+
+        const res = chatCollection.update(chat.id!, newChatState)
+
+        Logger.SuccessfulQueryLog(res);
     }
 }
