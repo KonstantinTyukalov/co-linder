@@ -38,11 +38,11 @@ export class UserService {
         console.log("Email to verify sended:", isVerified)
     }
 
-    async loginUser(userDto: User) {
+    async loginUser(login: string, password: string) {
 
         const authData = await pbService.PocketBaseInstance.collection('users').authWithPassword(
-            userDto.email,
-            userDto.password,
+            login,
+            password
         );
 
         // after the above you can also access the auth data from the authStore

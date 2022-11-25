@@ -10,12 +10,16 @@ import { FormsModule } from "@angular/forms";
 import { EffectsModule } from '@ngrx/effects';
 import { UserEffects } from "./store/effects/user.effects";
 import { UserService } from "./services/user.service";
+import { ApartmentsComponent } from './components/apartments/apartments.component';
+import { MenuComponent } from './components/menu/menu.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         LoginComponent,
-        RegistrationComponent
+        RegistrationComponent,
+        ApartmentsComponent,
+        MenuComponent
     ],
     imports: [
         BrowserModule,

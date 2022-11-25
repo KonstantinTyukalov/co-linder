@@ -25,8 +25,8 @@
         placeholder="Age"
         [(ngModel)]="newUser.age">
     <select class="sex" [(ngModel)]="newUser.isWoman">
-        <option value="">Select sex</option>
-        <option [value]="true">Women</option>
+        <option [value]="null">Select sex</option>
+        <option [value]="true">Woman</option>
         <option [value]="false">Man</option>
     </select>
     <select class="country" [(ngModel)]="newUser.country">
@@ -41,7 +41,8 @@
         (ngModelChange)="inputLanguages($event)">
     <textarea
         class="description"
-        [(ngModel)]="newUser.description">
+        [ngModel]="newUser.description"
+        (ngModelChange)="descriptionshanged($event)">
     </textarea>
     <button class="registration" (click)="registration()">
         <h3>Lest registration in this sheet</h3>

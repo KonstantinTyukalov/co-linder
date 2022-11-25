@@ -3,7 +3,7 @@ export interface User {
     email: string;
     name: string;
     age: number;
-    isWoman: boolean;
+    isWoman: boolean | null;
     country: string;
     languages: string;
     password: string;

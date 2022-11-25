@@ -2,7 +2,7 @@ import { User } from "./user.dto";
 
 export interface Flat {
     id?: string;
-    externalUrl: string;
+    externalUrl?: string;
     photo?: File;
     name: string; // "Flat in center" or address
     owner: User;
