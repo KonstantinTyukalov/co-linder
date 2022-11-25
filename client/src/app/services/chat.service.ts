@@ -80,20 +80,26 @@ export class ChatService {
         return res;
     }
 
-    async leaveChat(user: User, chatIdToLeave: string) {
+    // Not working
+    async leaveChat(useId: string, chatIdToLeave: string) {
         const chatCollection = this.pbService.PocketBaseInstance.collection('chats');
 
-        const chat = await chatCollection.getOne(chatIdToLeave) as Chat;
+        const chat = await chatCollection.getOne(chatIdToLeave) as any;
 
-        const userIds = chat.users?.map(user => user.id);
+        console.log('Got chat ', chat)
+
         const newChatState = {
-            ...chat,
             users: [
-                ...userIds!.filter(userId => user.id)
+                chat.users?.filter((uId: any) => uId !== useId)
             ],
-        }
+            messages: [
+                ...chat.messages
+            ]
+        };
 
-        const res = chatCollection.update(chat.id!, newChatState)
+        console.log('Trying to update chat ', newChatState)
+
+        const res = await chatCollection.update(chatIdToLeave, newChatState)
 
         Logger.SuccessfulQueryLog(res);
     }
