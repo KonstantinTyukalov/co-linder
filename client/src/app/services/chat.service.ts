@@ -5,11 +5,12 @@ import { Chat } from "../dto/chat.dto";
 import { PocketBaseService } from "./pb.service";
 import { ChatMessage } from "../dto/chatMessage.dto";
 import { Logger } from "../utils/logger";
+import { expandAvatar } from "./user.service";
 
 function mapToChat(chat: any): Chat {
     const result = {
         ...chat,
-        users: chat.expand?.users,
+        users: chat.expand?.users?.map((user: User) => expandAvatar(user)),
         messages: chat.expand?.messages
     }
     delete result.expand;
