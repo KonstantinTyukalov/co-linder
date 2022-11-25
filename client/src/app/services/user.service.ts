@@ -66,6 +66,6 @@ export class UserService {
 }
 
 export function expandAvatar(user: User): User {
-    user.avatar = user.avatar ? STATIC_PATH + "users/" + user.avatar : undefined;
+    user.avatar = user.avatar ? STATIC_PATH + "users/" + user.id + "/" + user.avatar : undefined;
     return user;
 }
