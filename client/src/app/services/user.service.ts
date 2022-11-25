@@ -39,15 +39,20 @@ export class UserService {
     }
 
     async loginUser(login: string, password: string) {
+        try {
+            const authData = await pbService.PocketBaseInstance.collection('users').authWithPassword(
+                login,
+                password
+            );
 
-        const authData = await pbService.PocketBaseInstance.collection('users').authWithPassword(
-            login,
-            password
-        );
+            console.log("User logged in. Data: ", authData)
 
-        // after the above you can also access the auth data from the authStore
-        console.log(pbService.PocketBaseInstance.authStore.isValid);
-        console.log(pbService.PocketBaseInstance.authStore.token);
+            // after the above you can also access the auth data from the authStore
+            console.log(pbService.PocketBaseInstance.authStore.isValid);
+            console.log(pbService.PocketBaseInstance.authStore.token);
+        } catch (err) {
+            throw new Error("With this data: " + userDto + " Login Error: " + err)
+        }
     }
 
     async logoutUser() {
