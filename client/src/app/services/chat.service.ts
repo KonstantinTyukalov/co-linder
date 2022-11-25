@@ -6,17 +6,27 @@ import { PocketBaseService } from "./pb.service";
 import { ChatMessage } from "../dto/chatMessage.dto";
 import { Logger } from "../utils/logger";
 
+function mapToChat(chat: any): Chat {
+    const result = {
+        ...chat,
+        users: chat.expand?.users,
+        messages: chat.expand?.messages
+    }
+    delete result.expand;
+    return result;
+}
+
 @Injectable()
 export class ChatService {
     constructor(private pbService: PocketBaseService) {
     }
 
-    async createChatWithUser(loggedInUser: User, targetUser: User): Promise<Chat> {
-        console.log('Trying to create chat between ', targetUser.name, ' and ', loggedInUser.name)
+    async createChatWithUser(loggedInUserId: string, targetUserId: string): Promise<Chat> {
+        console.log('Trying to create chat between ', loggedInUserId, ' and ', targetUserId)
 
-        const res = await this.pbService.PocketBaseInstance.collection('chats').create({ users: [loggedInUser.id, targetUser.id] }) as Chat
+        const res = await this.pbService.PocketBaseInstance.collection('chats').create({ users: [loggedInUserId, targetUserId] }) as Chat
 
-        console.log("Successfully created chat with: ", targetUser.name, ' and ', loggedInUser.name)
+        console.log("Successfully created chat with: ", loggedInUserId, ' and ', targetUserId)
 
         return res
     }
@@ -71,13 +81,15 @@ export class ChatService {
         return res;
     }
 
-    async getChatById(chatId: string) {
-        const chatMessagesCollection = this.pbService.PocketBaseInstance.collection('chatMessages');
+    async getChatById(chatId: string): Promise<Chat> {
+        const chatCollection = this.pbService.PocketBaseInstance.collection('chats');
 
-        const res = await chatMessagesCollection.getOne(chatId)
+        const res = await chatCollection.getOne(chatId, {
+            expand: 'users,messages'
+        })
         Logger.SuccessfulQueryLog(res)
 
-        return res;
+        return mapToChat(res);
     }
 
     // Not working

@@ -6,6 +6,7 @@ import { ApartmentsComponent } from "./components/apartments/apartments.componen
 import { MenuComponent } from "./components/menu/menu.component";
 import { TestComponent } from "./components/test/test.component";
 import { FlatComponent } from "./components/flat/flat.component";
+import { ChatComponent } from "./components/chat/chat.component";
 
 const routes: Routes = [
     { path: 'login', component: LoginComponent },
@@ -14,6 +15,7 @@ const routes: Routes = [
     { path: 'apartments', component: ApartmentsComponent },
     { path: 'flats', component: ApartmentsComponent },
     { path: 'flat/:id', component: FlatComponent },
+    { path: 'chat/:id', component: ChatComponent },
 
 
     { path: 'test', component: TestComponent },

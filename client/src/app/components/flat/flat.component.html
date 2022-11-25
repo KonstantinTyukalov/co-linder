@@ -5,10 +5,14 @@
     <div class="flat">
         <div class="photos">
             <img *ngFor="let photo of (flat$ | async)?.downloadedPhotos"
-                 [src]="'http://172.16.101.228:3000/api/files/flats/'+(flat$ | async)?.id+'/'+photo"
+                 [src]="photo"
                  alt="Photo">
         </div>
-        <div class="flat-metadata">
+        <div class="buttons">
+            <button><h2>I'm interested</h2></button>
+            <button><h2>Send</h2></button>
+        </div>
+        <div class="flat-metadata" *ngIf="(flat$ | async)?.name">
             <div class="header-one">
                 <h1>{{(flat$ | async)?.name}}</h1>
                 <h1>{{(flat$ | async)?.cost | currency: '$'}}</h1>
@@ -17,25 +21,31 @@
             <h3>{{(flat$ | async)?.description}}</h3>
         </div>
         <div class="comments">
-            
+            <div class="chat">
+                <div class="chat-overflow">
+                    <p *ngFor="let ada of (flat$ | async)?.comments">{{ada.value}</p>
+                </div>
+            </div>
+            <input type="text">
+            <button>send</button>
         </div>
     </div>
 
 
     <div class="users-block">
         <h1 style="text-align: center; margin-bottom: 1rem">Intrested</h1>
-        <div class="users" *ngIf="(flat$ | async)?.expand?.interestedUsers?.length !== 0">
-            <div class="user" *ngFor="let user of (flat$ | async)?.expand?.interestedUsers">
-                <img [src]="'http://172.16.101.228:3000/api/files/users/'+user.id+'/'+user.avatar" alt="Avatar">
+        <div class="users">
+            <div class="user" *ngFor="let user of (flat$ | async)?.interestedUsers">
+                <img [src]="user.avatar" alt="Avatar">
                 <h2>{{user?.name}}s</h2>
             </div>
         </div>
         <h1 style="text-align: center">Owner</h1>
         <div class="owner">
             <img
-                [src]="'http://172.16.101.228:3000/api/files/users/'+(flat$ | async)?.expand?.owner?.id+'/'+(flat$ | async)?.expand?.owner?.avatar"
+                [src]="(flat$ | async)?.owner?.avatar"
                 alt="Avatar">
-            <h2>{{(flat$ | async)?.expand?.owner?.name}}</h2>
+            <h2>{{(flat$ | async)?.owner?.name}}</h2>
         </div>
     </div>
 </div>

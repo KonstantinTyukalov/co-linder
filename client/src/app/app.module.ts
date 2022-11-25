@@ -20,6 +20,7 @@ import { PocketBaseService } from "./services/pb.service";
 import { FlatComponent } from './components/flat/flat.component';
 import { FlatCardComponent } from './components/flat-card/flat-card.component';
 import { ChatService } from './services/chat.service';
+import { ChatComponent } from "./components/chat/chat.component";
 
 @NgModule({
     declarations: [
@@ -30,7 +31,8 @@ import { ChatService } from './services/chat.service';
         MenuComponent,
         TestComponent,
         FlatComponent,
-        FlatCardComponent
+        FlatCardComponent,
+        ChatComponent
     ],
     imports: [
         BrowserModule,
