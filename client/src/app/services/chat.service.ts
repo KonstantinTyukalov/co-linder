@@ -14,12 +14,40 @@ function mapToChat(chat: any): Chat {
         messages: chat.expand?.messages
     }
     delete result.expand;
+
+    console.log("Mapped chat: ", result)
     return result;
 }
 
 @Injectable()
 export class ChatService {
     constructor(private pbService: PocketBaseService) {
+    }
+
+    async getChatWithMessageSendersAvatars(chatId: string): Promise<Chat> {
+        const res = await this.getChatById(chatId)
+
+        const data = {
+            ...res
+        }
+
+        if (res.messages) {
+            const expandedMessages = []
+            for (const message of res.messages) {
+                const sender = await this.pbService.PocketBaseInstance.collection('users').getOne((message.sender) as any) as User;
+
+                const expandedMessage = {
+                    ...message,
+                    sender
+                }
+
+                expandedMessages.push(expandedMessage);
+            }
+
+            data.messages = expandedMessages
+        }
+
+        return data;
     }
 
     async createChatWithUser(loggedInUserId: string, targetUserId: string): Promise<Chat> {
