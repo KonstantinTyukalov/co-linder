@@ -1,33 +1,18 @@
 import { Flat } from '../../dto/flat.dto';
 import { createReducer, on } from '@ngrx/store';
-import * as FlatActions from '../actions/flat.actions';
+import * as FlatsActions from '../actions/flat.actions';
 
-export interface FlatState {
-    flat: Flat;
+export interface FlatsState {
+    flats: Flat[];
     flatNotFoundErr: string;
 }
 
-export const initialState: FlatState = {
-    flat: {
-        id?: string;
-        externalUrl?: string;
-        photo?: File;
-        name: string; // "Flat in center" or address
-        owner: User;
-        area: string; // city or region in city
-        cost: number;
-        capacity: number;
-        description: string;
-        created: Date;
-        updated: Date;
-    },
-    productNotFoundErr: '',
+export const initialState: FlatsState = {
+    flats: [],
+    flatNotFoundErr: ''
 };
 
 export const reducer = createReducer(
     initialState,
-    on(FlatActions.getFlatsSuccess, (state, { product }) => ({
-        ...state,
-        product: product,
-    })),
+    on(FlatsActions.getFlatsSuccess, (state, { flats }) => ({ ...state, flats })),
 );
