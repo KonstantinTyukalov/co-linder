@@ -1,9 +1,10 @@
 import { Injectable } from "@angular/core";
 import { User } from "src/app/dto/user.dto";
 import { Flat } from "src/app/dto/flat.dto";
-import { PocketBaseService } from "./pb.service";
+import { PocketBaseService, STATIC_PATH} from "./pb.service";
 import { FlatComment } from "../dto/flatComment.dto";
 import { Logger } from "../utils/logger";
+import { expandAvatar } from "./user.service";
 
 export class FilterFlat {
     withPhoto?: boolean
@@ -29,6 +30,23 @@ function addAnd(str: string, suffix: string): string {
     return suffix
 }
 
+function toFilePath(id:string, fileName: string) {
+    return STATIC_PATH + "flats/" + id + "/" + fileName;
+}
+
+function mapToFlat(flat: any):Flat {
+    const result = {
+        ...flat,
+        owner: expandAvatar(flat.expand!.owner!),
+        interestedUsers: flat.expand?.interestedUsers?.map((user: User) => expandAvatar(user)),
+        readyToLiveUsers: flat.expand?.readyToLiveUsers?.map((user: User) => expandAvatar(user)),
+        downloadedPhotos: 'photo' in flat ? flat['photo'].map((photo: string) => toFilePath(flat.id, photo)) : ""
+    }
+    delete result.expand;
+    delete result.photo;
+    return result;
+}
+
 @Injectable()
 export class FlatService {
     readonly PER_PAGE = 20;
@@ -50,14 +68,9 @@ export class FlatService {
         console.log('Trying to get flat by id:', id);
         const res = await this.pbService.PocketBaseInstance.collection('flats').getOne(id, {
             expand: ["owner", "interestedUsers", "readyToLiveUsers"]
-        }) as any;
+        });
 
-        const flat: Flat = {
-            ...res,
-            downloadedPhotos: res['photo'] as string[]
-        }
-
-        return flat
+        return mapToFlat(res);
     }
 
     async getFlatCommentsById(flatId: string): Promise<FlatComment[]> {
@@ -78,9 +91,10 @@ export class FlatService {
 
     async getFlats(): Promise<Flat[]> {
         console.log('Trying to get flats');
-        return await this.pbService.PocketBaseInstance.collection('flats').getFullList(200, {
+        const res = this.pbService.PocketBaseInstance.collection('flats').getFullList(200, {
             expand: ["owner", "interestedUsers", "readyToLiveUsers"]
         });
+        return (await res).map(flat => mapToFlat(flat))
     }
 
     async searchFlat(page: number, filter: FilterFlat) {
@@ -109,6 +123,6 @@ export class FlatService {
             }
         )
 
-        return result;
+        return (await result).items.map(res => mapToFlat(res));
     }
 }

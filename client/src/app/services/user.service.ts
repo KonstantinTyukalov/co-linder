@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { User } from "src/app/dto/user.dto";
-import { PocketBaseService } from "./pb.service";
+import { PocketBaseService, STATIC_PATH } from "./pb.service";
 
 @Injectable()
 export class UserService {
@@ -63,4 +63,9 @@ export class UserService {
         console.log('Trying to get user by id:', id);
         return await this.pbService.PocketBaseInstance.collection('users').getOne(id);
     }
+}
+
+export function expandAvatar(user: User): User {
+    user.avatar = user.avatar ? STATIC_PATH + "users/" + user.avatar : undefined;
+    return user;
 }
