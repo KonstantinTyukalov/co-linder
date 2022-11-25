@@ -13,7 +13,7 @@ export class ChatService {
     async createChatWithUser(loggedInUser: User, targetUser: User): Promise<Chat> {
         console.log('Trying to create chat between ', targetUser.name, ' and ', loggedInUser.name)
 
-        const res = await this.pbService.PocketBaseInstance.collection('chats').create({ users: [loggedInUser, targetUser] }) as Chat
+        const res = await this.pbService.PocketBaseInstance.collection('chats').create({ users: [loggedInUser.id, targetUser.id] }) as Chat
 
         console.log("Successfully created chat with: ", targetUser.name, ' and ', loggedInUser.name)
 
