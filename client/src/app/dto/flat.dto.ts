@@ -10,6 +10,6 @@ export interface Flat {
     cost: number;
     capacity: number;
     description: string;
-    created: Date;
-    updated: Date;
+    created?: Date;
+    updated?: Date;
 }

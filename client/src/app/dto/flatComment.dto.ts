@@ -6,6 +6,6 @@ export interface FlatComment {
     flat: Flat;
     user: User;
     content: string;
-    created: Date;
-    updated: Date;
+    created?: Date;
+    updated?: Date;
 }
