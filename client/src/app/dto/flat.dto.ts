@@ -1,3 +1,4 @@
+import { FlatComment } from "./flatComment.dto";
 import { User } from "./user.dto";
 
 export interface Flat {
@@ -15,9 +16,5 @@ export interface Flat {
     readyToLiveUsers: User[];
     created?: Date;
     updated?: Date;
-    expand?: {
-        owner?: User;
-        interestedUsers?: User[];
-        readyToLiveUsers?: User[];
-    }
+    comments?: FlatComment[];
 }
