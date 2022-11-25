@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { User } from "src/app/dto/user.dto";
 import { Flat } from "src/app/dto/flat.dto";
 import { pbService } from "./pb.service";
-import { FlatComment } from "../dto/message.dto";
+import { FlatComment } from "../dto/flatComment.dto";
 
 export interface FilterFlat {
     withPhoto?: boolean
@@ -65,14 +65,14 @@ export class FlatService {
         if (filter.owner) filterStr += "owner ~ " + filter.owner.id;
         if (filter.area) filterStr += "area ~ " + filter.area;
         if (filter.costMin) filterStr += "cost >= " + filter.costMin;
-        if (filter.costMax)     filterStr += "cost <= " + filter.costMax;
+        if (filter.costMax) filterStr += "cost <= " + filter.costMax;
         if (filter.capacityMin) filterStr += "capacity >= " + filter.capacityMin;
         if (filter.capacityMax) filterStr += "capacity <= " + filter.capacityMax;
         if (filter.description) filterStr += "description ~ " + filter.description;
         if (filter.createdMin) filterStr += "created < \"" + filter.createdMin + "\"";
         // TODO relations and filters for them
         console.log('Looking flats with', filterStr);
-        return await pbService.PocketBaseInstance.collection('flats').getList(
+        const result = await pbService.PocketBaseInstance.collection('flats').getList(
             page,
             this.PER_PAGE,
             {
@@ -80,5 +80,7 @@ export class FlatService {
                 "sort": '-cost'
             }
         )
+
+        return result;
     }
 }
