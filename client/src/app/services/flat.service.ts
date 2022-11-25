@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { User } from "src/app/dto/user.dto";
 import { Flat } from "src/app/dto/flat.dto";
-import { pbService } from "./pb.service";
+import { PocketBaseService } from "./pb.service";
 import { FlatComment } from "../dto/message.dto";
 
 export interface FilterFlat {
@@ -23,40 +23,40 @@ export interface FilterFlat {
 export class FlatService {
     readonly PER_PAGE = 20;
 
-    constructor() {
+    constructor(private pbService: PocketBaseService) {
     }
 
     async createFlat(flat: Flat): Promise<Flat> {
         console.log('Trying to create flat', flat);
-        return await pbService.PocketBaseInstance.collection('flats').create(flat);
+        return await this.pbService.PocketBaseInstance.collection('flats').create(flat);
     }
 
     async updateFlat(flat: Flat): Promise<Flat> {
         console.log('Trying to update flat', flat);
-        return await pbService.PocketBaseInstance.collection('flats').update(flat.id!, flat);
+        return await this.pbService.PocketBaseInstance.collection('flats').update(flat.id!, flat);
     }
 
     async getFlatById(id: string): Promise<Flat> {
         console.log('Trying to get flat by id:', id);
-        return await pbService.PocketBaseInstance.collection('flats').getOne(id);
+        return await this.pbService.PocketBaseInstance.collection('flats').getOne(id);
     }
 
     async getFlatCommentsById(flat: Flat): Promise<FlatComment[]> {
         console.log('Trying to get flat by id:', flat);
-        const result = await pbService.PocketBaseInstance.collection('flatComments').getFullList(200, {
-            filter: `flat = ${flat.id}`,
+        const result = await this.pbService.PocketBaseInstance.collection('flatComments').getFullList(200, {
+            filter: `flat = ${ flat.id }`,
         })
         return result as unknown as Promise<FlatComment[]>;
     }
 
     async addFlatComment(flatComment: FlatComment): Promise<FlatComment> {
         console.log('Trying add flat comment', flatComment);
-        return await pbService.PocketBaseInstance.collection('flatComments').create(flatComment);
+        return await this.pbService.PocketBaseInstance.collection('flatComments').create(flatComment);
     }
 
     async getFlats(): Promise<Flat[]> {
         console.log('Trying to get flast');
-        return await pbService.PocketBaseInstance.collection('flats').getFullList(200);
+        return await this.pbService.PocketBaseInstance.collection('flats').getFullList(200);
     }
 
     async searchFlat(page: number, filter: FilterFlat) {
@@ -65,14 +65,14 @@ export class FlatService {
         if (filter.owner) filterStr += "owner ~ " + filter.owner.id;
         if (filter.area) filterStr += "area ~ " + filter.area;
         if (filter.costMin) filterStr += "cost >= " + filter.costMin;
-        if (filter.costMax)     filterStr += "cost <= " + filter.costMax;
+        if (filter.costMax) filterStr += "cost <= " + filter.costMax;
         if (filter.capacityMin) filterStr += "capacity >= " + filter.capacityMin;
         if (filter.capacityMax) filterStr += "capacity <= " + filter.capacityMax;
         if (filter.description) filterStr += "description ~ " + filter.description;
         if (filter.createdMin) filterStr += "created < \"" + filter.createdMin + "\"";
         // TODO relations and filters for them
         console.log('Looking flats with', filterStr);
-        return await pbService.PocketBaseInstance.collection('flats').getList(
+        return await this.pbService.PocketBaseInstance.collection('flats').getList(
             page,
             this.PER_PAGE,
             {

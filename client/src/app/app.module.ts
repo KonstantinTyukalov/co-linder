@@ -13,6 +13,10 @@ import { UserService } from "./services/user.service";
 import { ApartmentsComponent } from './components/apartments/apartments.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { TestComponent } from './components/test/test.component';
+import { FlatEffects } from "./store/effects/flat.effects";
+import * as FlatStore from './store/reducers/flat.reducer';
+import { FlatService } from "./services/flat.service";
+import { PocketBaseService } from "./services/pb.service";
 
 @NgModule({
     declarations: [
@@ -28,13 +32,18 @@ import { TestComponent } from './components/test/test.component';
         AppRoutingModule,
         StoreModule.forRoot({}),
         FormsModule,
-        EffectsModule.forRoot([UserEffects]),
-        StoreModule.forRoot({}, {})
+        EffectsModule.forRoot([UserEffects, FlatEffects]),
+        StoreModule.forRoot({
+            FLAT_STATE: FlatStore.reducer
+        })
     ],
     providers: [
-        UserService
+        PocketBaseService,
+        UserService,
+        FlatService
     ],
     bootstrap: [AppComponent]
 })
 export class AppModule {
+
 }

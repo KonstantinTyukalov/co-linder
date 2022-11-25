@@ -5,7 +5,9 @@
     <div class="list-content">
         <div class="searching"></div>
         <div class="list">
-            <div *ngFor="let flat of ['bob', 'chen', 'kek', 'lol']"></div>
+            <div *ngFor="let flat of flats$ | async">
+                {{flat.name}}
+            </div>
         </div>
     </div>
 </div>

@@ -1,14 +1,13 @@
 import { Injectable } from "@angular/core";
 import { User } from "src/app/dto/user.dto";
-import { pbService } from "./pb.service";
+import { PocketBaseService } from "./pb.service";
 
 @Injectable()
 export class UserService {
-    constructor() {
+    constructor(private pbService: PocketBaseService) {
     }
 
     async registerUser(userDto: User) {
-
         // example create data
         const langs = userDto.languages.split(',').map(s => s.trim());
 
@@ -28,19 +27,19 @@ export class UserService {
 
         console.log('Sending new user:', data);
 
-        const record = await pbService.PocketBaseInstance.collection('users').create(data);
+        const record = await this.pbService.PocketBaseInstance.collection('users').create(data);
 
         console.log('Record created', record);
 
         // (optional) send an email verification request
-        const isVerified = await pbService.PocketBaseInstance.collection('users').requestVerification(userDto.email);
+        const isVerified = await this.pbService.PocketBaseInstance.collection('users').requestVerification(userDto.email);
 
         console.log("Email to verify sended:", isVerified)
     }
 
     async loginUser(login: string, password: string) {
         try {
-            const authData = await pbService.PocketBaseInstance.collection('users').authWithPassword(
+            const authData = await this.pbService.PocketBaseInstance.collection('users').authWithPassword(
                 login,
                 password
             );
@@ -48,14 +47,14 @@ export class UserService {
             console.log("User logged in. Data: ", authData)
 
             // after the above you can also access the auth data from the authStore
-            console.log(pbService.PocketBaseInstance.authStore.isValid);
-            console.log(pbService.PocketBaseInstance.authStore.token);
+            console.log(this.pbService.PocketBaseInstance.authStore.isValid);
+            console.log(this.pbService.PocketBaseInstance.authStore.token);
         } catch (err) {
             throw new Error("With login: " + login + " Login Error: " + err)
         }
     }
 
     async logoutUser() {
-        await pbService.Logout();
+        await this.pbService.Logout();
     }
 }

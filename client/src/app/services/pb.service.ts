@@ -1,20 +1,27 @@
 import PocketBase from 'pocketbase';
+import { Injectable } from "@angular/core";
 
-class PocketBaseService {
-    constructor(private readonly pb: PocketBase) {
+const connectionUrl = 'http://172.16.101.228:3000';
+
+@Injectable({ providedIn: "root" })
+export class PocketBaseService {
+
+    private pb = new PocketBase(connectionUrl);
+
+    constructor() {
+
     }
 
     get PocketBaseInstance(): PocketBase {
-        return pb;
+        return this.pb;
     }
 
     async Logout() {
         console.log('Logging out');
-        await pb.authStore.clear()
+        await this.pb.authStore.clear()
     }
 }
 
-const connectionUrl = 'http://172.16.101.228:3000';
 
-const pb = new PocketBase(connectionUrl);
-export const pbService = new PocketBaseService(pb)
+// const pb = new PocketBase(connectionUrl);
+// export const pbService = new PocketBaseService(pb)
