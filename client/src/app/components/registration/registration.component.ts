@@ -15,6 +15,7 @@ export class RegistrationComponent {
 
     public newUser: User = {
         email: '',
+        avatar: "",
         password: '',
         name: '',
         age: NaN,

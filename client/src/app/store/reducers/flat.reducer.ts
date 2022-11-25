@@ -15,4 +15,5 @@ export const initialState: FlatsState = {
 export const reducer = createReducer(
     initialState,
     on(FlatsActions.getFlatsSuccess, (state, { flats }) => ( { ...state, flats } )),
+    on(FlatsActions.getFlatByIdSuccess, (state, { flat }) => ( { ...state, currentFlat: flat } )),
 );

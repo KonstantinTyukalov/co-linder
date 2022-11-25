@@ -15,8 +15,10 @@ export class FilterFlat {
     capacityMax?: number
     description?: string // substring
     createdMin?: Date // like "not older 1 month"
-    capacityReadyMin?: number // full of people min (more chance to book soon), unsupported yet
-    capacityReadyMax?: number // there are places at least (find for group of people), unsupported yet. If = 0, It's first will be the first list
+    interestedMin?: number // interested people min (more chance to book soon)
+    interestedMax?: number // not popular yet.
+    readyToLiveMin?: number // ready to live people min (more chance to book soon, used together with capacityMin/Max)
+    readyToLiveMax?: number // there are places at least (find for group of people)
 }
 
 function addAnd(str: string, suffix: string): string {
@@ -77,7 +79,10 @@ export class FlatService {
         if (filter.capacityMax) filterStr = addAnd(filterStr , "capacity <= " + filter.capacityMax);
         if (filter.description) filterStr = addAnd(filterStr, "description ~ \"" + filter.description + "\"");
         if (filter.createdMin) filterStr = addAnd(filterStr , "created < \"" + filter.createdMin + "\"");
-        // TODO relations and filters for them
+        //cost < 1500 && 
+        if (filter.interestedMin) filterStr = addAnd(filterStr , "created < \"" + filter.createdMin + "\"");
+        if (filter.readyToLiveMin) filterStr = addAnd(filterStr , "created < \"" + filter.createdMin + "\"");
+        // TODO relations and filters for them capacityReadyMin
         console.log('Looking flats with', filterStr);
         const result = await this.pbService.PocketBaseInstance.collection('flats').getList(
             page,
