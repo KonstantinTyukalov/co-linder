@@ -10,21 +10,23 @@ export class UserService {
     async registerUser(userDto: User) {
 
         // example create data
+        const langs = userDto.languages.split(',').map(s => s.trim())
+
         const data = {
             "email": userDto.email,
             "emailVisibility": true,
             "password": userDto.password,
             "passwordConfirm": userDto.password,
             "name": userDto.name,
-            "birthDate": "",
+            "birthDate": new Date(),
             "isWoman": userDto.isWoman,
             "country": userDto.country,
-            "langs": userDto.languages,
+            "langs": langs,
             "hasPets": false,
-            "aboutMyself": ""
+            "aboutMyself": userDto.description
         };
 
-        console.log('Sending new user:', data)
+        console.log('Sending new user:', data);
 
         const record = await pbService.PocketBaseInstance.collection('users').create(data);
 
