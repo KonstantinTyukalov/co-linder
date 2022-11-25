@@ -40,6 +40,11 @@ export class FlatService {
         return await pbService.PocketBaseInstance.collection('flats').getOne(id);
     }
 
+    async getFlatCommentsById(id: string): Promise<Flat> {
+        console.log('Trying to get flat by id:', id);
+        return await pbService.PocketBaseInstance.collection('flatComments').getOne(id);
+    }
+
     async getFlats(): Promise<Flat[]> {
         console.log('Trying to get flast');
         return await pbService.PocketBaseInstance.collection('flats').getFullList(200);
