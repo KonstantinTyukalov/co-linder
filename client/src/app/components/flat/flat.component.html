@@ -4,14 +4,38 @@
 
     <div class="flat">
         <div class="photos">
-            <img *ngFor="let photo of (flat$ | async)?.downloadedPhotos" src="photo" alt="">
+            <img *ngFor="let photo of (flat$ | async)?.downloadedPhotos"
+                 [src]="'http://172.16.101.228:3000/api/files/flats/'+(flat$ | async)?.id+'/'+photo"
+                 alt="Photo">
         </div>
         <div class="flat-metadata">
-
+            <div class="header-one">
+                <h1>{{(flat$ | async)?.name}}</h1>
+                <h1>{{(flat$ | async)?.cost | currency: '$'}}</h1>
+            </div>
+            <h2 style="margin-bottom: 1rem">Adress: {{(flat$ | async)?.area}}</h2>
+            <h3>{{(flat$ | async)?.description}}</h3>
         </div>
-        <div class="comments"></div>
+        <div class="comments">
+            
+        </div>
     </div>
 
 
-    <div class="users">asgas</div>
+    <div class="users-block">
+        <h1 style="text-align: center; margin-bottom: 1rem">Intrested</h1>
+        <div class="users" *ngIf="(flat$ | async)?.expand?.interestedUsers?.length !== 0">
+            <div class="user" *ngFor="let user of (flat$ | async)?.expand?.interestedUsers">
+                <img [src]="'http://172.16.101.228:3000/api/files/users/'+user.id+'/'+user.avatar" alt="Avatar">
+                <h2>{{user?.name}}s</h2>
+            </div>
+        </div>
+        <h1 style="text-align: center">Owner</h1>
+        <div class="owner">
+            <img
+                [src]="'http://172.16.101.228:3000/api/files/users/'+(flat$ | async)?.expand?.owner?.id+'/'+(flat$ | async)?.expand?.owner?.avatar"
+                alt="Avatar">
+            <h2>{{(flat$ | async)?.expand?.owner?.name}}</h2>
+        </div>
+    </div>
 </div>

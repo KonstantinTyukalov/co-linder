@@ -1,5 +1,6 @@
 <div class="content" (click)="onClick()">
-    <img src="../../../assets/flat.png" alt="image">
+    <img [src]="photo"
+         alt="image">
     <div class="flat-data">
         <h3>{{flat.name}}</h3>
         <h3>{{flat.cost | currency: '$'}}</h3>
