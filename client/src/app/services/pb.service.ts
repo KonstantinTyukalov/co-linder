@@ -14,5 +14,7 @@ class PocketBaseService {
     }
 }
 
-const pb = new PocketBase('http://127.0.0.1:8090');
+const connectionUrl = 'http://172.16.101.228:3000';
+
+const pb = new PocketBase(connectionUrl);
 export const pbService = new PocketBaseService(pb)
