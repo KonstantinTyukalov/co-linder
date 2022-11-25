@@ -51,7 +51,7 @@ export class UserService {
             console.log(pbService.PocketBaseInstance.authStore.isValid);
             console.log(pbService.PocketBaseInstance.authStore.token);
         } catch (err) {
-            throw new Error("With this data: " + userDto + " Login Error: " + err)
+            throw new Error("With login: " + login + " Login Error: " + err)
         }
     }
 

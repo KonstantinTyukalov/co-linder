@@ -12,6 +12,7 @@ import { UserEffects } from "./store/effects/user.effects";
 import { UserService } from "./services/user.service";
 import { ApartmentsComponent } from './components/apartments/apartments.component';
 import { MenuComponent } from './components/menu/menu.component';
+import { TestComponent } from './components/test/test.component';
 
 @NgModule({
     declarations: [
@@ -19,7 +20,8 @@ import { MenuComponent } from './components/menu/menu.component';
         LoginComponent,
         RegistrationComponent,
         ApartmentsComponent,
-        MenuComponent
+        MenuComponent,
+        TestComponent
     ],
     imports: [
         BrowserModule,
