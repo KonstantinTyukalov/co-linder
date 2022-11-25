@@ -12,7 +12,7 @@
             <button><h2>I'm interested</h2></button>
             <button><h2>Send</h2></button>
         </div>
-        <div class="flat-metadata">
+        <div class="flat-metadata" *ngIf="(flat$ | async)?.name">
             <div class="header-one">
                 <h1>{{(flat$ | async)?.name}}</h1>
                 <h1>{{(flat$ | async)?.cost | currency: '$'}}</h1>
@@ -23,7 +23,7 @@
         <div class="comments">
             <div class="chat">
                 <div class="chat-overflow">
-                    <p *ngFor="let a of (flat$ | async)?.comments">{{a}}</p>
+                    <p *ngFor="let ada of (flat$ | async)?.comments">{{ada.value}</p>
                 </div>
             </div>
             <input type="text">
