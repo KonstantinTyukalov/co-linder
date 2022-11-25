@@ -19,6 +19,7 @@ import { FlatService } from "./services/flat.service";
 import { PocketBaseService } from "./services/pb.service";
 import { FlatComponent } from './components/flat/flat.component';
 import { FlatCardComponent } from './components/flat-card/flat-card.component';
+import { ChatService } from './services/chat.service';
 
 @NgModule({
     declarations: [
@@ -44,7 +45,8 @@ import { FlatCardComponent } from './components/flat-card/flat-card.component';
     providers: [
         PocketBaseService,
         UserService,
-        FlatService
+        FlatService,
+        ChatService
     ],
     bootstrap: [AppComponent]
 })
