@@ -4,7 +4,12 @@
         <input class="file" type="file" name="file">
     </div>
     <h2 class="registration-text">Registration</h2>
-    <input class="email" type="text" placeholder="Email">
+    <input
+        class="email"
+        type="text"
+        placeholder="Email"
+        [(ngModel)]="newUser.email"
+    >
     <input class="name" type="text" placeholder="Name">
     <input class="age" type="number" placeholder="Age">
     <select class="sex">

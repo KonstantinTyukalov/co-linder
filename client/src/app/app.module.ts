@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { StoreModule } from '@ngrx/store';
 import { RegistrationComponent } from "./components/registration/registration.component";
 import { LoginComponent } from "./components/login/login.component";
+import { FormsModule } from "@angular/forms";
 
 @NgModule({
     declarations: [
@@ -16,7 +17,8 @@ import { LoginComponent } from "./components/login/login.component";
     imports: [
         BrowserModule,
         AppRoutingModule,
-        StoreModule.forRoot({})
+        StoreModule.forRoot({}),
+        FormsModule
     ],
     providers: [],
     bootstrap: [AppComponent]

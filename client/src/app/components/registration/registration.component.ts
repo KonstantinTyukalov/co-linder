@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { User } from "../../dto/user.dto";
+import { Store } from "@ngrx/store";
 
 @Component({
     selector: 'app-registration',
@@ -6,7 +8,15 @@ import { Component } from '@angular/core';
     styleUrls: ['./registration.component.scss']
 })
 export class RegistrationComponent {
-    onClick() {
-        //this.store.dispatch(userActions.registration);
+    public newUser: User = {
+        email: '',
+        name: '',
+        age: 0,
+        country: '',
+        isWoman: true,
+        languages: ''
+    };
+
+    constructor(private readonly store: Store) {
     }
 }
