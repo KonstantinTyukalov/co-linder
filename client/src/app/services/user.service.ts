@@ -13,6 +13,7 @@ export class UserService {
 
         const data = {
             "email": userDto.email,
+            "avatar": userDto.avatar,
             "emailVisibility": true,
             "password": userDto.password,
             "passwordConfirm": userDto.password,
@@ -56,5 +57,10 @@ export class UserService {
 
     logoutUser() {
         this.pbService.Logout();
+    }
+
+    async getUserById(id: string): Promise<User> {
+        console.log('Trying to get user by id:', id);
+        return await this.pbService.PocketBaseInstance.collection('users').getOne(id);
     }
 }
