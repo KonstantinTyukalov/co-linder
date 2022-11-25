@@ -47,13 +47,20 @@ export class FlatService {
 
     async getFlatById(id: string): Promise<Flat> {
         console.log('Trying to get flat by id:', id);
-        return await this.pbService.PocketBaseInstance.collection('flats').getOne(id);
+        const res = await this.pbService.PocketBaseInstance.collection('flats').getOne(id) as any;
+
+        const flat: Flat = {
+            ...res,
+            downloadedPhotos: res['photo'] as string[]
+        }
+
+        return flat
     }
 
     async getFlatCommentsById(flat: Flat): Promise<FlatComment[]> {
         console.log('Trying to get flat by id:', flat);
         const result = await this.pbService.PocketBaseInstance.collection('flatComments').getFullList(200, {
-            filter: `flat = ${ flat.id }`,
+            filter: `flat = ${flat.id}`,
         })
         return result as unknown as Promise<FlatComment[]>;
     }
@@ -72,16 +79,16 @@ export class FlatService {
         let filterStr: string = ""
         if (filter.withPhoto) filterStr = addAnd(filterStr, "photo > 1");
         if (filter.owner) filterStr = addAnd(filterStr, "owner ~ \"" + filter.owner.id + "\"");
-        if (filter.area) filterStr = addAnd(filterStr , "area ~ \"" + filter.area + "\"");
+        if (filter.area) filterStr = addAnd(filterStr, "area ~ \"" + filter.area + "\"");
         if (filter.costMin) filterStr = addAnd(filterStr, "cost >= " + filter.costMin);
-        if (filter.costMax) filterStr = addAnd(filterStr , "cost <= " + filter.costMax);
-        if (filter.capacityMin) filterStr = addAnd(filterStr,"capacity >= " + filter.capacityMin);
-        if (filter.capacityMax) filterStr = addAnd(filterStr , "capacity <= " + filter.capacityMax);
+        if (filter.costMax) filterStr = addAnd(filterStr, "cost <= " + filter.costMax);
+        if (filter.capacityMin) filterStr = addAnd(filterStr, "capacity >= " + filter.capacityMin);
+        if (filter.capacityMax) filterStr = addAnd(filterStr, "capacity <= " + filter.capacityMax);
         if (filter.description) filterStr = addAnd(filterStr, "description ~ \"" + filter.description + "\"");
-        if (filter.createdMin) filterStr = addAnd(filterStr , "created < \"" + filter.createdMin + "\"");
+        if (filter.createdMin) filterStr = addAnd(filterStr, "created < \"" + filter.createdMin + "\"");
         //cost < 1500 && 
-        if (filter.interestedMin) filterStr = addAnd(filterStr , "created < \"" + filter.createdMin + "\"");
-        if (filter.readyToLiveMin) filterStr = addAnd(filterStr , "created < \"" + filter.createdMin + "\"");
+        if (filter.interestedMin) filterStr = addAnd(filterStr, "created < \"" + filter.createdMin + "\"");
+        if (filter.readyToLiveMin) filterStr = addAnd(filterStr, "created < \"" + filter.createdMin + "\"");
         // TODO relations and filters for them capacityReadyMin
         console.log('Looking flats with', filterStr);
         const result = await this.pbService.PocketBaseInstance.collection('flats').getList(
