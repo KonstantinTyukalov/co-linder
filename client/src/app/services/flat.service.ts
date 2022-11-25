@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { User } from "src/app/dto/user.dto";
 import { Flat } from "src/app/dto/flat.dto";
 import { pbService } from "./pb.service";
+import { FlatComment } from "../dto/message.dto";
 
 export interface FilterFlat {
     withPhoto?: boolean
@@ -32,7 +33,7 @@ export class FlatService {
 
     async updateFlat(flat: Flat): Promise<Flat> {
         console.log('Trying to update flat', flat);
-        return await pbService.PocketBaseInstance.collection('flats').update(flat.id, flat);
+        return await pbService.PocketBaseInstance.collection('flats').update(flat.id!, flat);
     }
 
     async getFlatById(id: string): Promise<Flat> {
@@ -40,9 +41,17 @@ export class FlatService {
         return await pbService.PocketBaseInstance.collection('flats').getOne(id);
     }
 
-    async getFlatCommentsById(id: string): Promise<Flat> {
-        console.log('Trying to get flat by id:', id);
-        return await pbService.PocketBaseInstance.collection('flatComments').getOne(id);
+    async getFlatCommentsById(flat: Flat): Promise<FlatComment[]> {
+        console.log('Trying to get flat by id:', flat);
+        const result = await pbService.PocketBaseInstance.collection('flatComments').getFullList(200, {
+            filter: `flat = ${flat.id}`,
+        })
+        return result as unknown as Promise<FlatComment[]>;
+    }
+
+    async addFlatComment(flatComment: FlatComment): Promise<FlatComment> {
+        console.log('Trying add flat comment', flatComment);
+        return await pbService.PocketBaseInstance.collection('flatComments').create(flatComment);
     }
 
     async getFlats(): Promise<Flat[]> {

@@ -1,7 +1,7 @@
 import { User } from "./user.dto";
 import { Flat } from "./flat.dto";
 
-export interface Message {
+export interface FlatComment {
     id?: string;
     flat: Flat;
     user: User;
