@@ -32,7 +32,7 @@ export class FlatEffects {
         return this.actions$.pipe(
             ofType(FlatActions.getFlatById),
             switchMap((action: { id: string }) => {
-                return from(this.flatService.getFlatById(action.id))
+                return from(this.flatService.getFlatWithComments(action.id))
             }),
             map((flat: Flat) => {
                 return FlatActions.getFlatByIdSuccess({ flat });
