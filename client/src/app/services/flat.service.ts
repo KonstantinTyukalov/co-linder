@@ -15,7 +15,7 @@ export interface FilterFlat {
     description?: string // substring
     createdMin?: Date // like "not older 1 month"
     capacityReadyMin?: number // full of people min (more chance to book soon), unsupported yet
-    capacityReadyMax?: number // there are places at least (find for group of people), unsupported yet
+    capacityReadyMax?: number // there are places at least (find for group of people), unsupported yet. If = 0, It's first will be the first list
 }
 
 @Injectable()
@@ -32,7 +32,7 @@ export class FlatService {
 
     async updateFlat(flat: Flat): Promise<Flat> {
         console.log('Trying to update flat', flat);
-        return await pbService.PocketBaseInstance.collection('flats').update(flat);
+        return await pbService.PocketBaseInstance.collection('flats').update(flat.id, flat);
     }
 
     async getFlatById(id: string): Promise<Flat> {
@@ -52,7 +52,7 @@ export class FlatService {
         if (filter.area) filterStr += "area ~ " + filter.area;
         if (filter.costMin || filter.costMax) {
             if (filter.costMin)
-            filterStr += "name ~ " + filter.name;
+                filterStr += "name ~ " + filter.name;
         }
         if (filter.name) filterStr += "name ~ " + filter.name;
         if (filter.name) filterStr += "name ~ " + filter.name;
