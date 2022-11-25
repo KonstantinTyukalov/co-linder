@@ -54,7 +54,7 @@ export class UserService {
         }
     }
 
-    async logoutUser() {
-        await this.pbService.Logout();
+    logoutUser() {
+        this.pbService.Logout();
     }
 }
