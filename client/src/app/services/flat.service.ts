@@ -3,8 +3,19 @@ import { User } from "src/app/dto/user.dto";
 import { Flat } from "src/app/dto/flat.dto";
 import { pbService } from "./pb.service";
 
-export class FilterFlat {
-
+export interface FilterFlat {
+    withPhoto?: boolean
+    name?: string // substring
+    owner?: User
+    area?: string // substring
+    costMin?: number
+    costMax?: number
+    capacityMin?: number
+    capacityMax?: number
+    description?: string // substring
+    createdMin?: Date // like "not older 1 month"
+    capacityReadyMin?: number // full of people min (more chance to book soon), unsupported yet
+    capacityReadyMax?: number // there are places at least (find for group of people), unsupported yet
 }
 
 @Injectable()
@@ -35,11 +46,23 @@ export class FlatService {
     }
 
     async searchFlat(page: number, filter: FilterFlat) { // TODO
+        let filterStr: string = ""
+        if (filter.withPhoto) filterStr += "photo > 1";
+        if (filter.owner) filterStr += "owner ~ " + filter.owner.id;
+        if (filter.area) filterStr += "area ~ " + filter.area;
+        if (filter.costMin || filter.costMax) {
+            if (filter.costMin)
+            filterStr += "name ~ " + filter.name;
+        }
+        if (filter.name) filterStr += "name ~ " + filter.name;
+        if (filter.name) filterStr += "name ~ " + filter.name;
+        if (filter.name) filterStr += "name ~ " + filter.name;
+        console.log('Looking flats with', filterStr);
         return await pbService.PocketBaseInstance.collection('flats').getList(
             page,
             this.PER_PAGE,
             {
-                "filter": filter,
+                "filter": filterStr,
                 "sort": '-cost'
             }
         )
