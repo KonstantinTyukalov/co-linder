@@ -8,8 +8,11 @@ import { Store } from "@ngrx/store";
     styleUrls: ['./registration.component.scss']
 })
 export class RegistrationComponent {
+    public aboba = ['Moscow', 'London', 'Paris']
+
     public newUser: User = {
         email: '',
+        password: '',
         name: '',
         age: 0,
         country: '',
@@ -18,5 +21,9 @@ export class RegistrationComponent {
     };
 
     constructor(private readonly store: Store) {
+    }
+
+    public nameChanged(event: Event) {
+        console.log(this.newUser);
     }
 }
