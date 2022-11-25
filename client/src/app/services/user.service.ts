@@ -24,6 +24,8 @@ export class UserService {
             "aboutMyself": ""
         };
 
+        console.log('Sending new user:', data)
+
         const record = await pbService.PocketBaseInstance.collection('users').create(data);
 
         console.log('Record created', record);
