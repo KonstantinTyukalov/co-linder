@@ -9,7 +9,7 @@ export class UserService {
 
     async registerUser(userDto: User) {
         // example create data
-        const langs = userDto.languages.split(',').map(s => s.trim());
+        const langs = userDto.languages!.split(',').map(s => s.trim());
 
         const data = {
             "email": userDto.email,

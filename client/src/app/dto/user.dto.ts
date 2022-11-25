@@ -4,8 +4,8 @@ export interface User {
     name: string;
     age: number;
     isWoman: boolean | null;
-    country: string;
-    languages: string;
-    password: string;
+    country?: string;
+    languages?: string;
+    password?: string;
     description?: string;
 }

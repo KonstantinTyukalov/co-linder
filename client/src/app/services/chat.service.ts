@@ -44,9 +44,16 @@ export class ChatService {
     }
 
     async sendMessage(message: ChatMessage) {
-        const chatMessagesCollection = this.pbService.PocketBaseInstance.collection('chatsMessage');
+        const chatMessagesCollection = this.pbService.PocketBaseInstance.collection('chatMessages');
 
-        const res = await chatMessagesCollection.create(message)
+        const newMessage = {
+            "content": message.content,
+            "sender": message.sender.id,
+            "chat": message.chat.id
+        }
+        console.log('Trying to create new chat message: ', newMessage)
+
+        const res = await chatMessagesCollection.create(newMessage)
         console.log('Added new chat message ', res)
 
         return res;
