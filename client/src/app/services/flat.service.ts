@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { User } from "src/app/dto/user.dto";
 import { Flat } from "src/app/dto/flat.dto";
 import { PocketBaseService } from "./pb.service";
-import { FlatComment } from "../dto/message.dto";
+import { FlatComment } from "../dto/flatComment.dto";
 
 export interface FilterFlat {
     withPhoto?: boolean
