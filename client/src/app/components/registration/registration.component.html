@@ -9,18 +9,30 @@
         type="text"
         placeholder="Email"
         [(ngModel)]="newUser.email"
-    >
-    <input class="name" type="text" placeholder="Name">
-    <input class="age" type="number" placeholder="Age">
-    <select class="sex">
+        (ngModelChange)="nameChanged($event)">
+    <input
+        class="password"
+        type="password"
+        placeholder="Password"
+        [(ngModel)]="newUser.password">
+    <input
+        class="name"
+        type="text"
+        placeholder="Name"
+        [(ngModel)]="newUser.name">
+    <input
+        class="age"
+        type="number"
+        placeholder="Age"
+        [(ngModel)]="newUser.age">
+    <select class="sex" [(ngModel)]="newUser.isWoman">
         <option value="">Select sex</option>
-        <option value="option-1">Option 1</option>
-        <option value="option-2">Option 2</option>
+        <option [value]="true">Women</option>
+        <option [value]="false">Man</option>
     </select>
-    <select class="country">
-        <option value="">Select country</option>
-        <option value="option-1">Option 1</option>
-        <option value="option-2">Option 2</option>
+    <select class="country" [(ngModel)]="newUser.country">
+        <option value="">Select</option>
+        <option *ngFor="let sos of aboba" [value]="sos">{{sos}}</option>
     </select>
     <input class="languages" type="text" placeholder="Languages">
     <textarea style="margin-bottom: 1rem"></textarea>
