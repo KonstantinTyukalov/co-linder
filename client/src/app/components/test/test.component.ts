@@ -34,7 +34,12 @@ export class TestComponent implements OnInit {
         //     console.log("got flats", flats)
         // });
 
-        this.sendMessageTest();
+        // this.sendMessageTest();
+        // this.testGettingChats()
+    }
+
+    private testGettingChats() {
+        this.chatService.getChatsByUserId(user1.id!);
     }
 
     private sendMessageTest() {

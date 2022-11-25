@@ -4,6 +4,7 @@ import { User } from "../dto/user.dto";
 import { Chat } from "../dto/chat.dto";
 import { PocketBaseService } from "./pb.service";
 import { ChatMessage } from "../dto/chatMessage.dto";
+import { Logger } from "../utils/logger";
 
 @Injectable()
 export class ChatService {
@@ -41,6 +42,17 @@ export class ChatService {
         console.log('Successfully updated chat. New info: ', res);
 
         return true;
+    }
+
+    async getChatsByUserId(userId: string) {
+        const chatCollection = this.pbService.PocketBaseInstance.collection('chats');
+
+        const res = (await chatCollection.getFullList())
+            .filter((record: any) => record.users.includes(userId))
+
+        Logger.SuccessfulQueryLog(res)
+
+        return res as unknown as Chat[];
     }
 
     async sendMessage(message: ChatMessage) {
