@@ -10,6 +10,8 @@ export interface Flat {
     cost: number;
     capacity: number;
     description: string;
+    interestedUsers?: User[];
+    readyToLiveUsers: User[];
     created: Date;
     updated: Date;
 }
