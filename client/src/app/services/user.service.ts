@@ -10,7 +10,7 @@ export class UserService {
     async registerUser(userDto: User) {
 
         // example create data
-        const langs = userDto.languages.split(',').map(s => s.trim())
+        const langs = userDto.languages.split(',').map(s => s.trim());
 
         const data = {
             "email": userDto.email,
@@ -48,10 +48,6 @@ export class UserService {
         // after the above you can also access the auth data from the authStore
         console.log(pbService.PocketBaseInstance.authStore.isValid);
         console.log(pbService.PocketBaseInstance.authStore.token);
-
-        // "logout" the last authenticated account
-        pbService.PocketBaseInstance.authStore.clear();
-
     }
 
     async logoutUser() {
