@@ -47,6 +47,15 @@ function mapToFlat(flat: any):Flat {
     return result;
 }
 
+function mapToFlatComment(comment: any):FlatComment {
+    const result = {
+        ...comment,
+        user: expandAvatar(comment.expand!.user!),
+    }
+    delete result.expand;
+    return result;
+}
+
 @Injectable()
 export class FlatService {
     readonly PER_PAGE = 20;
@@ -74,24 +83,21 @@ export class FlatService {
     }
 
     async getFlatWithComments(id: string): Promise<Flat> {
-        console.log('Trying to get flat with comments by id:', id);
-        const flat = this.getFlatById(id)
-        const comments = this.getFlatCommentsById(id)
+        const flat = await this.getFlatById(id);
+        const comments = await this.getFlatCommentsById(id);
 
-        const result = mapToFlat(flat);
         (await flat).comments = (await comments);
-        return result;
+        return flat;
     }
 
     async getFlatCommentsById(flatId: string): Promise<FlatComment[]> {
-        console.log('Trying to get flat by id:', flatId);
+        console.log('Trying to get comments for flat by id:', flatId);
         const result = await this.pbService.PocketBaseInstance.collection('flatComments').getFullList(200, {
-            filter: `flat = ${flatId}`,
-            expand: ['flat', 'user']
+            filter: "flat = '" + flatId + "'",
+            expand: 'user'
         })
 
-        Logger.SuccessfulQueryLog(result);
-        return result as unknown as Promise<FlatComment[]>;
+        return (await result).map(comment => mapToFlatComment(comment));
     }
 
     async addFlatComment(flatComment: FlatComment): Promise<FlatComment> {
