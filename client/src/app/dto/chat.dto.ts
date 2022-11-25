@@ -3,8 +3,9 @@ import { User } from "./user.dto";
 
 export interface Chat {
     id?: string;
-    users: User[];
-    messages: ChatMessage[]
+    users?: User[];
+    userIds?: string[]
+    messages?: ChatMessage[]
     created?: Date;
     updated?: Date;
 }
