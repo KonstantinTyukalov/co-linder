@@ -21,7 +21,3 @@ export class PocketBaseService {
         await this.pb.authStore.clear()
     }
 }
-
-
-// const pb = new PocketBase(connectionUrl);
-// export const pbService = new PocketBaseService(pb)

@@ -72,7 +72,7 @@ export class FlatService {
         if (filter.createdMin) filterStr += "created < \"" + filter.createdMin + "\"";
         // TODO relations and filters for them
         console.log('Looking flats with', filterStr);
-        return await this.pbService.PocketBaseInstance.collection('flats').getList(
+        const result = await this.pbService.PocketBaseInstance.collection('flats').getList(
             page,
             this.PER_PAGE,
             {
@@ -80,5 +80,7 @@ export class FlatService {
                 "sort": '-cost'
             }
         )
+
+        return result;
     }
 }
