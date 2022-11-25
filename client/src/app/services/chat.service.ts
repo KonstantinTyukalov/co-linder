@@ -13,7 +13,7 @@ export class ChatService {
     async createChatWithUser(loggedInUser: User, targetUser: User): Promise<Chat> {
         console.log('Trying to create chat between ', targetUser.name, ' and ', loggedInUser.name)
 
-        const res = await this.pbService.PocketBaseInstance.collection('chats').create({ users: [loggedInUser, targetUser] }) as Chat
+        const res = await this.pbService.PocketBaseInstance.collection('chats').create({ users: [loggedInUser.id, targetUser.id] }) as Chat
 
         console.log("Successfully created chat with: ", targetUser.name, ' and ', loggedInUser.name)
 
@@ -44,9 +44,16 @@ export class ChatService {
     }
 
     async sendMessage(message: ChatMessage) {
-        const chatMessagesCollection = this.pbService.PocketBaseInstance.collection('chatsMessage');
+        const chatMessagesCollection = this.pbService.PocketBaseInstance.collection('chatMessages');
 
-        const res = await chatMessagesCollection.create(message)
+        const newMessage = {
+            "content": message.content,
+            "sender": message.sender.id,
+            "chat": message.chat.id
+        }
+        console.log('Trying to create new chat message: ', newMessage)
+
+        const res = await chatMessagesCollection.create(newMessage)
         console.log('Added new chat message ', res)
 
         return res;

@@ -13,6 +13,6 @@ export interface Flat {
     description: string;
     interestedUsers?: User[];
     readyToLiveUsers: User[];
-    created: Date;
-    updated: Date;
+    created?: Date;
+    updated?: Date;
 }

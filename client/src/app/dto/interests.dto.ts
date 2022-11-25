@@ -6,6 +6,6 @@ export interface Interest {
     flat: Flat;
     user: User;
     isReadyToLive: boolean;
-    created: Date;
-    updated: Date;
+    created?: Date;
+    updated?: Date;
 }

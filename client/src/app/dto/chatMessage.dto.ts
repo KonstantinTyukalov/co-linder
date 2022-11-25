@@ -6,6 +6,6 @@ export interface ChatMessage {
     content: string;
     sender: User;
     chat: Chat;
-    created: Date;
-    updated: Date;
+    created?: Date;
+    updated?: Date;
 }

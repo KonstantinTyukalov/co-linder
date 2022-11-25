@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from "../../dto/user.dto";
-import { Flat } from "../../dto/flat.dto";
 import { FlatService } from "../../services/flat.service";
+import { ChatService } from 'src/app/services/chat.service';
+import { ChatMessage } from 'src/app/dto/chatMessage.dto';
+import { Chat } from 'src/app/dto/chat.dto';
+import { user1, user2 } from './testUsers';
+
 
 @Component({
     selector: 'app-hero-list',
@@ -23,12 +27,34 @@ export class TestComponent implements OnInit {
         description: ''
     };
 
-    constructor(private flatService: FlatService) {
-    }
+    constructor(private chatService: ChatService, private flatService: FlatService) { }
 
     public ngOnInit() {
-        this.flatService.getFlats().then(flats => {
-            console.log("got flats", flats)
-        });
+        // this.flatService.getFlats().then(flats => {
+        //     console.log("got flats", flats)
+        // });
+
+        this.sendMessageTest();
+    }
+
+    private sendMessageTest() {
+
+        const chat: Chat = {
+            messages: [],
+            users: [user1, user2],
+            id: 'sou3qc79a3s2ycw'
+        }
+        const message: ChatMessage = {
+            chat: chat,
+            content: 'Wassup',
+            sender: user1
+        }
+
+        this.chatService.sendMessage(message);
+    }
+
+    private TestCreatingTheChat() {
+
+        this.chatService.createChatWithUser(user1, user2)
     }
 }
