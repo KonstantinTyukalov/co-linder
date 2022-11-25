@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 
 const connectionUrl = 'http://172.16.101.228:3000';
 
-export const STATIC_PATH = "http://127.0.0.1:3000/api/files/"
+export const STATIC_PATH = connectionUrl + "/api/files/"
 
 @Injectable({ providedIn: "root" })
 export class PocketBaseService {
