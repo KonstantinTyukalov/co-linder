@@ -3,6 +3,7 @@ import { User } from "src/app/dto/user.dto";
 import { Flat } from "src/app/dto/flat.dto";
 import { PocketBaseService } from "./pb.service";
 import { FlatComment } from "../dto/flatComment.dto";
+import { Logger } from "../utils/logger";
 
 export class FilterFlat {
     withPhoto?: boolean
@@ -59,11 +60,14 @@ export class FlatService {
         return flat
     }
 
-    async getFlatCommentsById(flat: Flat): Promise<FlatComment[]> {
-        console.log('Trying to get flat by id:', flat);
+    async getFlatCommentsById(flatId: string): Promise<FlatComment[]> {
+        console.log('Trying to get flat by id:', flatId);
         const result = await this.pbService.PocketBaseInstance.collection('flatComments').getFullList(200, {
-            filter: `flat = ${flat.id}`,
+            filter: `flat = ${flatId}`,
+            expand: ['flat', 'user']
         })
+
+        Logger.SuccessfulQueryLog(result);
         return result as unknown as Promise<FlatComment[]>;
     }
 
