@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Store } from "@ngrx/store";
 import { Router } from "@angular/router";
+import * as UserActions from '../../store/actions/user.actions'
 
 @Component({
     selector: 'app-login',
@@ -17,7 +18,11 @@ export class LoginComponent {
     ) {
     }
 
+    public doLogin() {
+        this.store.dispatch(UserActions.userLogin({ login: this.login, password: this.password }))
+    }
+
     public redirectToRegistration() {
-        
+        this.router.navigate(['registration']);
     }
 }

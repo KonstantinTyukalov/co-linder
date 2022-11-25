@@ -59,18 +59,18 @@ export class FlatService {
         return await pbService.PocketBaseInstance.collection('flats').getFullList(200);
     }
 
-    async searchFlat(page: number, filter: FilterFlat) { // TODO
+    async searchFlat(page: number, filter: FilterFlat) {
         let filterStr: string = ""
         if (filter.withPhoto) filterStr += "photo > 1";
         if (filter.owner) filterStr += "owner ~ " + filter.owner.id;
         if (filter.area) filterStr += "area ~ " + filter.area;
-        if (filter.costMin || filter.costMax) {
-            if (filter.costMin)
-                filterStr += "name ~ " + filter.name;
-        }
-        if (filter.name) filterStr += "name ~ " + filter.name;
-        if (filter.name) filterStr += "name ~ " + filter.name;
-        if (filter.name) filterStr += "name ~ " + filter.name;
+        if (filter.costMin) filterStr += "cost >= " + filter.costMin;
+        if (filter.costMax)     filterStr += "cost <= " + filter.costMax;
+        if (filter.capacityMin) filterStr += "capacity >= " + filter.capacityMin;
+        if (filter.capacityMax) filterStr += "capacity <= " + filter.capacityMax;
+        if (filter.description) filterStr += "description ~ " + filter.description;
+        if (filter.createdMin) filterStr += "created < \"" + filter.createdMin + "\"";
+        // TODO relations and filters for them
         console.log('Looking flats with', filterStr);
         return await pbService.PocketBaseInstance.collection('flats').getList(
             page,

@@ -3,6 +3,7 @@ import { User } from "../../dto/user.dto";
 import { Store } from "@ngrx/store";
 import { COUNTRIES } from "../../utils/countries";
 import * as UserActions from "../../store/actions/user.actions";
+import { Router } from "@angular/router";
 
 @Component({
     selector: 'app-registration',
@@ -16,19 +17,29 @@ export class RegistrationComponent {
         email: '',
         password: '',
         name: '',
-        age: 0,
+        age: NaN,
         country: '',
-        isWoman: true,
+        isWoman: null,
         languages: '',
         description: ''
     };
 
-    constructor(private readonly store: Store) {
+    constructor(
+        private readonly store: Store,
+        private readonly router: Router
+    ) {
 
     }
 
+    public descriptionshanged(event: string) {
+        this.newUser.description = event;
+        console.log(this.newUser);
+    }
+
     public registration() {
-        this.store.dispatch(UserActions.registrationUser({ user: this.newUser }));
+        const u = { ...this.newUser };
+        this.store.dispatch(UserActions.registrationUser({ user: u }));
+        //this.router.navigate(['login']);
     }
 
     public inputLanguages(event: string) {

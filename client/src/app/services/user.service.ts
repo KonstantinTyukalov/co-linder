@@ -38,13 +38,11 @@ export class UserService {
         console.log("Email to verify sended:", isVerified)
     }
 
-    async loginUser(userDto: User) {
-
+    async loginUser(login: string, password: string) {
         try {
-
             const authData = await pbService.PocketBaseInstance.collection('users').authWithPassword(
-                userDto.email,
-                userDto.password,
+                login,
+                password
             );
 
             console.log("User logged in. Data: ", authData)
@@ -52,9 +50,8 @@ export class UserService {
             // after the above you can also access the auth data from the authStore
             console.log(pbService.PocketBaseInstance.authStore.isValid);
             console.log(pbService.PocketBaseInstance.authStore.token);
-        }
-        catch (err) {
-            throw new Error("With this data: " + userDto + " Login Error: " + err)
+        } catch (err) {
+            throw new Error("With login: " + login + " Login Error: " + err)
         }
     }
 
