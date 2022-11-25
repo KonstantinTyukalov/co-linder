@@ -1,1 +1,17 @@
-<p>flat works!</p>
+<div class="content">
+    <div class="menu">as</div>
+
+
+    <div class="flat">
+        <div class="photos">
+            <img *ngFor="let photo of (flat$ | async)?.downloadedPhotos" src="photo" alt="">
+        </div>
+        <div class="flat-metadata">
+
+        </div>
+        <div class="comments"></div>
+    </div>
+
+
+    <div class="users">asgas</div>
+</div>

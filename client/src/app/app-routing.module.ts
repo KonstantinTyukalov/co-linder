@@ -5,6 +5,7 @@ import { LoginComponent } from "./components/login/login.component";
 import { ApartmentsComponent } from "./components/apartments/apartments.component";
 import { MenuComponent } from "./components/menu/menu.component";
 import { TestComponent } from "./components/test/test.component";
+import { FlatComponent } from "./components/flat/flat.component";
 
 const routes: Routes = [
     { path: 'login', component: LoginComponent },
@@ -12,7 +13,8 @@ const routes: Routes = [
     { path: 'menu', component: MenuComponent },
     { path: 'apartments', component: ApartmentsComponent },
     { path: 'flats', component: ApartmentsComponent },
-    
+    { path: 'flat/:id', component: FlatComponent },
+
 
     { path: 'test', component: TestComponent },
 ];
