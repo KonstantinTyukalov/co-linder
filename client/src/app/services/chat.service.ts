@@ -33,15 +33,26 @@ export class ChatService {
         console.log('targetUserId in getChatWithMessageSendersAvatars = ', targetUserId)
         const chat = await this.tryGetChatWithUser(targetUserId)
 
-        const res = await this.getChatById(chat.id!)
+        console.log("GOT CHAT WITH TARGET USER ", chat)
+
+        const mappedChat = mapToChat(chat)
+
+        const allMessages = await this.pbService.PocketBaseInstance.collection('chatMessages').getFullList() as ChatMessage[]
+
+        console.log('ALL MESSAGES', allMessages)
+
+        const chatMessages = allMessages.filter(m => m.chat === chat.id)
+
+        console.log('CHAT MESSAGES', chatMessages)
 
         const data = {
-            ...res
+            ...mappedChat,
+            messages: chatMessages
         }
 
-        if (res.messages) {
+        if (chatMessages) {
             const expandedMessages = []
-            for (const message of res.messages) {
+            for (const message of chatMessages) {
                 const messageSenderId = message.sender as unknown as string
                 const sender = await this.pbService.PocketBaseInstance.collection('users').getOne(messageSenderId) as User;
 
@@ -66,7 +77,9 @@ export class ChatService {
         const currentUser = this.pbService.PocketBaseInstance.authStore.model as unknown as User;
 
         console.log("Current user: ", currentUser)
-        const chatsList = await chatsCollection.getFullList() as Chat[]
+        const chatsList = await chatsCollection.getFullList(300, {
+            expand: 'users'
+        }) as Chat[]
 
         console.log("Chats list ", chatsList)
 
@@ -146,31 +159,6 @@ export class ChatService {
         console.log('Added new chat message ', res)
 
         return res;
-    }
-
-    async getChatById(chatId: string): Promise<Chat> {
-        const chatMessagesCollection = this.pbService.PocketBaseInstance.collection('chatMessages');
-
-        const messages = await chatMessagesCollection.getFullList(200) as ChatMessage[]
-
-        const chatMessages = messages.filter(m => m.chat === chatId)
-
-        // const chat = await this.pbService.PocketBaseInstance.collection('chatMessages').getOne(chatId, {
-        //     expand: 'users'
-        // })
-
-        const chat = await this.pbService.PocketBaseInstance.collection('chats').getOne(chatId, {
-            expand: 'users'
-        })
-
-        const fullChat = {
-            ...chat,
-            messages: chatMessages
-        }
-
-        Logger.SuccessfulQueryLog(fullChat)
-
-        return mapToChat(fullChat);
     }
 
     // Not working
