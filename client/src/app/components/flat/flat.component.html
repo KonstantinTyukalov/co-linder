@@ -23,7 +23,16 @@
         <div class="comments">
             <div class="chat">
                 <div class="chat-overflow">
-                    <p *ngFor="let ada of (flat$ | async)?.comments">{{ada.value}</p>
+                    <div
+                        class="chat-message"
+                        *ngFor="let comment of (flat$ | async)?.comments"
+                        [ngClass]="comment?.user?.id === '1' ? 'chat-message-left' : 'chat-message-right'">
+                        <img [src]="comment?.user?.avatar" alt="">
+                        <div>
+                            <h4>{{comment.user.name}}</h4>
+                            <h2 style="font-weight: normal">{{comment.content}}</h2>
+                        </div>
+                    </div>
                 </div>
             </div>
             <input type="text">
@@ -33,7 +42,7 @@
 
 
     <div class="users-block">
-        <h1 style="text-align: center; margin-bottom: 1rem">Intrested</h1>
+        <h1 style="text-align: center;">Interested</h1>
         <div class="users">
             <div class="user" *ngFor="let user of (flat$ | async)?.interestedUsers">
                 <img [src]="user.avatar" alt="Avatar">

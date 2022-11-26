@@ -15,12 +15,14 @@ import { MenuComponent } from './components/menu/menu.component';
 import { TestComponent } from './components/test/test.component';
 import { FlatEffects } from "./store/effects/flat.effects";
 import * as FlatStore from './store/reducers/flat.reducer';
+import * as ChatStore from './store/reducers/chat.reducer';
 import { FlatService } from "./services/flat.service";
 import { PocketBaseService } from "./services/pb.service";
 import { FlatComponent } from './components/flat/flat.component';
 import { FlatCardComponent } from './components/flat-card/flat-card.component';
 import { ChatService } from './services/chat.service';
 import { ChatComponent } from "./components/chat/chat.component";
+import { ChatEffects } from "./store/effects/chat.effects";
 
 @NgModule({
     declarations: [
@@ -39,9 +41,10 @@ import { ChatComponent } from "./components/chat/chat.component";
         AppRoutingModule,
         StoreModule.forRoot({}),
         FormsModule,
-        EffectsModule.forRoot([UserEffects, FlatEffects]),
+        EffectsModule.forRoot([UserEffects, FlatEffects, ChatEffects]),
         StoreModule.forRoot({
-            FLAT_STATE: FlatStore.reducer
+            FLAT_STATE: FlatStore.reducer,
+            CHAT_STATE: ChatStore.reducer
         })
     ],
     providers: [

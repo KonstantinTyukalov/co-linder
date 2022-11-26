@@ -1,1 +1,15 @@
-<div></div>
+<div class="content">
+    <div class="menu">
+
+    </div>
+    <div class="chat-content">
+        <div class="users">
+            <div
+                class="user"
+                *ngFor="let user of (chat$ | async)?.users">
+                <img [src]="user.avatar" alt="Avatar">
+                <h3>{{user.name}}</h3>
+            </div>
+        </div>
+    </div>
+</div>

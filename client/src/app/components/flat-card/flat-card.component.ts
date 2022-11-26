@@ -9,14 +9,13 @@ import { Router } from "@angular/router";
 })
 export class FlatCardComponent implements OnInit {
     @Input() flat!: Flat;
-    public photo: string;
+    public photo: string = '';
 
     constructor(private readonly router: Router) {
-        this.photo = this.flat?.downloadedPhotos && this.flat?.downloadedPhotos[0] ? this.flat.downloadedPhotos[0] : '../../../assets/flat.png';
     }
 
     ngOnInit(): void {
-
+        this.photo = this.flat?.downloadedPhotos && this.flat?.downloadedPhotos[0] ? this.flat.downloadedPhotos[0] : '../../../assets/flat.png';
     }
 
     public onClick() {

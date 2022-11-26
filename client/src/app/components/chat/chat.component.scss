@@ -1,0 +1,34 @@
+.content {
+    background-color: #665bf0;
+    width: 100vw;
+    height: 100%;
+    display: flex;
+}
+
+.menu {
+    background-color: coral;
+    min-width: 20rem;
+}
+
+.chat-content {
+    padding: 3rem;
+    background-color: darkmagenta;
+    width: 100%;
+}
+
+.users {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 1rem;
+    display: flex;
+
+    div.user {
+        display: flex;
+        align-items: center;
+
+        img {
+            width: 3rem;
+            height: 3rem;
+        }
+    }
+}
