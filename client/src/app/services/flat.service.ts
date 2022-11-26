@@ -5,6 +5,9 @@ import { PocketBaseService, STATIC_PATH} from "./pb.service";
 import { FlatComment } from "../dto/flatComment.dto";
 import { Logger } from "../utils/logger";
 import { expandAvatar } from "./user.service";
+import { Store } from "@ngrx/store";
+import { updateFlatComments } from "../store/actions/flat.actions";
+import { RecordSubscription } from "pocketbase";
 
 export class FilterFlat {
     withPhoto?: boolean
@@ -60,7 +63,7 @@ function mapToFlatComment(comment: any):FlatComment {
 export class FlatService {
     readonly PER_PAGE = 20;
 
-    constructor(private pbService: PocketBaseService) {
+    constructor(private pbService: PocketBaseService, private store: Store) {
     }
 
     async createFlat(flat: Flat): Promise<Flat> {
@@ -82,14 +85,6 @@ export class FlatService {
         return mapToFlat(res);
     }
 
-    async getFlatWithComments(id: string): Promise<Flat> {
-        const flat = await this.getFlatById(id);
-        const comments = await this.getFlatCommentsById(id);
-
-        (await flat).comments = (await comments);
-        return flat;
-    }
-
     async getFlatCommentsById(flatId: string): Promise<FlatComment[]> {
         console.log('Trying to get comments for flat by id:', flatId);
         const result = await this.pbService.PocketBaseInstance.collection('flatComments').getFullList(200, {
@@ -97,13 +92,34 @@ export class FlatService {
             expand: 'user',
             sort: '+created'
         })
-
         return (await result).map(comment => mapToFlatComment(comment));
+    }
+
+    async getFlatWithComments(id: string): Promise<Flat> {
+        const flat = await this.getFlatById(id);
+        const comments = await this.getFlatCommentsById(id);
+
+        // Subscribe to updates
+        this.subscribeToFlatComments(id);
+
+        (await flat).comments = (await comments);
+        return flat;
     }
 
     async addFlatComment(flatComment: FlatComment): Promise<FlatComment> {
         console.log('Trying add flat comment', flatComment);
         return await this.pbService.PocketBaseInstance.collection('flatComments').create(flatComment);
+    }
+
+    async subscribeToFlatComments(flatId: string) {
+        const collection = this.pbService.PocketBaseInstance.collection('flatComments');
+        collection.subscribe("*", (data: RecordSubscription<FlatComment>) => {
+            console.log("Got comment " + data.action + " in flat " + data.record.flat + ": " + data.record.content)
+            if (data.action == "create" && data.record.flat.toString() == flatId) {
+                this.store.dispatch(updateFlatComments({ comment: data.record }));
+            }
+        })
+        console.log('Subscribed to flatComments for ' + flatId + ' flatId', collection);
     }
 
     async getFlats(): Promise<Flat[]> {
@@ -125,7 +141,6 @@ export class FlatService {
         if (filter.capacityMax) filterStr = addAnd(filterStr, "capacity <= " + filter.capacityMax);
         if (filter.description) filterStr = addAnd(filterStr, "description ~ \"" + filter.description + "\"");
         if (filter.createdMin) filterStr = addAnd(filterStr, "created < \"" + filter.createdMin + "\"");
-        //cost < 1500 && 
         if (filter.interestedMin) filterStr = addAnd(filterStr, "created < \"" + filter.createdMin + "\"");
         if (filter.readyToLiveMin) filterStr = addAnd(filterStr, "created < \"" + filter.createdMin + "\"");
         // TODO relations and filters for them capacityReadyMin
