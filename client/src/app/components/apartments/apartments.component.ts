@@ -14,8 +14,15 @@ import { Observable } from "rxjs";
 })
 export class ApartmentsComponent implements OnInit {
     public area!: string;
+    public name!: string;
     public costMax!: number
+    public costMin!: number
     public capacityMin!: number;
+    public interestedMin!: number;
+    public readyToLiveMin!: number;
+    public readyToLiveMax!: number;
+    public createdMin!: Date;
+
 
     public flats$: Observable<Flat[]> = this.store.select(FlatSelector.flats);
 
@@ -29,8 +36,14 @@ export class ApartmentsComponent implements OnInit {
     public onClickFilter(): void {
         this.store.dispatch(FlatActions.getFlatsByFilters({
             area: this.area,
+            name: this.name,
             costMax: this.costMax,
-            capacityMin: this.capacityMin
+            costMin: this.costMin,
+            capacityMin: this.capacityMin,
+            interestedMin: this.interestedMin,
+            readyToLiveMin: this.readyToLiveMin,
+            readyToLiveMax: this.readyToLiveMax,
+            createdMin: this.createdMin
         }))
     }
 

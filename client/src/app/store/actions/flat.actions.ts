@@ -15,6 +15,12 @@ export const updateFlat = createAction('UPDATE_FLAT', props<{ flat: Flat, user: 
 
 export const getFlatsByFilters = createAction('GET_FLATS_BY_FILTERS', props<{
     area: string;
-    costMax: number;
-    capacityMin: number
+    name: string;
+    costMax: number
+    costMin: number
+    capacityMin: number;
+    interestedMin: number;
+    readyToLiveMin: number;
+    readyToLiveMax: number;
+    createdMin: Date;
 }>());
