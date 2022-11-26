@@ -42,7 +42,7 @@ function toFilePath(id: string, fileName: string) {
 function mapToFlat(flat: any): Flat {
     const result = {
         ...flat,
-        owner: expandAvatar(flat.expand!.owner!),
+        owner: expandAvatar(flat.expand?.owner!),
         interestedUsers: flat.expand?.interestedUsers?.map((user: User) => expandAvatar(user)),
         readyToLiveUsers: flat.expand?.readyToLiveUsers?.map((user: User) => expandAvatar(user)),
         downloadedPhotos: 'photo' in flat ? flat['photo'].map((photo: string) => toFilePath(flat.id, photo)) : ""
@@ -74,8 +74,14 @@ export class FlatService {
     }
 
     async updateFlat(flat: Flat): Promise<Flat> {
-        console.log('Trying to update flat', flat);
-        return await mapToFlat(this.pbService.PocketBaseInstance.collection('flats').update(flat.id!, flat, {
+        const payload = {
+            ...flat,
+            owner: flat.owner.id,
+            interestedUsers: flat.interestedUsers?.map(user => user?.id).filter(x => x),
+            readyToLiveUsers: flat.readyToLiveUsers?.map(user => user?.id).filter(x => x)
+        }
+        console.log('Trying to update flat with payload', payload);
+        return await mapToFlat(this.pbService.PocketBaseInstance.collection('flats').update(flat.id!, payload, {
             expand: "owner,interestedUsers,readyToLiveUsers"
         }));
     }
