@@ -41,15 +41,15 @@ export class ChatEffects {
         )
     })
 
-    goToChatById$ = createEffect(() => {
-        return this.actions$.pipe(
-            ofType(ChatActions.getChatById),
-            switchMap((action: { userId: string }) => {
-                return from(this.chatService.tryGetChatWithUser(action.userId!))
-            }),
-            map((chat: Chat) => {
-                return ChatActions.getChatByIdSuccess({ chat });
-            })
-        )
-    })
+    // goToChatById$ = createEffect(() => {
+    //     return this.actions$.pipe(
+    //         ofType(ChatActions.getChatById),
+    //         switchMap((action: { userId: string }) => {
+    //             return from(this.chatService.tryGetChatWithUser(action.userId!))
+    //         }),
+    //         map((chat: Chat) => {
+    //             return ChatActions.getChatByIdSuccess({ chat });
+    //         })
+    //     )
+    // })
 }

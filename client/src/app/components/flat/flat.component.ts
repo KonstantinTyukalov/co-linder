@@ -1,14 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from "@ngrx/store";
 
-import * as FlatActions from '../../store/actions/flat.actions'
-import * as UserSelector from '../../store/selectors/user.selectors'
-import { Flat } from "../../dto/flat.dto";
+import * as UserSelector from '../../store/selectors/user.selectors';
+import * as FlatActions from '../../store/actions/flat.actions';
 
 import * as FlatSelector from '../../store/selectors/flat.selectors';
-import { Observable, Subscription } from "rxjs";
+import { Subscription } from "rxjs";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ChatService } from 'src/app/services/chat.service';
+import { Location } from "@angular/common";
 
 @Component({
     selector: 'app-flat',
@@ -17,6 +17,7 @@ import { ChatService } from 'src/app/services/chat.service';
 })
 export class FlatComponent implements OnInit, OnDestroy {
     public flat$ = this.store.select(FlatSelector.flat);
+    public user$ = this.store.select(UserSelector.user);
 
     private subscriptions: Subscription = new Subscription();
 
@@ -24,7 +25,8 @@ export class FlatComponent implements OnInit, OnDestroy {
         private readonly store: Store,
         private readonly route: ActivatedRoute,
         private readonly router: Router,
-        private readonly chatService: ChatService
+        private readonly chatService: ChatService,
+        private readonly location: Location
     ) {
     }
 
@@ -37,6 +39,10 @@ export class FlatComponent implements OnInit, OnDestroy {
                 }
             }),
         );
+    }
+
+    public onBackClick(): void {
+        this.location.back();
     }
 
     public async onUserClick(userId: string | undefined) {

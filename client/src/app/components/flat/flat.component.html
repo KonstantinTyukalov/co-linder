@@ -1,5 +1,11 @@
 <div class="content">
-    <div class="menu">as</div>
+    <div class="menu">
+        <button class="back" (click)="onBackClick()">
+            <h2 style="font-weight: normal;">Back</h2>
+        </button>
+        <img [src]="(user$ | async)?.avatar" alt="">
+        <h2>{{(user$ | async)?.name}}</h2>
+    </div>
 
 
     <div class="flat">

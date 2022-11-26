@@ -6,10 +6,11 @@ import { Chat } from "../../dto/chat.dto";
 
 import * as ChatSelector from '../../store/selectors/chat.selectors';
 import { combineLatest, Observable, Subscription } from "rxjs";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import * as UserSelector from "../../store/selectors/user.selectors";
 import { ChatService } from "../../services/chat.service";
 import { ChatMessage } from "../../dto/chatMessage.dto";
+import { Location } from "@angular/common";
 
 @Component({
     selector: 'app-chat',
@@ -27,7 +28,9 @@ export class ChatComponent implements OnInit, OnDestroy {
     constructor(
         private readonly store: Store,
         private readonly route: ActivatedRoute,
-        private readonly chatService: ChatService
+        private readonly chatService: ChatService,
+        private readonly router: Router,
+        private readonly location: Location
     ) {
     }
 
@@ -47,6 +50,10 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy(): void {
         this.subscriptions.unsubscribe();
+    }
+
+    public onBackClick(): void {
+        this.location.back();
     }
 
     public onClickSend(): void {

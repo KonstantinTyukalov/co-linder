@@ -6,6 +6,36 @@
     box-sizing: border-box;
 }
 
+.menu {
+    padding-top: 2rem;
+    background-color: #c2c2c2;
+    min-width: 20rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: left;
+
+    .back {
+        width: 10rem;
+        height: 3rem;
+        border-radius: 1rem;
+        background-color: white;
+        border: none;
+        box-shadow: 0 0 5px white;
+        margin-bottom: 2rem;
+
+        h2 {
+            text-align: center;
+        }
+    }
+
+    img {
+        width: 5rem;
+        height: 5rem;
+    }
+}
+
+
 .flat {
     width: 100%;
     height: 100%;
