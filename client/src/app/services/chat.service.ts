@@ -69,6 +69,8 @@ export class ChatService {
 
         console.log('Chat with message avatars: ', data)
 
+        this.subscribeToChatMessages(mappedChat.id!)
+
         return data;
     }
 
@@ -121,14 +123,33 @@ export class ChatService {
         return res
     }
 
-    async enterChat(chatId: string) {
+    private async getMessageWithPicture(message: ChatMessage): Promise<ChatMessage> {
+        const senderId = (message.sender) as unknown as string
+
+        const sender = await this.pbService.PocketBaseInstance.collection('users').getOne(senderId) as User
+
+        const expandedAvatar = expandAvatar(sender);
+
+        const data: ChatMessage = {
+            ...message,
+            sender: expandedAvatar
+        }
+
+        return data
+    }
+
+    async subscribeToChatMessages(chatId: string) {
         const user = this.pbService.PocketBaseInstance.authStore.model;
-        this.pbService.PocketBaseInstance.collection('chatMessages').subscribe("*", (data: RecordSubscription<ChatMessage>) => {
-            console.log("Got mesage " + data.action + " in chat " + data.record.chat + ": " + data.record.content)
+
+        this.pbService.PocketBaseInstance.collection('chatMessages').subscribe("*", async (data: RecordSubscription<ChatMessage>) => {
+            console.log("Got message " + data.action + " in chat " + data.record.chat + ": " + data.record.content)
             if (data.action == "create" && data.record.chat == chatId) {
-                this.store.dispatch(updateChat({ chatMessage: data.record }));
+                const message = await this.getMessageWithPicture(data.record)
+
+                this.store.dispatch(updateChat({ chatMessage: message }));
             }
         })
+
         console.log('Subscribed to chatMessages for ' + chatId + ' chatId', user);
 
         return true;

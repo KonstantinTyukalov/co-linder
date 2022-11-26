@@ -5,7 +5,7 @@ import * as ChatActions from '../../store/actions/chat.actions'
 import { Chat } from "../../dto/chat.dto";
 
 import * as ChatSelector from '../../store/selectors/chat.selectors';
-import { combineLatest, Observable, Subscription } from "rxjs";
+import { combineLatest, Observable, Subscription, take } from "rxjs";
 import { ActivatedRoute, Router } from "@angular/router";
 import * as UserSelector from "../../store/selectors/user.selectors";
 import { ChatService } from "../../services/chat.service";
@@ -61,12 +61,14 @@ export class ChatComponent implements OnInit, OnDestroy {
             combineLatest(
                 this.chat$,
                 this.user$
-            ).subscribe(([chat, user]) => {
+            ).pipe(take(1)).subscribe(([chat, user]) => {
                 this.chatService.sendMessage({
                     chat: chat,
                     sender: user,
                     content: this.message
                 } as ChatMessage)
+
+                this.message = ''
             })
         );
 

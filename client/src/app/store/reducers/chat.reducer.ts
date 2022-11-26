@@ -14,14 +14,13 @@ export const initialState: ChatsState = {
 
 export const reducer = createReducer(
     initialState,
-    on(ChatsActions.getChatsByUserIdSuccess, (state, { chats }) => ( { ...state, chats } )),
-    on(ChatsActions.getChatByIdSuccess, (state, { chat }) => ( { ...state, currentChat: chat } )),
+    on(ChatsActions.getChatsByUserIdSuccess, (state, { chats }) => ({ ...state, chats })),
+    on(ChatsActions.getChatByIdSuccess, (state, { chat }) => ({ ...state, currentChat: chat })),
     on(ChatsActions.updateChat, (state, { chatMessage }) => {
-        const messages = state.currentChat?.messages;
-        messages?.push(chatMessage);
+        const messages = state.currentChat?.messages ?? [];
 
         return {
-            ...state, currentChat: { ...state.currentChat, messages: messages }
+            ...state, currentChat: { ...state.currentChat, messages: [...messages, chatMessage] }
         }
     }),
 );
