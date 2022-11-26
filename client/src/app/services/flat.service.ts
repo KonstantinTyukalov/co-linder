@@ -143,8 +143,8 @@ export class FlatService {
         if (filter.createdMin) filterStr = addAnd(filterStr, "created < \"" + filter.createdMin + "\"");
         if (filter.interestedMin) filterStr = addAnd(filterStr, "created < \"" + filter.createdMin + "\"");
         if (filter.readyToLiveMin) filterStr = addAnd(filterStr, "created < \"" + filter.createdMin + "\"");
-        // TODO relations and filters for them capacityReadyMin
-        console.log('Looking flats with', filterStr);
+        // Remained filters are quite hard implement on server so do in front-end.
+        console.log('Looking for flats with filterString=' + filterStr, filter);
         const result = await this.pbService.PocketBaseInstance.collection('flats').getList(
             page,
             this.PER_PAGE,
@@ -155,6 +155,20 @@ export class FlatService {
             }
         )
 
-        return (await result).items.map(res => mapToFlat(res));
+        return (await result).items.map(res => mapToFlat(res)).filter(flat => {
+            if (filter.interestedMin && (flat.interestedUsers === undefined || flat.interestedUsers!.length < filter.interestedMin)) {
+                return false;
+            }
+            if (filter.interestedMax && (flat.interestedUsers && flat.interestedUsers!.length > filter.interestedMax)) {
+                return false;
+            }
+            if (filter.readyToLiveMin && (flat.readyToLiveUsers === undefined || flat.readyToLiveUsers!.length < filter.readyToLiveMin)) {
+                return false;
+            }
+            if (filter.readyToLiveMax && (flat.readyToLiveUsers && flat.readyToLiveUsers!.length > filter.readyToLiveMax)) {
+                return false;
+            }
+            return true;
+        });
     }
 }
