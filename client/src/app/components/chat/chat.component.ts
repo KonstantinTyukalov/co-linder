@@ -6,8 +6,7 @@ import { Chat } from "../../dto/chat.dto";
 
 import * as ChatSelector from '../../store/selectors/chat.selectors';
 import { combineLatest, Observable, Subscription } from "rxjs";
-import { ActivatedRoute, Router } from "@angular/router";
-import { concatLatestFrom } from "@ngrx/effects";
+import { ActivatedRoute } from "@angular/router";
 import * as UserSelector from "../../store/selectors/user.selectors";
 
 @Component({
@@ -32,13 +31,12 @@ export class ChatComponent implements OnInit, OnDestroy {
             combineLatest(
                 this.route.params,
                 this.user$
-            )
-                .subscribe(([param, user]) => {
-                    const chatId = param['id'];
-                    if (chatId) {
-                        this.store.dispatch(ChatActions.getChatById({ currentUserId: user!.id!, userId: chatId }));
-                    }
-                }),
+            ).subscribe(([param, user]) => {
+                const userId = param['id'];
+                if (userId) {
+                    this.store.dispatch(ChatActions.getChatById({ userId }));
+                }
+            }),
         );
     }
 
