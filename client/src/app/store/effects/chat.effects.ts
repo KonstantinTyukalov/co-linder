@@ -35,7 +35,6 @@ export class ChatEffects {
                 return from(this.chatService.getChatWithMessageSendersAvatars(action.userId!))
             }),
             map((chat: Chat) => {
-                debugger;
                 return ChatActions.getChatByIdSuccess({ chat });
             })
         )
