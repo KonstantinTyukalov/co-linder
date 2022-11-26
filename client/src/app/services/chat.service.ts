@@ -57,18 +57,19 @@ export class ChatService {
         return data;
     }
 
-    async tryGetChatWithUser(targetUserId: string): Promise<Chat> {
+    async tryGetChatWithUser(targetUser: User): Promise<Chat> {
         const chatsCollection = this.pbService.PocketBaseInstance.collection('chats')
         const currentUser = this.pbService.PocketBaseInstance.authStore.model as unknown as User;
 
         console.log("Current user: ", currentUser)
         const chatsList = await chatsCollection.getFullList() as Chat[]
 
-
         console.log("Chats list ", chatsList)
 
-        const filtered = chatsList?.filter((ch: any) =>
-            ch.users.contains(currentUser.id) && ch.users.contains(targetUserId))
+        const filtered = chatsList?.filter((chat: any) => {
+            console.log("Checking chat", chat)
+            return chat.users?.includes(currentUser.id) && chat.users?.includes(targetUser.id)
+        })
 
         console.log("Filtered chats list ", filtered)
 
@@ -76,17 +77,17 @@ export class ChatService {
             return filtered[0]
         }
 
-        const createdChat = await this.createChatWithUser(currentUser.id!, targetUserId)
+        const createdChat = await this.createChatWithUser(currentUser, targetUser)
 
         return createdChat;
     }
 
-    async createChatWithUser(loggedInUserId: string, targetUserId: string): Promise<Chat> {
-        console.log('Trying to create chat between ', loggedInUserId, ' and ', targetUserId)
+    async createChatWithUser(loggedInUser: User, targetUser: User): Promise<Chat> {
+        console.log('Trying to create chat between ', loggedInUser, ' and ', targetUser)
 
-        const res = await this.pbService.PocketBaseInstance.collection('chats').create({ users: [loggedInUserId, targetUserId] }) as Chat
+        const res = await this.pbService.PocketBaseInstance.collection('chats').create({ name: `${loggedInUser.name} - ${targetUser.name}`, users: [loggedInUser.id, targetUser.id] }) as Chat
 
-        console.log("Successfully created chat with: ", loggedInUserId, ' and ', targetUserId)
+        console.log("Successfully created chat with: ", loggedInUser, ' and ', targetUser)
 
         return res
     }
@@ -107,7 +108,7 @@ export class ChatService {
     async getChatsByUserId(userId: string) {
         const chatCollection = this.pbService.PocketBaseInstance.collection('chats');
 
-        const res = ( await chatCollection.getFullList() )
+        const res = (await chatCollection.getFullList())
             .filter((record: any) => record.users.includes(userId))
 
         Logger.SuccessfulQueryLog(res)
