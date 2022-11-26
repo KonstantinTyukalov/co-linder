@@ -5,10 +5,12 @@ import * as UserSelector from '../../store/selectors/user.selectors';
 import * as FlatActions from '../../store/actions/flat.actions';
 
 import * as FlatSelector from '../../store/selectors/flat.selectors';
-import { Subscription } from "rxjs";
+import { combineLatest, Subscription } from "rxjs";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ChatService } from 'src/app/services/chat.service';
 import { Location } from "@angular/common";
+import { FlatService } from "../../services/flat.service";
+import { FlatComment } from "../../dto/flatComment.dto";
 
 @Component({
     selector: 'app-flat',
@@ -19,6 +21,8 @@ export class FlatComponent implements OnInit, OnDestroy {
     public flat$ = this.store.select(FlatSelector.flat);
     public user$ = this.store.select(UserSelector.user);
 
+    public content = '';
+
     private subscriptions: Subscription = new Subscription();
 
     constructor(
@@ -26,7 +30,8 @@ export class FlatComponent implements OnInit, OnDestroy {
         private readonly route: ActivatedRoute,
         private readonly router: Router,
         private readonly chatService: ChatService,
-        private readonly location: Location
+        private readonly location: Location,
+        private readonly flatService: FlatService
     ) {
     }
 
@@ -45,13 +50,24 @@ export class FlatComponent implements OnInit, OnDestroy {
         this.location.back();
     }
 
+    public onSendClick(): void {
+        this.subscriptions.add(
+            combineLatest(
+                this.flat$,
+                this.user$
+            ).subscribe(([flat, user]) => {
+                this.flatService.addFlatComment({
+                    flat,
+                    user,
+                    content: this.content
+                } as FlatComment)
+            })
+        )
+    }
+
     public async onUserClick(userId: string | undefined) {
-
-        console.log('OnUserClick', userId)
-
         if (userId) {
             const chat = await this.chatService.tryGetChatWithUser(userId);
-
             this.router.navigate(['chat', chat.id]);
         }
     }

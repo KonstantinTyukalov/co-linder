@@ -41,8 +41,8 @@
                     </div>
                 </div>
             </div>
-            <input type="text">
-            <button>send</button>
+            <input type="text" [(ngModel)]="content">
+            <button (click)="onSendClick()">Send</button>
         </div>
     </div>
 
