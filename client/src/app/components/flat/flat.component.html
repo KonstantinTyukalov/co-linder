@@ -44,9 +44,12 @@
     <div class="users-block">
         <h1 style="text-align: center;">Interested</h1>
         <div class="users">
-            <div class="user" *ngFor="let user of (flat$ | async)?.interestedUsers">
+            <div
+                class="user"
+                *ngFor="let user of (flat$ | async)?.interestedUsers"
+                (click)="onUserClick(user.id)">
                 <img [src]="user.avatar" alt="Avatar">
-                <h2>{{user?.name}}s</h2>
+                <h2>{{user?.name}}</h2>
             </div>
         </div>
         <h1 style="text-align: center">Owner</h1>

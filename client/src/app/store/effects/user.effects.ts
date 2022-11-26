@@ -6,7 +6,6 @@ import { delayWhen, EMPTY, from, switchMap, tap } from "rxjs";
 import { map } from 'rxjs/operators'
 import { User } from "../../dto/user.dto";
 import { Router } from "@angular/router";
-import { fromPromise } from "rxjs/internal/observable/innerFrom";
 
 @Injectable()
 export class UserEffects {
@@ -33,11 +32,13 @@ export class UserEffects {
     loginUser$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(UserActions.userLogin),
-            tap((action: { login: string, password: string }) => {
-                this.userService.loginUser(action.login, action.password);
-                this.router.navigate(['menu']);
+            switchMap((action: { login: string, password: string }) => {
+                return from(this.userService.loginUser(action.login, action.password))
             }),
-            map(() => UserActions.userLoginSuccess())
+            map((user: User) => {
+                this.router.navigate(['menu']);
+                return UserActions.userLoginSuccess({ user })
+            })
         )
     });
 }

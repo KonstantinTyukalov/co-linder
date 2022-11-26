@@ -96,7 +96,7 @@ export class ChatService {
         this.pbService.PocketBaseInstance.collection('chatMessages').subscribe("*", (data: RecordSubscription<ChatMessage>) => {
             console.log("Got mesage " + data.action + " in chat " + data.record.chat + ": " + data.record.content)
             if (data.action == "create" && data.record.chat == chatId) {
-                this.store.dispatch(updateChat({ chat: data.record }));
+                this.store.dispatch(updateChat({ chatMessage: data.record }));
             }
         })
         console.log('Subscribed to chatMessages for ' + chatId + ' chatId', user);
@@ -107,7 +107,7 @@ export class ChatService {
     async getChatsByUserId(userId: string) {
         const chatCollection = this.pbService.PocketBaseInstance.collection('chats');
 
-        const res = (await chatCollection.getFullList())
+        const res = ( await chatCollection.getFullList() )
             .filter((record: any) => record.users.includes(userId))
 
         Logger.SuccessfulQueryLog(res)

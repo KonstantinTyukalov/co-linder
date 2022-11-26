@@ -29,8 +29,8 @@ export class ChatEffects {
     getChatById$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(ChatActions.getChatById),
-            switchMap((action: { id: string }) => {
-                return from(this.chatService.getChatById(action.id))
+            switchMap((action: { currentUserId: string, userId: string }) => {
+                return from(this.chatService.tryGetChatWithUser(action.userId))
             }),
             map((chat: Chat) => {
                 return ChatActions.getChatByIdSuccess({ chat });

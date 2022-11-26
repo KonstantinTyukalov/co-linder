@@ -22,9 +22,11 @@
     width: 70rem;
     height: 7rem;
     background-color: coral;
+    margin-bottom: 3rem;
 }
 
 .list {
+    overflow-y: scroll;
     padding-top: 2rem;
     width: 100%;
     display: flex;

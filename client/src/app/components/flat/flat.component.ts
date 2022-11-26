@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from "@ngrx/store";
 
 import * as FlatActions from '../../store/actions/flat.actions'
+import * as UserSelector from '../../store/selectors/user.selectors'
 import { Flat } from "../../dto/flat.dto";
 
 import * as FlatSelector from '../../store/selectors/flat.selectors';
@@ -14,13 +15,14 @@ import { ActivatedRoute, Router } from "@angular/router";
     styleUrls: ['./flat.component.scss']
 })
 export class FlatComponent implements OnInit, OnDestroy {
-    public flat$: Observable<Flat | undefined> = this.store.select(FlatSelector.flat);
+    public flat$ = this.store.select(FlatSelector.flat);
 
     private subscriptions: Subscription = new Subscription();
 
     constructor(
         private readonly store: Store,
-        private route: ActivatedRoute
+        private readonly route: ActivatedRoute,
+        private readonly router: Router
     ) {
     }
 
@@ -33,6 +35,12 @@ export class FlatComponent implements OnInit, OnDestroy {
                 }
             }),
         );
+    }
+
+    public onUserClick(userId: string | undefined) {
+        if (userId) {
+            this.router.navigate(['chat', userId]);
+        }
     }
 
     public ngOnDestroy(): void {

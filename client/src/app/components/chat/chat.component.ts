@@ -5,8 +5,10 @@ import * as ChatActions from '../../store/actions/chat.actions'
 import { Chat } from "../../dto/chat.dto";
 
 import * as ChatSelector from '../../store/selectors/chat.selectors';
-import { Observable, Subscription } from "rxjs";
+import { combineLatest, Observable, Subscription } from "rxjs";
 import { ActivatedRoute, Router } from "@angular/router";
+import { concatLatestFrom } from "@ngrx/effects";
+import * as UserSelector from "../../store/selectors/user.selectors";
 
 @Component({
     selector: 'app-chat',
@@ -15,6 +17,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 })
 export class ChatComponent implements OnInit, OnDestroy {
     public chat$: Observable<Chat | undefined> = this.store.select(ChatSelector.chat);
+    public user$ = this.store.select(UserSelector.user);
 
     private subscriptions: Subscription = new Subscription();
 
@@ -26,12 +29,16 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     public ngOnInit(): void {
         this.subscriptions.add(
-            this.route.params.subscribe(params => {
-                const chatId = params['id'];
-                if (chatId) {
-                    this.store.dispatch(ChatActions.getChatById({ id: chatId }));
-                }
-            }),
+            combineLatest(
+                this.route.params,
+                this.user$
+            )
+                .subscribe(([param, user]) => {
+                    const chatId = param['id'];
+                    if (chatId) {
+                        this.store.dispatch(ChatActions.getChatById({ currentUserId: user!.id!, userId: chatId }));
+                    }
+                }),
         );
     }
 

@@ -11,5 +11,21 @@
                 <h3>{{user.name}}</h3>
             </div>
         </div>
+        <div class="chat">
+            <div class="chat-messages-box">
+                <div class="messages">
+                    <div class="message" *ngFor="let message of (chat$ | async)?.messages">
+                        <img [src]="message.sender.avatar" alt="">
+                        <div>
+                            <h3>{{message.sender.name}}</h3>
+                            <h2>{{message.content}}</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="message-area">
+                asdasd
+            </div>
+        </div>
     </div>
 </div>

@@ -16,6 +16,7 @@ import { TestComponent } from './components/test/test.component';
 import { FlatEffects } from "./store/effects/flat.effects";
 import * as FlatStore from './store/reducers/flat.reducer';
 import * as ChatStore from './store/reducers/chat.reducer';
+import * as UserStore from './store/reducers/user.reducer';
 import { FlatService } from "./services/flat.service";
 import { PocketBaseService } from "./services/pb.service";
 import { FlatComponent } from './components/flat/flat.component';
@@ -44,7 +45,8 @@ import { ChatEffects } from "./store/effects/chat.effects";
         EffectsModule.forRoot([UserEffects, FlatEffects, ChatEffects]),
         StoreModule.forRoot({
             FLAT_STATE: FlatStore.reducer,
-            CHAT_STATE: ChatStore.reducer
+            CHAT_STATE: ChatStore.reducer,
+            USER_STATE: UserStore.reducer
         })
     ],
     providers: [

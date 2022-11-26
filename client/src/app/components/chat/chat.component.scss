@@ -1,34 +1,83 @@
 .content {
-    background-color: #665bf0;
     width: 100vw;
     height: 100%;
     display: flex;
+    box-sizing: border-box;
 }
 
 .menu {
-    background-color: coral;
+    background-color: #c2c2c2;
     min-width: 20rem;
 }
 
 .chat-content {
+    box-sizing: border-box;
     padding: 3rem;
-    background-color: darkmagenta;
     width: 100%;
 }
 
 .users {
     background-color: white;
-    padding: 1rem;
+    padding: 0.5rem;
     border-radius: 1rem;
     display: flex;
+    margin-bottom: 2rem;
+    box-shadow: 0 0 10px #c5c5c5;
 
     div.user {
+        border-radius: 2rem;
+        border: 0.5px solid #e3e3e3;
+        margin: 0.5rem;
         display: flex;
         align-items: center;
 
         img {
+            border-radius: 50%;
+            margin-right: 0.5rem;
             width: 3rem;
             height: 3rem;
         }
     }
+}
+
+.chat {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 10px #c5c5c5;
+
+    .chat-messages-box {
+        width: 100%;
+        overflow-x: hidden;
+        overflow-y: scroll;
+
+        .messages {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+
+            .message {
+                margin-bottom: 1rem;
+                display: flex;
+                align-items: center;
+
+                img {
+                    margin-right: 1rem;
+                    border-radius: 50%;
+                    width: 3rem;
+                    height: 3rem;
+                }
+            }
+        }
+    }
+
+    .message-area {
+        background-color: #c2c2c2;
+        height: 5rem;
+        width: 5rem;
+    }
+
+
 }
