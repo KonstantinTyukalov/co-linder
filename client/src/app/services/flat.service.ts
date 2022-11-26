@@ -8,6 +8,8 @@ import { expandAvatar } from "./user.service";
 import { Store } from "@ngrx/store";
 import { updateFlatComments } from "../store/actions/flat.actions";
 import { RecordSubscription } from "pocketbase";
+import * as FlatSelectors from "../store/selectors/flat.selectors"
+import { take } from "rxjs/operators";
 
 export class FilterFlat {
     withPhoto?: boolean
@@ -123,7 +125,11 @@ export class FlatService {
         collection.subscribe("*", (data: RecordSubscription<FlatComment>) => {
             console.log("Got comment " + data.action + " in flat " + data.record.flat + ": " + data.record.content)
             if (data.action == "create" && data.record.flat.toString() == flatId) {
-                this.store.dispatch(updateFlatComments({ comment: data.record }));
+                let user;
+                this.store.select(FlatSelectors.flats).pipe(take(1)).subscribe((flat: Flat) => {
+                    data.record.user = flat.interestedUsers!.find(e => e.id == (data.record.user as unknown as string))!;
+                    this.store.dispatch(updateFlatComments({ comment: data.record }));
+                })
             }
         })
         console.log('Subscribed to flatComments for ' + flatId + ' flatId', collection);
