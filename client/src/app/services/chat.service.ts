@@ -29,6 +29,8 @@ export class ChatService {
     }
 
     async getChatWithMessageSendersAvatars(targetUserId: string): Promise<Chat> {
+
+        console.log('targetUserId in getChatWithMessageSendersAvatars = ', targetUserId)
         const chat = await this.tryGetChatWithUser(targetUserId)
 
         const res = await this.getChatById(chat.id!)
@@ -70,7 +72,13 @@ export class ChatService {
 
         const filtered = chatsList?.filter((chat: any) => {
             console.log("Checking chat", chat)
-            return chat.users?.includes(currentUser.id) && chat.users?.includes(targetUserId)
+            const userIds = chat.users
+
+            console.log(userIds)
+            const isCurrentUserPresent = chat.users?.includes(currentUser.id)
+            const isTargetUserPresent = chat.users?.includes(targetUserId)
+            console.log(isCurrentUserPresent, isTargetUserPresent)
+            return isCurrentUserPresent && isTargetUserPresent
         })
 
         console.log("Filtered chats list ", filtered)
@@ -147,7 +155,11 @@ export class ChatService {
 
         const chatMessages = messages.filter(m => m.chat === chatId)
 
-        const chat = await this.pbService.PocketBaseInstance.collection('chatMessages').getOne(chatId, {
+        // const chat = await this.pbService.PocketBaseInstance.collection('chatMessages').getOne(chatId, {
+        //     expand: 'users'
+        // })
+
+        const chat = await this.pbService.PocketBaseInstance.collection('chats').getOne(chatId, {
             expand: 'users'
         })
 

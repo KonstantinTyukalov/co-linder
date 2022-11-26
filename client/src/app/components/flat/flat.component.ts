@@ -52,7 +52,7 @@ export class FlatComponent implements OnInit, OnDestroy {
         if (userId) {
             const chat = await this.chatService.tryGetChatWithUser(userId);
 
-            this.router.navigate(['chat', chat.id]);
+            this.router.navigate(['chat', userId]);
         }
     }
 
