@@ -1,9 +1,9 @@
 <div class="content">
+    <h1 class="registration-text">Registration</h1>
     <div class="photo">
         <img src="./assets/user-mock.jpg" class="user-photo" alt="your photo">
-        <input class="file" type="file" name="file">
+        <input style="width: 22rem; horiz-align: center" class="file" type="file" name="file">
     </div>
-    <h2 class="registration-text">Registration</h2>
     <input
         class="email"
         type="text"
@@ -30,7 +30,7 @@
         <option [value]="false">Man</option>
     </select>
     <select class="country" [(ngModel)]="newUser.country">
-        <option value="">Select</option>
+        <option value="">Select country</option>
         <option *ngFor="let sos of countries" [value]="sos">{{sos}}</option>
     </select>
     <input
@@ -40,11 +40,12 @@
         [ngModel]="newUser.languages"
         (ngModelChange)="inputLanguages($event)">
     <textarea
+        placeholder="Description"
         class="description"
         [ngModel]="newUser.description"
         (ngModelChange)="descriptionshanged($event)">
     </textarea>
     <button class="registration" (click)="registration()">
-        <h3>Lest registration in this sheet</h3>
+        <h3>Les't registration</h3>
     </button>
 </div>
