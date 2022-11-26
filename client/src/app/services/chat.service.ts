@@ -39,13 +39,11 @@ export class ChatService {
             const expandedMessages = []
             for (const message of res.messages) {
                 const messageSenderId = message.sender as unknown as string
-                const sender = await this.pbService.PocketBaseInstance.collection('users').getOne(messageSenderId, {
-                    expand: 'avatar'
-                }) as User;
+                const sender = await this.pbService.PocketBaseInstance.collection('users').getOne(messageSenderId) as User;
 
                 const expandedMessage = {
                     ...message,
-                    sender
+                    sender: expandAvatar(sender)
                 }
 
                 expandedMessages.push(expandedMessage);
