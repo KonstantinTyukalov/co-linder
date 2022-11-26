@@ -6,6 +6,10 @@ import { PocketBaseService } from "./pb.service";
 import { ChatMessage } from "../dto/chatMessage.dto";
 import { Logger } from "../utils/logger";
 import { expandAvatar } from "./user.service";
+import { RecordSubscription } from "pocketbase";
+import { Store } from "@ngrx/store";
+import { updateChat } from "../store/actions/chat.actions";
+import { chat } from "../store/selectors/chat.selectors";
 
 function mapToChat(chat: any): Chat {
     const result = {
@@ -21,7 +25,7 @@ function mapToChat(chat: any): Chat {
 
 @Injectable()
 export class ChatService {
-    constructor(private pbService: PocketBaseService) {
+    constructor(private pbService: PocketBaseService, private store: Store) {
     }
 
     async getChatWithMessageSendersAvatars(chatId: string): Promise<Chat> {
@@ -65,27 +69,15 @@ export class ChatService {
         return res
     }
 
-    async enterTheChat(loggedInUser: User, chat: Chat, callback: () => void) {
-        const chatCollection = this.pbService.PocketBaseInstance.collection('chats');
-        const chatData = await chatCollection.getOne(chat.id!) as Chat;
-
-        const users = [
-            ...chatData.users!,
-            loggedInUser
-        ]
-
-        const newChatData = {
-            ...chatData,
-            users
-        }
-
-        console.log("Trying to update chat. new data: ", newChatData)
-
-        const res = await this.pbService.PocketBaseInstance.collection('chats').update(chat.id!, newChatData)
-
-        console.log('Successfully updated chat. New info: ', res);
-
-        chatCollection.subscribe(chat.id!, callback)
+    async enterChat(chatId: string) {
+        const user = this.pbService.PocketBaseInstance.authStore.model;
+        this.pbService.PocketBaseInstance.collection('chatMessages').subscribe("*", (data: RecordSubscription<ChatMessage>) => {
+            console.log("Got mesage " + data.action + " in chat " + data.record.chat + ": " + data.record.content)
+            if (data.action == "create" && data.record.chat == chatId) {
+                this.store.dispatch(updateChat({ chat: data.record }));
+            }
+        })
+        console.log('Subscribed to chatMessages for ' + chatId + ' chatId', user);
 
         return true;
     }
@@ -129,26 +121,9 @@ export class ChatService {
     }
 
     // Not working
-    async leaveChat(useId: string, chatIdToLeave: string) {
+    async leaveChat() {
         const chatCollection = this.pbService.PocketBaseInstance.collection('chats');
-
-        const chat = await chatCollection.getOne(chatIdToLeave) as any;
-
-        console.log('Got chat ', chat)
-
-        const newChatState = {
-            users: [
-                chat.users?.filter((uId: any) => uId !== useId)
-            ],
-            messages: [
-                ...chat.messages
-            ]
-        };
-
-        console.log('Trying to update chat ', newChatState)
-
-        const res = await chatCollection.update(chatIdToLeave, newChatState)
-
-        Logger.SuccessfulQueryLog(res);
+        console.log('Leaving all chats')
+        chatCollection.unsubscribe();
     }
 }

@@ -6,3 +6,5 @@ export const getChatByIdSuccess = createAction('GET_CHAT_BY_ID_SUCCESS', props<{
 
 export const getChatsByUserId = createAction('GET_CHATS_BY_USER_ID', props<{ id: string }>());
 export const getChatsByUserIdSuccess = createAction('GET_CHATS_BY_USER_ID_SUCCESS', props<{ chats: Chat[] }>());
+
+export const updateChat = createAction('UPDATE_CHAT', props<{ chat: Chat }>());
