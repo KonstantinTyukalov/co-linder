@@ -5,7 +5,7 @@
 }
 
 .menu {
-    background-color: #e3d7d7;
+    background-color: #b9b5ff;
     min-width: 20rem;
     height: 100%;
 }
@@ -19,10 +19,45 @@
 }
 
 .searching {
-    width: 70rem;
-    height: 7rem;
-    background-color: coral;
-    margin-bottom: 3rem;
+    border-radius: 1rem;
+    width: 80rem;
+    padding: 1rem;
+    margin: 2rem 0 0 0;
+    display: flex;
+    justify-content: space-around;
+    box-shadow: 0 0 5px #b9b5ff;
+
+    input {
+        font-size: 18px;
+        background-color: transparent;
+        height: 3rem;
+        padding: 0;
+        margin: 0;
+        border-left: none;
+        border-right: none;
+        border-top: none;
+        border-bottom: 2px solid #b9b5ff;
+    }
+
+    button {
+        width: 8rem;
+        font-size: 18px;
+        background-color: transparent;
+        height: 3rem;
+        padding: 0;
+        margin: 0;
+        border-radius: 1rem;
+        border: 2px solid #b9b5ff;
+        color: #665bf0;
+    }
+
+    input:focus {
+        outline: none;
+    }
+
+    button:hover {
+        background-color: #b9b5ff;
+    }
 }
 
 .list {

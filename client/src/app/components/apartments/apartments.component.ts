@@ -13,14 +13,25 @@ import { Observable } from "rxjs";
     styleUrls: ['./apartments.component.scss']
 })
 export class ApartmentsComponent implements OnInit {
+    public area!: string;
+    public costMax!: number
+    public capacityMin!: number;
 
     public flats$: Observable<Flat[]> = this.store.select(FlatSelector.flats);
 
     constructor(private readonly store: Store) {
     }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.store.dispatch(FlatActions.getFlats());
+    }
+
+    public onClickFilter(): void {
+        this.store.dispatch(FlatActions.getFlatsByFilters({
+            area: this.area,
+            costMax: this.costMax,
+            capacityMin: this.capacityMin
+        }))
     }
 
 }

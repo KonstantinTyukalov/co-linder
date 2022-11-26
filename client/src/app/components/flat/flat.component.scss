@@ -2,18 +2,22 @@
     width: 100vw;
     height: 100%;
     display: grid;
-    grid-template-columns: 1fr 3fr 1fr;
+    grid-template-columns: 0.8fr 3fr 1fr;
     box-sizing: border-box;
 }
 
 .menu {
     padding-top: 2rem;
-    background-color: #c2c2c2;
+    background-color: #665bf0;
     min-width: 20rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: left;
+
+    h2 {
+        color: white;
+    }
 
     .back {
         width: 10rem;
@@ -25,7 +29,9 @@
         margin-bottom: 2rem;
 
         h2 {
+            font-weight: bold;
             text-align: center;
+            color: #665bf0;
         }
     }
 
