@@ -34,7 +34,10 @@ export class ChatService {
         if (res.messages) {
             const expandedMessages = []
             for (const message of res.messages) {
-                const sender = await this.pbService.PocketBaseInstance.collection('users').getOne((message.sender) as any) as User;
+                const messageSenderId = message.sender as unknown as string
+                const sender = await this.pbService.PocketBaseInstance.collection('users').getOne(messageSenderId, {
+                    expand: 'avatar'
+                }) as User;
 
                 const expandedMessage = {
                     ...message,
@@ -62,7 +65,7 @@ export class ChatService {
         return res
     }
 
-    async enterTheChat(loggedInUser: User, chat: Chat) {
+    async enterTheChat(loggedInUser: User, chat: Chat, callback: () => void) {
         const chatCollection = this.pbService.PocketBaseInstance.collection('chats');
         const chatData = await chatCollection.getOne(chat.id!) as Chat;
 
@@ -81,6 +84,8 @@ export class ChatService {
         const res = await this.pbService.PocketBaseInstance.collection('chats').update(chat.id!, newChatData)
 
         console.log('Successfully updated chat. New info: ', res);
+
+        chatCollection.subscribe(chat.id!, callback)
 
         return true;
     }
