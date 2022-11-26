@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { User } from "src/app/dto/user.dto";
 import { Flat } from "src/app/dto/flat.dto";
-import { PocketBaseService, STATIC_PATH} from "./pb.service";
+import { PocketBaseService, STATIC_PATH } from "./pb.service";
 import { FlatComment } from "../dto/flatComment.dto";
 import { Logger } from "../utils/logger";
 import { expandAvatar } from "./user.service";
@@ -33,11 +33,11 @@ function addAnd(str: string, suffix: string): string {
     return suffix
 }
 
-function toFilePath(id:string, fileName: string) {
+function toFilePath(id: string, fileName: string) {
     return STATIC_PATH + "flats/" + id + "/" + fileName;
 }
 
-function mapToFlat(flat: any):Flat {
+function mapToFlat(flat: any): Flat {
     const result = {
         ...flat,
         owner: expandAvatar(flat.expand!.owner!),
@@ -50,7 +50,7 @@ function mapToFlat(flat: any):Flat {
     return result;
 }
 
-function mapToFlatComment(comment: any):FlatComment {
+function mapToFlatComment(comment: any): FlatComment {
     const result = {
         ...comment,
         user: expandAvatar(comment.expand!.user!),
@@ -108,7 +108,14 @@ export class FlatService {
 
     async addFlatComment(flatComment: FlatComment): Promise<FlatComment> {
         console.log('Trying add flat comment', flatComment);
-        return await this.pbService.PocketBaseInstance.collection('flatComments').create(flatComment);
+
+        const data = {
+            "flat": flatComment.flat.id!,
+            "user": flatComment.user.id!,
+            "content": flatComment.content
+        }
+        console.log("ADD FLAT COMMENT, ", data)
+        return await this.pbService.PocketBaseInstance.collection('flatComments').create(data);
     }
 
     async subscribeToFlatComments(flatId: string) {
