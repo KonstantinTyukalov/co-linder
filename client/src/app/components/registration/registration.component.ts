@@ -40,7 +40,7 @@ export class RegistrationComponent {
     public registration() {
         const u = { ...this.newUser };
         this.store.dispatch(UserActions.registrationUser({ user: u }));
-        //this.router.navigate(['login']);
+        this.router.navigate(['login']);
     }
 
     public inputLanguages(event: string) {
