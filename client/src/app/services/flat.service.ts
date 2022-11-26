@@ -75,7 +75,9 @@ export class FlatService {
 
     async updateFlat(flat: Flat): Promise<Flat> {
         console.log('Trying to update flat', flat);
-        return await this.pbService.PocketBaseInstance.collection('flats').update(flat.id!, flat);
+        return await mapToFlat(this.pbService.PocketBaseInstance.collection('flats').update(flat.id!, flat, {
+            expand: "owner,interestedUsers,readyToLiveUsers"
+        }));
     }
 
     async getFlatById(id: string): Promise<Flat> {
