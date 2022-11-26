@@ -2,15 +2,20 @@ import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { ChatService } from '../../services/chat.service';
 import * as ChatActions from '../actions/chat.actions';
-import { from, switchMap } from "rxjs";
+import { from, mergeMap, switchMap } from "rxjs";
 import { map } from "rxjs/operators";
 import { Chat } from "src/app/dto/chat.dto";
+import { Store } from "@ngrx/store";
+
+import * as UserSelector from "../../store/selectors/user.selectors";
+import { User } from "../../dto/user.dto";
 
 @Injectable()
 export class ChatEffects {
     constructor(
         private readonly actions$: Actions,
-        private readonly chatService: ChatService
+        private readonly chatService: ChatService,
+        private readonly store: Store
     ) {
     }
 
@@ -29,8 +34,8 @@ export class ChatEffects {
     getChatById$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(ChatActions.getChatById),
-            switchMap((action: { currentUserId: string, userId: string }) => {
-                return from(this.chatService.tryGetChatWithUser(action.userId))
+            switchMap((action: { userId: string }) => {
+                return from(this.chatService.tryGetChatWithUser(action.userId!))
             }),
             map((chat: Chat) => {
                 return ChatActions.getChatByIdSuccess({ chat });
