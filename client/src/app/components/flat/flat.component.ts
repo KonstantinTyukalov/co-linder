@@ -41,6 +41,8 @@ export class FlatComponent implements OnInit, OnDestroy {
 
     public async onUserClick(userId: string | undefined) {
 
+        console.log('OnUserClick', userId)
+
         if (userId) {
             const chat = await this.chatService.tryGetChatWithUser(userId);
 

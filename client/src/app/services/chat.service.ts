@@ -28,8 +28,10 @@ export class ChatService {
     constructor(private pbService: PocketBaseService, private store: Store) {
     }
 
-    async getChatWithMessageSendersAvatars(chatId: string): Promise<Chat> {
-        const res = await this.getChatById(chatId)
+    async getChatWithMessageSendersAvatars(targetUserId: string): Promise<Chat> {
+        const chat = await this.tryGetChatWithUser(targetUserId)
+
+        const res = await this.getChatById(chat.id!)
 
         const data = {
             ...res
@@ -76,6 +78,10 @@ export class ChatService {
         if (filtered && filtered.length) {
             return filtered[0]
         }
+
+        console.log("No available chats found. Trying to create new.")
+
+        console.log("Getting user by Id ", targetUserId)
 
         const targetUser = await this.pbService.PocketBaseInstance.collection('users').getOne(targetUserId) as User
 
@@ -135,14 +141,24 @@ export class ChatService {
     }
 
     async getChatById(chatId: string): Promise<Chat> {
-        const chatCollection = this.pbService.PocketBaseInstance.collection('chats');
+        const chatMessagesCollection = this.pbService.PocketBaseInstance.collection('chatMessages');
 
-        const res = await chatCollection.getOne(chatId, {
-            expand: 'users,messages'
+        const messages = await chatMessagesCollection.getFullList(200) as ChatMessage[]
+
+        const chatMessages = messages.filter(m => m.chat === chatId)
+
+        const chat = await this.pbService.PocketBaseInstance.collection('chatMessages').getOne(chatId, {
+            expand: 'users'
         })
-        Logger.SuccessfulQueryLog(res)
 
-        return mapToChat(res);
+        const fullChat = {
+            ...chat,
+            messages: chatMessages
+        }
+
+        Logger.SuccessfulQueryLog(fullChat)
+
+        return mapToChat(fullChat);
     }
 
     // Not working
