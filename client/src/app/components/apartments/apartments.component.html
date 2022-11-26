@@ -1,12 +1,12 @@
 <div class="content">
     <div class="menu">
-
+        <app-chats></app-chats>
     </div>
     <div class="list-content">
         <div class="searching">
-            <input placeholder="Address" type="text" [(ngModel)]="area">
-            <input placeholder="Cost MAX" type="number" [(ngModel)]="costMax">
-            <input placeholder="Capacity MIN" type="number" [(ngModel)]="capacityMin">
+            <input placeholder="Address" type="text" [(ngModel)]="area" />
+            <input placeholder="Cost MAX" type="number" [(ngModel)]="costMax" />
+            <input placeholder="Capacity MIN" type="number" [(ngModel)]="capacityMin" />
             <button (click)="onClickFilter()"><h4>Find</h4></button>
         </div>
         <div class="list">

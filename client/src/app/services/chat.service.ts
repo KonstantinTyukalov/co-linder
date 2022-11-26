@@ -161,6 +161,8 @@ export class ChatService {
         const res = (await chatCollection.getFullList())
             .filter((record: any) => record.users.includes(userId))
 
+        console.log("FILTERED CHATS", res)
+
         Logger.SuccessfulQueryLog(res)
 
         return res as unknown as Chat[];
