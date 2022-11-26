@@ -8,6 +8,8 @@ import * as ChatSelector from '../../store/selectors/chat.selectors';
 import { combineLatest, Observable, Subscription } from "rxjs";
 import { ActivatedRoute } from "@angular/router";
 import * as UserSelector from "../../store/selectors/user.selectors";
+import { ChatService } from "../../services/chat.service";
+import { ChatMessage } from "../../dto/chatMessage.dto";
 
 @Component({
     selector: 'app-chat',
@@ -18,11 +20,14 @@ export class ChatComponent implements OnInit, OnDestroy {
     public chat$: Observable<Chat | undefined> = this.store.select(ChatSelector.chat);
     public user$ = this.store.select(UserSelector.user);
 
+    public message: string = '';
+
     private subscriptions: Subscription = new Subscription();
 
     constructor(
         private readonly store: Store,
-        private route: ActivatedRoute
+        private readonly route: ActivatedRoute,
+        private readonly chatService: ChatService
     ) {
     }
 
@@ -42,5 +47,21 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy(): void {
         this.subscriptions.unsubscribe();
+    }
+
+    public onClickSend(): void {
+        this.subscriptions.add(
+            combineLatest(
+                this.chat$,
+                this.user$
+            ).subscribe(([chat, user]) => {
+                this.chatService.sendMessage({
+                    chat: chat,
+                    sender: user,
+                    content: this.message
+                } as ChatMessage)
+            })
+        );
+
     }
 }

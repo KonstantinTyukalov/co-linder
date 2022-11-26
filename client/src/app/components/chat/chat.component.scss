@@ -25,6 +25,7 @@
     box-shadow: 0 0 10px #c5c5c5;
 
     div.user {
+        padding: 0 0.5rem;
         border-radius: 2rem;
         border: 0.5px solid #e3e3e3;
         margin: 0.5rem;
@@ -74,9 +75,27 @@
     }
 
     .message-area {
-        background-color: #c2c2c2;
         height: 5rem;
-        width: 5rem;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+
+        textarea {
+            background-color: #fafafa;
+            width: 100%;
+            font-size: 24px;
+            border: none;
+            border-bottom: 1px solid #c2c2c2;
+        }
+
+        button.send {
+            background-color: #665bf0;
+            color: white;
+            border: none;
+            width: 10rem;
+            border-radius: 1rem;
+            margin-left: 1rem;
+        }
     }
 
 

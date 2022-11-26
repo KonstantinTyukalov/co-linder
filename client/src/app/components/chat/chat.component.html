@@ -24,7 +24,9 @@
                 </div>
             </div>
             <div class="message-area">
-                asdasd
+                <textarea [(ngModel)]="message" placeholder="Type the message">                    
+                </textarea>
+                <button class="send" (click)="onClickSend()"><h2>Send</h2></button>
             </div>
         </div>
     </div>

@@ -2,13 +2,10 @@ import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { ChatService } from '../../services/chat.service';
 import * as ChatActions from '../actions/chat.actions';
-import { from, mergeMap, switchMap } from "rxjs";
+import { from, switchMap } from "rxjs";
 import { map } from "rxjs/operators";
 import { Chat } from "src/app/dto/chat.dto";
 import { Store } from "@ngrx/store";
-
-import * as UserSelector from "../../store/selectors/user.selectors";
-import { User } from "../../dto/user.dto";
 
 @Injectable()
 export class ChatEffects {
@@ -38,6 +35,7 @@ export class ChatEffects {
                 return from(this.chatService.getChatWithMessageSendersAvatars(action.userId!))
             }),
             map((chat: Chat) => {
+                debugger;
                 return ChatActions.getChatByIdSuccess({ chat });
             })
         )
