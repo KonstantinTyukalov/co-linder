@@ -57,7 +57,7 @@ export class ChatService {
         return data;
     }
 
-    async tryGetChatWithUser(targetUser: User): Promise<Chat> {
+    async tryGetChatWithUser(targetUserId: string): Promise<Chat> {
         const chatsCollection = this.pbService.PocketBaseInstance.collection('chats')
         const currentUser = this.pbService.PocketBaseInstance.authStore.model as unknown as User;
 
@@ -68,7 +68,7 @@ export class ChatService {
 
         const filtered = chatsList?.filter((chat: any) => {
             console.log("Checking chat", chat)
-            return chat.users?.includes(currentUser.id) && chat.users?.includes(targetUser.id)
+            return chat.users?.includes(currentUser.id) && chat.users?.includes(targetUserId)
         })
 
         console.log("Filtered chats list ", filtered)
@@ -76,6 +76,8 @@ export class ChatService {
         if (filtered && filtered.length) {
             return filtered[0]
         }
+
+        const targetUser = await this.pbService.PocketBaseInstance.collection('users').getOne(targetUserId) as User
 
         const createdChat = await this.createChatWithUser(currentUser, targetUser)
 

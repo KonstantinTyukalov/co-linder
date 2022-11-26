@@ -60,6 +60,6 @@ export class TestComponent implements OnInit {
 
     private TestCreatingTheChat() {
 
-        this.chatService.createChatWithUser(user1.id!, user2.id!)
+        this.chatService.createChatWithUser(user1, user2)
     }
 }
