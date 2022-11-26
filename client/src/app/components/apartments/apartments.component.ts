@@ -23,7 +23,6 @@ export class ApartmentsComponent implements OnInit {
     public readyToLiveMax!: number;
     public createdMin!: Date;
 
-
     public flats$: Observable<Flat[]> = this.store.select(FlatSelector.flats);
 
     constructor(private readonly store: Store) {
