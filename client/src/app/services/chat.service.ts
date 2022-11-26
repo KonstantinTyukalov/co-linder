@@ -57,6 +57,30 @@ export class ChatService {
         return data;
     }
 
+    async tryGetChatWithUser(targetUserId: string): Promise<Chat> {
+        const chatsCollection = this.pbService.PocketBaseInstance.collection('chats')
+        const currentUser = this.pbService.PocketBaseInstance.authStore.model as unknown as User;
+
+        console.log("Current user: ", currentUser)
+        const chatsList = await chatsCollection.getFullList() as Chat[]
+
+
+        console.log("Chats list ", chatsList)
+
+        const filtered = chatsList?.filter((ch: any) =>
+            ch.users.contains(currentUser.id) && ch.users.contains(targetUserId))
+
+        console.log("Filtered chats list ", filtered)
+
+        if (filtered && filtered.length) {
+            return filtered[0]
+        }
+
+        const createdChat = await this.createChatWithUser(currentUser.id!, targetUserId)
+
+        return createdChat;
+    }
+
     async createChatWithUser(loggedInUserId: string, targetUserId: string): Promise<Chat> {
         console.log('Trying to create chat between ', loggedInUserId, ' and ', targetUserId)
 
