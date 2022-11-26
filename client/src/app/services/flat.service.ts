@@ -94,7 +94,8 @@ export class FlatService {
         console.log('Trying to get comments for flat by id:', flatId);
         const result = await this.pbService.PocketBaseInstance.collection('flatComments').getFullList(200, {
             filter: "flat = '" + flatId + "'",
-            expand: 'user'
+            expand: 'user',
+            sort: '+created'
         })
 
         return (await result).map(comment => mapToFlatComment(comment));
