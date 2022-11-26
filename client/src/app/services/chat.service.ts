@@ -47,6 +47,8 @@ export class ChatService {
             data.messages = expandedMessages
         }
 
+        console.log('Chat with message avatars: ', data)
+
         return data;
     }
 
