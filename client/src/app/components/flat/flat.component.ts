@@ -80,6 +80,19 @@ export class FlatComponent implements OnInit, OnDestroy {
         )
     }
 
+    public readyToLive(): void {
+        this.subscriptions.add(
+            combineLatest(
+                this.flat$,
+                this.user$
+            ).pipe(
+                take(1)
+            ).subscribe(([flat, user]) => {
+                this.store.dispatch(FlatActions.updateFlat({ user: user!, flat: flat! }));
+            })
+        )
+    }
+
     public async onUserClick(userId: string | undefined) {
         if (userId) {
             const chat = await this.chatService.tryGetChatWithUser(userId);
