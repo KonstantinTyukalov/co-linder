@@ -8,6 +8,7 @@ import { Flat } from "../../dto/flat.dto";
 import * as FlatSelector from '../../store/selectors/flat.selectors';
 import { Observable, Subscription } from "rxjs";
 import { ActivatedRoute, Router } from "@angular/router";
+import { ChatService } from 'src/app/services/chat.service';
 
 @Component({
     selector: 'app-flat',
@@ -22,7 +23,8 @@ export class FlatComponent implements OnInit, OnDestroy {
     constructor(
         private readonly store: Store,
         private readonly route: ActivatedRoute,
-        private readonly router: Router
+        private readonly router: Router,
+        private readonly chatService: ChatService
     ) {
     }
 
@@ -37,9 +39,12 @@ export class FlatComponent implements OnInit, OnDestroy {
         );
     }
 
-    public onUserClick(userId: string | undefined) {
+    public async onUserClick(userId: string | undefined) {
+
         if (userId) {
-            this.router.navigate(['chat', userId]);
+            const chat = await this.chatService.tryGetChatWithUser(userId);
+
+            this.router.navigate(['chat', chat.id]);
         }
     }
 
