@@ -1,7 +1,6 @@
 import { Chat } from '../../dto/chat.dto';
 import { createReducer, on } from '@ngrx/store';
 import * as ChatsActions from '../actions/chat.actions';
-import { ChatMessage } from "../../dto/chatMessage.dto";
 
 export interface ChatsState {
     chats: Chat[];
@@ -20,6 +19,7 @@ export const reducer = createReducer(
     on(ChatsActions.updateChat, (state, { chatMessage }) => {
         const messages = state.currentChat?.messages;
         messages?.push(chatMessage);
+
         return {
             ...state, currentChat: { ...state.currentChat, messages: messages }
         }

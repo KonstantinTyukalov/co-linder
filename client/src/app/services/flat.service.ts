@@ -94,7 +94,7 @@ export class FlatService {
             expand: 'user',
             sort: '+created'
         })
-        return (await result).map(comment => mapToFlatComment(comment));
+        return ( await result ).map(comment => mapToFlatComment(comment));
     }
 
     async getFlatWithComments(id: string): Promise<Flat> {
@@ -104,7 +104,7 @@ export class FlatService {
         // Subscribe to updates
         this.subscribeToFlatComments(id);
 
-        (await flat).comments = (await comments);
+        ( await flat ).comments = ( await comments );
         return flat;
     }
 
@@ -126,8 +126,8 @@ export class FlatService {
             console.log("Got comment " + data.action + " in flat " + data.record.flat + ": " + data.record.content)
             if (data.action == "create" && data.record.flat.toString() == flatId) {
                 let user;
-                this.store.select(FlatSelectors.flats).pipe(take(1)).subscribe((flat: Flat) => {
-                    data.record.user = flat.interestedUsers!.find(e => e.id == (data.record.user as unknown as string))!;
+                this.store.select(FlatSelectors.flat).pipe(take(1)).subscribe((flat) => {
+                    data.record.user = flat!.interestedUsers!.find(e => e.id == ( data.record.user as unknown as string ))!;
                     this.store.dispatch(updateFlatComments({ comment: data.record }));
                 })
             }
@@ -140,7 +140,7 @@ export class FlatService {
         const res = this.pbService.PocketBaseInstance.collection('flats').getFullList(200, {
             expand: "owner,interestedUsers,readyToLiveUsers"
         });
-        return (await res).map(flat => mapToFlat(flat))
+        return ( await res ).map(flat => mapToFlat(flat))
     }
 
     async searchFlat(page: number, filter: FilterFlat) {
@@ -168,17 +168,17 @@ export class FlatService {
             }
         )
 
-        return (await result).items.map(res => mapToFlat(res)).filter(flat => {
-            if (filter.interestedMin && (flat.interestedUsers === undefined || flat.interestedUsers!.length < filter.interestedMin)) {
+        return ( await result ).items.map(res => mapToFlat(res)).filter(flat => {
+            if (filter.interestedMin && ( flat.interestedUsers === undefined || flat.interestedUsers!.length < filter.interestedMin )) {
                 return false;
             }
-            if (filter.interestedMax && (flat.interestedUsers && flat.interestedUsers!.length > filter.interestedMax)) {
+            if (filter.interestedMax && ( flat.interestedUsers && flat.interestedUsers!.length > filter.interestedMax )) {
                 return false;
             }
-            if (filter.readyToLiveMin && (flat.readyToLiveUsers === undefined || flat.readyToLiveUsers!.length < filter.readyToLiveMin)) {
+            if (filter.readyToLiveMin && ( flat.readyToLiveUsers === undefined || flat.readyToLiveUsers!.length < filter.readyToLiveMin )) {
                 return false;
             }
-            if (filter.readyToLiveMax && (flat.readyToLiveUsers && flat.readyToLiveUsers!.length > filter.readyToLiveMax)) {
+            if (filter.readyToLiveMax && ( flat.readyToLiveUsers && flat.readyToLiveUsers!.length > filter.readyToLiveMax )) {
                 return false;
             }
             return true;

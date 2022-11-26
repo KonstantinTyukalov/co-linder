@@ -5,7 +5,7 @@ import * as UserSelector from '../../store/selectors/user.selectors';
 import * as FlatActions from '../../store/actions/flat.actions';
 
 import * as FlatSelector from '../../store/selectors/flat.selectors';
-import { combineLatest, Subscription } from "rxjs";
+import { combineLatest, Subscription, take } from "rxjs";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ChatService } from 'src/app/services/chat.service';
 import { Location } from "@angular/common";
@@ -55,6 +55,8 @@ export class FlatComponent implements OnInit, OnDestroy {
             combineLatest(
                 this.flat$,
                 this.user$
+            ).pipe(
+                take(1)
             ).subscribe(([flat, user]) => {
                 this.flatService.addFlatComment({
                     flat,

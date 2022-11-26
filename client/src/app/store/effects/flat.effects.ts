@@ -6,6 +6,8 @@ import { from, switchMap } from "rxjs";
 import { map } from "rxjs/operators";
 import { Flat } from "src/app/dto/flat.dto";
 import { UserService } from "../../services/user.service";
+import { updateFlatComments } from "../actions/flat.actions";
+import { FlatComment } from "../../dto/flatComment.dto";
 
 @Injectable()
 export class FlatEffects {

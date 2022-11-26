@@ -16,4 +16,9 @@ export const reducer = createReducer(
     initialState,
     on(FlatsActions.getFlatsSuccess, (state, { flats }) => ( { ...state, flats } )),
     on(FlatsActions.getFlatByIdSuccess, (state, { flat }) => ( { ...state, currentFlat: flat } )),
+    on(FlatsActions.updateFlatComments, (state, { comment }) => {
+        const thisComment = [...state.currentFlat!.comments!];
+        thisComment.push(comment);
+        return { ...state, currentFlat: { ...state.currentFlat!, comments: thisComment } }
+    }),
 );
