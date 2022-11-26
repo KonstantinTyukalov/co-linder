@@ -4,10 +4,20 @@
     </div>
     <div class="list-content">
         <div class="searching">
-            <input placeholder="Address" type="text" [(ngModel)]="area">
-            <input placeholder="Cost MAX" type="number" [(ngModel)]="costMax">
-            <input placeholder="Capacity MIN" type="number" [(ngModel)]="capacityMin">
-            <button (click)="onClickFilter()"><h4>Find</h4></button>
+            <div class="search1">
+                <input placeholder="Address" type="text" [(ngModel)]="area">
+                <input placeholder="Name" type="text" [(ngModel)]="name">
+            </div>
+            <div class="search2">
+                <input placeholder="Cost MIN" type="number" [(ngModel)]="costMin" style="width: 8rem">
+                <input placeholder="Cost MAX" type="number" [(ngModel)]="costMax" style="width: 8rem">
+                <input placeholder="Capacity MIN" type="number" [(ngModel)]="capacityMin" style="width: 12rem">
+                <input placeholder="Interested MIN" type="number" [(ngModel)]="interestedMin" style="width: 13rem">
+                <input placeholder="Ready to live MIN" type="number" [(ngModel)]="readyToLiveMin" style="width: 13rem">
+                <input placeholder="Ready to live MAX" type="number" [(ngModel)]="readyToLiveMin" style="width: 13rem">
+                <span>Posted not later than</span><input placeholder="Not older than" type="date" [(ngModel)]="createdMin" style="width: 10rem">
+            </div>
+            <button (click)="onClickFilter()"><h4>Apply Filters</h4></button>
         </div>
         <div class="list">
             <app-flat-card *ngFor="let flat of flats$ | async" [flat]="flat"></app-flat-card>
