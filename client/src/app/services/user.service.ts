@@ -53,7 +53,7 @@ export class UserService {
             console.log(this.pbService.PocketBaseInstance.authStore.isValid);
             console.log(this.pbService.PocketBaseInstance.authStore.token);
 
-            return loggedInUser;
+            return expandAvatar(loggedInUser);
         } catch (err) {
             throw new Error("With login: " + login + " Login Error: " + err)
         }
