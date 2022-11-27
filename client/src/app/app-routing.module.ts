@@ -9,6 +9,7 @@ import { FlatComponent } from "./components/flat/flat.component";
 import { ChatComponent } from "./components/chat/chat.component";
 
 const routes: Routes = [
+    { path: '', component: LoginComponent },
     { path: 'login', component: LoginComponent },
     { path: 'registration', component: RegistrationComponent },
     { path: 'menu', component: MenuComponent },
