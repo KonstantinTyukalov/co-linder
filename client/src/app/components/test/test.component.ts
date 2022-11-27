@@ -55,8 +55,4 @@ export class TestComponent implements OnInit {
 
         this.chatService.sendMessage(message);
     }
-
-    private TestCreatingTheChat() {
-        this.chatService.createChatWithUser(user1, user2);
-    }
 }
