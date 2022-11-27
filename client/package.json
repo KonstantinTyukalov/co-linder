@@ -7,8 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "cd .. && eslint **/*.ts && cd client",
-    "lint-fix": "cd .. && eslint --fix **/*.ts && cd client"
+    "lint": "cd .. && eslint ./client/**/*.ts && cd client",
+    "lint:fix": "cd .. && eslint --fix ./client/**/*.ts && cd client"
   },
   "private": true,
   "dependencies": {
