@@ -44,8 +44,7 @@ export class UserService {
 
     async loginUser(login: string, password: string): Promise<User> {
         try {
-            const pb = this.pbService.PocketBaseInstance;
-            const authData = await pb.collection('users').authWithPassword(
+            const authData = await this.pbService.getCollection('users').authWithPassword(
                 login,
                 password
             );
@@ -56,30 +55,10 @@ export class UserService {
 
             console.log('User logged in. Data: ', authData);
 
-            // after the above you can also access the auth data from the authStore
-            // console.log(pb.authStore.isValid);
-            // console.log(pb.authStore.token);
-
             return expandAvatar(loggedInUser);
         } catch (err) {
             throw new Error('With login: ' + login + ' Login Error: ' + err);
         }
-    }
-
-    loadFromCookeis() {
-        // const pb = this.pbService.PocketBaseInstance;
-        // const authData = window.localStorage["pocketbase_auth"]
-        // // const value = `; ${document.cookie}`;
-        // // const parts = value.split(`; ${this.COOKIE_FOR_AUTH_DATA}=`);
-        // // let authData: string;
-        // // if (parts.length === 2) {
-        // //     authData = parts!.pop()!.split(';').shift()!;
-        // if (authData) {
-        //     pb.authStore.loadFromCookie(authData);
-        //     console.log('Got login info from cookies:', pb.authStore);
-        //     return;
-        // }
-        console.log("Can't find cookies by", this.COOKIE_FOR_AUTH_DATA);
     }
 
     logoutUser() {
