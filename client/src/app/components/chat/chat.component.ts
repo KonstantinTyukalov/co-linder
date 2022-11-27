@@ -43,7 +43,7 @@ export class ChatComponent implements OnInit, OnDestroy {
             ).subscribe(([param, user]) => {
                 const userId = param['id'];
                 if (userId) {
-                    this.store.dispatch(ChatActions.getChatById({ userId }));
+                    this.store.dispatch(ChatActions.getChatById({ currentUser: user!, targetUserId: userId }));
                 }
             })
         );

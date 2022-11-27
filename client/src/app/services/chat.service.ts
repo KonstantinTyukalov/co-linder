@@ -8,6 +8,7 @@ import { RecordSubscription } from 'pocketbase';
 import { Store } from '@ngrx/store';
 import { updateChat } from '../store/actions/chat.actions';
 import { ChatPb } from '../models/chats.model.pb';
+import { UserPb } from '../models/user.model.pb';
 
 function mapToChat(chat: any): Chat {
     const result = {
@@ -26,9 +27,11 @@ export class ChatService {
     constructor(private readonly pbService: PocketBaseService, private readonly store: Store) {
     }
 
-    async getChatWithMessageSendersAvatars(targetUserId: string): Promise<Chat> {
+    async getChatWithMessageSendersAvatars(user: User, targetUserId: string): Promise<Chat> {
         console.log('targetUserId in getChatWithMessageSendersAvatars = ', targetUserId);
-        const chat = await this.tryGetChatWithUser(targetUserId);
+
+        console.log('LOGGED_IN_USER', user)
+        const chat = await this.tryGetChatWithUser(user, targetUserId);
 
         console.log('GOT CHAT WITH TARGET USER ', chat);
 
@@ -71,46 +74,44 @@ export class ChatService {
         return data;
     }
 
-    async tryGetChatWithUser(targetUserId: string): Promise<Chat> {
+    async tryGetChatWithUser(currentUser: User, targetUserId: string): Promise<Chat> {
         const chatsCollection = this.pbService.getCollection('chats');
-        const currentUser = this.pbService.PocketBaseInstance.authStore.model as unknown as User;
 
         console.log('Current user: ', currentUser);
-        const chatsList = await chatsCollection.getFullList(300, {
+
+        const chatsList = await chatsCollection.getFullList(undefined, {
             expand: 'users'
-        }) as Chat[];
+        }) as ChatPb[];
 
         console.log('Chats list ', chatsList);
 
-        const filtered = chatsList?.filter((chat: any) => {
+        const existedChat = chatsList?.find((chat) => {
             console.log('Checking chat', chat);
             const userIds = chat.users;
-
             console.log(userIds);
-            const isCurrentUserPresent = chat.users?.includes(currentUser.id);
+            const isCurrentUserPresent = chat.users?.includes(currentUser.id!);
             const isTargetUserPresent = chat.users?.includes(targetUserId);
             console.log(isCurrentUserPresent, isTargetUserPresent);
             return isCurrentUserPresent && isTargetUserPresent;
         });
 
-        console.log('Filtered chats list ', filtered);
-
-        if (filtered?.length) {
-            return filtered[0];
+        if (existedChat) {
+            console.log('Found chat with user ', existedChat)
+            return existedChat as unknown as Chat
         }
 
         console.log('No available chats found. Trying to create new.');
 
         console.log('Getting user by Id ', targetUserId);
 
-        const targetUser = await this.pbService.getCollection('users').getOne(targetUserId) as User;
+        const targetUser = await this.pbService.getCollection('users').getOne(targetUserId) as UserPb;
 
         const createdChat = await this.createChatWithUser(currentUser, targetUser);
 
         return createdChat;
     }
 
-    async createChatWithUser(loggedInUser: User, targetUser: User): Promise<Chat> {
+    private async createChatWithUser(loggedInUser: User, targetUser: User): Promise<Chat> {
         console.log('Trying to create chat between ', loggedInUser, ' and ', targetUser);
 
         const res = await this.pbService.getCollection('chats').create({

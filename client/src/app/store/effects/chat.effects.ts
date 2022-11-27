@@ -6,6 +6,7 @@ import { from, switchMap } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Chat } from 'src/app/dto/chat.dto';
 import { Store } from '@ngrx/store';
+import { User } from 'src/app/dto/user.dto';
 
 @Injectable()
 export class ChatEffects {
@@ -31,8 +32,8 @@ export class ChatEffects {
     getChatById$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(ChatActions.getChatById),
-            switchMap((action: { userId: string; }) => {
-                return from(this.chatService.getChatWithMessageSendersAvatars(action.userId!));
+            switchMap((action: { currentUser: User, targetUserId: string }) => {
+                return from(this.chatService.getChatWithMessageSendersAvatars(action.currentUser, action.targetUserId!));
             }),
             map((chat: Chat) => {
                 return ChatActions.getChatByIdSuccess({ chat });
