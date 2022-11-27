@@ -73,12 +73,7 @@ export class UserService {
 
 export function expandAvatar(user: User | UserPb): User {
 
-
-    console.log("EXPANDING AVATAR FOR", user)
-
     user.avatar = user?.avatar ? STATIC_PATH + 'users/' + user.id + '/' + user.avatar : undefined;
-
-    console.log("EXPANDED AVATAR", user.avatar)
 
     return user;
 }

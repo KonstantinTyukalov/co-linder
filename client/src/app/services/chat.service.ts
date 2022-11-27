@@ -9,6 +9,7 @@ import { Store } from '@ngrx/store';
 import { updateChat } from '../store/actions/chat.actions';
 import { ChatPb } from '../models/chats.model.pb';
 import { UserPb } from '../models/user.model.pb';
+import { ChatMessagesPb } from '../models/chatMessage.model.pb';
 
 function mapToChat(chat: any): Chat {
     const result = {
@@ -118,15 +119,15 @@ export class ChatService {
         return res;
     }
 
-    private async getMessageWithPicture(message: ChatMessage): Promise<ChatMessage> {
-        const senderId = (message.sender) as unknown as string;
+    private async getMessageWithPicture(message: ChatMessagesPb): Promise<ChatMessage> {
+        const senderId = message.sender
 
-        const sender = await this.pbService.getCollection('users').getOne(senderId) as User;
+        const sender = await this.pbService.getCollection('users').getOne(senderId) as UserPb;
 
         const expandedAvatar = expandAvatar(sender);
 
         const data: ChatMessage = {
-            ...message,
+            ...message as unknown as ChatMessage,
             sender: expandedAvatar
         };
 
@@ -142,7 +143,7 @@ export class ChatService {
 
                 const lastMessageId = chatMessages.pop();
 
-                const newMessage = await this.pbService.getCollection('chatMessages').getOne(lastMessageId!) as ChatMessage;
+                const newMessage = await this.pbService.getCollection('chatMessages').getOne(lastMessageId!) as ChatMessagesPb;
 
                 const message = await this.getMessageWithPicture(newMessage);
 
@@ -158,7 +159,7 @@ export class ChatService {
     async getAllChatsByUserId(userId: string): Promise<Chat[]> {
         const chatCollection = this.pbService.getCollection('chats');
 
-        const allChats = await chatCollection.getFullList(50, {
+        const allChats = await chatCollection.getFullList(undefined, {
             expand: 'users'
         }) as ChatPb[];
 
@@ -193,29 +194,29 @@ export class ChatService {
 
         const chatId = message.chat.id!;
 
-        const newMessage = {
+        const newMessage: ChatMessagesPb = {
             content: message.content,
-            sender: message.sender.id,
+            sender: message.sender.id!,
             chat: chatId
         };
         console.log('Trying to create new chat message: ', newMessage);
 
-        const newMessageInCollection = await chatMessagesCollection.create(newMessage);
-        console.log('Added new chat message ', newMessageInCollection);
+        const newMessageInCollection = await chatMessagesCollection.create(newMessage) as ChatMessagesPb
+        console.log('Added new chat message ', newMessageInCollection.id);
 
         console.log('Trying to update chat: ', chatId);
 
-        const chat = await chatCollection.getOne(chatId) as Chat;
+        const chat = await chatCollection.getOne(chatId) as ChatPb;
 
-        const newChat = {
+        const newChatState: ChatPb = {
             ...chat,
             messages: [
-                ...(chat.messages as unknown as string[]),
-                newMessageInCollection.id
+                ...chat.messages,
+                newMessageInCollection.id!
             ]
         };
 
-        const updatedChat = await chatCollection.update(chatId, newChat);
+        const updatedChat = await chatCollection.update(chatId, newChatState);
 
         console.log('Successfully updated chat: ', updatedChat.id);
 
