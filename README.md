@@ -15,7 +15,9 @@ Using https://github.com/codegangsta/gin:
 - Open Admin part at http://localhost:3000/_/#/login and user credentials alexander.makarov@akvelon.com x67LmrXVCDdUNWn
 
 Direct start (won't work with front-end due to different ports used):
-- In "server-go" folder run `go run main.go`.
+
+- In "server-go" folder run `go run main.go serve --http="<yourPort>:3000"`. example port - 172.16.101.93
+
 # Start front-end
 
 - Go to "client" folder.
