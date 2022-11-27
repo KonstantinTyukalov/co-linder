@@ -29,53 +29,43 @@ export class ChatService {
 
     async getChatById(chatId: string): Promise<Chat> {
         const chatsCollection = this.pbService.getCollection('chats');
-        const usersCollection = this.pbService.getCollection('users');
 
         const chat = await chatsCollection.getOne(chatId, {
-            expand: 'users, messages'
+            expand: 'users,messages'
         }) as ChatPb;
 
-        const mappedChat = mapToChat(chat);
+        console.log('GOT CHAT FROM DB ', chat)
 
+        const mappedChat = mapToChat(chat);
+        const expandedChatParticipants = mappedChat.users!
         const chatMessages = chat.expand?.messages;
 
-        const data = {
-            ...mappedChat,
-            messages: chatMessages as unknown as ChatMessage[]
-        };
-
         if (chatMessages) {
-            const participantsId = chat.users;
-            const expandedParticipants: User[] = [];
-
-            for (const participantId of participantsId) {
-                const participant = usersCollection.getOne(participantId) as unknown as User;
-                const expandedParticipant = expandAvatar(participant);
-                expandedParticipants.push(expandedParticipant);
-            }
 
             const expandedMessages: ChatMessage[] = [];
+
             for (const message of chatMessages) {
+
                 const messageSenderId = message.sender;
-                const sender = expandedParticipants.find(user => user.id === messageSenderId)!;
+                const sender = expandedChatParticipants.find(user => user.id === messageSenderId)!;
 
                 const expandedMessage: ChatMessage = {
                     ...message,
                     chat: message.chat as unknown as Chat,
-                    sender: expandAvatar(sender)
+                    sender: sender
                 };
 
                 expandedMessages.push(expandedMessage);
             }
 
-            data.messages = expandedMessages;
+            mappedChat.messages = expandedMessages;
         }
 
-        console.log('Chat with message avatars: ', data);
+        console.log('Chat with message avatars: ', mappedChat);
 
         this.subscribeToChatMessages(mappedChat.id!);
 
-        return data;
+        return mappedChat;
     }
 
     async tryGetChatWithUser(currentUser: User, targetUserId: string): Promise<Chat> {
@@ -119,7 +109,7 @@ export class ChatService {
         console.log('Trying to create chat between ', loggedInUser, ' and ', targetUser);
 
         const res = await this.pbService.getCollection('chats').create({
-            name: `${loggedInUser.name} - ${targetUser.name}`,
+            name: `${loggedInUser.name}, ${targetUser.name}`,
             users: [loggedInUser.id, targetUser.id]
         }) as Chat;
 
