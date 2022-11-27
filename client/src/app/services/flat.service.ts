@@ -9,6 +9,7 @@ import { updateFlatComments } from "../store/actions/flat.actions";
 import { RecordSubscription } from "pocketbase";
 import * as FlatSelectors from "../store/selectors/flat.selectors"
 import { take } from "rxjs/operators";
+import { FlatPb } from "../models/flat.model.pb";
 
 export class FilterFlat {
     withPhoto?: boolean
@@ -39,6 +40,8 @@ function toFilePath(id: string, fileName: string) {
 }
 
 function mapToFlat(flat: any): Flat {
+    console.log('MAPPING TO FLAT', flat)
+
     const result = {
         ...flat,
         owner: expandAvatar(flat.expand?.owner!),
@@ -48,6 +51,8 @@ function mapToFlat(flat: any): Flat {
     }
     delete result.expand;
     delete result.photo;
+
+    console.log('MAPPED TO FLAT', result)
     return result;
 }
 
@@ -72,17 +77,49 @@ export class FlatService {
         return await this.pbService.getCollection('flats').create(flat);
     }
 
-    async updateFlat(flat: Flat): Promise<Flat> {
-        const payload = {
-            ...flat,
-            owner: flat.owner.id,
-            interestedUsers: flat.interestedUsers?.map(user => user?.id).filter(x => x),
-            readyToLiveUsers: flat.readyToLiveUsers?.map(user => user?.id).filter(x => x)
+    async addUserToInterested(userId: string, flatId: string) {
+        const flatCollection = this.pbService.getCollection('flats')
+
+        const flat = await flatCollection.getOne(flatId) as FlatPb
+        const interestedUsers = flat.interestedUsers
+
+        if (interestedUsers.includes(userId)) {
+            console.log(`THIS USER WITH ID ${userId} already interested. Skipping`)
+
+            return flat;
         }
-        console.log('Trying to update flat with payload', payload);
-        return await mapToFlat(this.pbService.getCollection('flats').update(flat.id!, payload, {
+
+        const newFlatState: FlatPb = {
+            ...flat,
+            interestedUsers: [...interestedUsers, userId]
+        }
+        const result = await flatCollection.update(flatId, newFlatState)
+
+        return result
+    }
+
+    async updateFlat(flat: Flat): Promise<Flat> {
+        const flatsCollection = this.pbService.getCollection('flats')
+
+        const interestedUsers = flat.interestedUsers?.filter(x => x).map(user => user?.id).filter(x => x) as string[]
+        const readyToLiveUsers = flat.readyToLiveUsers?.filter(x => x).map(user => user?.id).filter(x => x) as string[]
+
+        const newFlatState = {
+            area: flat.area,
+            capacity: flat.capacity,
+            cost: flat.cost,
+            owner: flat.owner.id!,
+            interestedUsers: interestedUsers,
+            readyToLiveUsers: readyToLiveUsers
+        }
+
+        console.log('Trying to update flat with payload', newFlatState);
+
+        const res = await flatsCollection.update(flat.id!, newFlatState, {
             expand: "owner,interestedUsers,readyToLiveUsers"
-        }));
+        }) as FlatPb
+
+        return mapToFlat(res);
     }
 
     async getFlatById(id: string): Promise<Flat> {

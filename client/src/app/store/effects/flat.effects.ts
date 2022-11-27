@@ -25,7 +25,11 @@ export class FlatEffects {
                     ? [...action.flat!.interestedUsers!, action.user!]
                     : [action.user!];
                 const newFlat: Flat = { ...action.flat, interestedUsers: amogus };
-                return from(this.flatService.updateFlat(newFlat));
+                const result = from(this.flatService.updateFlat(newFlat));
+
+                console.log('OBSERVABLE FLAT', result)
+
+                return result
             }),
             map((flat: Flat) => {
                 return FlatActions.getFlatByIdSuccess({ flat });
