@@ -1,8 +1,15 @@
 .content {
     width: 100%;
-    min-width: 100%;
-    height: 4rem;
-    display: grid;
-    grid-template-columns: 0.8fr 3fr 1fr;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     box-sizing: border-box;
+
+    button {
+        border: 2px solid #000af9;
+        border-radius: 1rem;
+        background-color: #b9b5ff;
+        width: 70%;
+    }
 }
