@@ -30,10 +30,6 @@ export class PocketBaseService {
         this.pb = new PocketBase(environment.serverUrl, authStore);
     }
 
-    get PocketBaseInstance(): PocketBase {
-        return this.pb;
-    }
-
     getCollection(collectionName: CollectionNameType) {
         return this.pb.collection(collectionName);
     }

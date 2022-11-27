@@ -134,8 +134,6 @@ export class ChatService {
     }
 
     async subscribeToChatMessages(chatId: string) {
-        const user = this.pbService.PocketBaseInstance.authStore.model;
-
         this.pbService.getCollection('chats').subscribe(chatId, async (updatedChatRecord: RecordSubscription<Chat>) => {
             console.log('Got message ' + updatedChatRecord.action + ' in chat ' + updatedChatRecord.record.id);
 
@@ -152,7 +150,7 @@ export class ChatService {
             }
         });
 
-        console.log('Subscribed to chatMessages for ' + chatId + ' chatId', user);
+        console.log('Subscribed to chatMessages for chat ' + chatId);
 
         return true;
     }
