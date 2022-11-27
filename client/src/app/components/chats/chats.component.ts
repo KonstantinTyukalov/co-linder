@@ -20,7 +20,7 @@ export class ChatsComponent {
         private readonly router: Router) {
     }
 
-    public onClickRedirect(chat: Chat): void {
-        this.router.navigate(['/chat', chat.id], { replaceUrl: true });
+    public onClickRedirect(chatId: string): void {
+        this.router.navigate(['/chat', chatId]);
     }
 }

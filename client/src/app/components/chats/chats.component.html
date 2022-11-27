@@ -1,5 +1,5 @@
 <div class="line"></div>
-<button *ngFor="let chat of chats$ | async" (click)="onClickRedirect(chat)">
+<button *ngFor="let chat of chats$ | async" (click)="onClickRedirect(chat.id!)">
     <h2>{{ chat.name }}</h2>
     <div class="photos">
         <img *ngFor="let user of chat.users" [src]="user.avatar" alt="Avatar">
