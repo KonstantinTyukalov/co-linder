@@ -10,28 +10,30 @@ export class UserService {
     constructor(private pbService: PocketBaseService) {
     }
 
-    async registerUser(userDto: User) {
+    async registerUser(userDto: User, userAvatar: File) {
+
+        const newUserFormData = new FormData();
+
         // example create data
         const langs = userDto.languages!.split(',').map(s => s.trim());
 
-        const data = {
-            "email": userDto.email,
-            "avatar": userDto.avatar,
-            "emailVisibility": true,
-            "password": userDto.password,
-            "passwordConfirm": userDto.password,
-            "name": userDto.name,
-            "birthDate": new Date(),
-            "isWoman": userDto.isWoman,
-            "country": userDto.country,
-            "langs": langs,
-            "hasPets": false,
-            "aboutMyself": userDto.description
-        };
+        newUserFormData.append('avatar', userAvatar)
+        newUserFormData.append("email", userDto.email)
+        newUserFormData.append("emailVisibility", true.toString())
 
-        console.log('Sending new user:', data);
+        newUserFormData.append("password", userDto.password!)
+        newUserFormData.append("passwordConfirm", userDto.password!)
+        newUserFormData.append("name", userDto.name)
+        newUserFormData.append("birthDate", new Date().toString())
+        newUserFormData.append("isWoman", userDto.isWoman!.toString())
+        newUserFormData.append("country", userDto.country!)
+        newUserFormData.append("langs", JSON.stringify(langs))
+        newUserFormData.append("hasPets", false.toString())
+        newUserFormData.append("aboutMyself", userDto.description!)
 
-        const record = await this.pbService.getCollection('users').create(data);
+        console.log('Sending new user:', newUserFormData);
+
+        const record = await this.pbService.getCollection('users').create(newUserFormData);
 
         console.log('Record created', record);
 
