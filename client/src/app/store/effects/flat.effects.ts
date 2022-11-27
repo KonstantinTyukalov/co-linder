@@ -6,7 +6,6 @@ import { from, switchMap } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Flat } from 'src/app/dto/flat.dto';
 import { UserService } from '../../services/user.service';
-import { User } from '../../dto/user.dto';
 
 @Injectable()
 export class FlatEffects {
@@ -16,26 +15,6 @@ export class FlatEffects {
         private readonly userService: UserService
     ) {
     }
-
-    updateFlat$ = createEffect(() => {
-        return this.actions$.pipe(
-            ofType(FlatActions.updateFlat),
-            switchMap((action: { flat: Flat; user: User; }) => {
-                const amogus = action.flat!.interestedUsers
-                    ? [...action.flat!.interestedUsers!, action.user!]
-                    : [action.user!];
-                const newFlat: Flat = { ...action.flat, interestedUsers: amogus };
-                const result = from(this.flatService.updateFlat(newFlat));
-
-                console.log('OBSERVABLE FLAT', result);
-
-                return result;
-            }),
-            map((flat: Flat) => {
-                return FlatActions.getFlatByIdSuccess({ flat });
-            })
-        );
-    });
 
     getFlats$ = createEffect(() => {
         return this.actions$.pipe(

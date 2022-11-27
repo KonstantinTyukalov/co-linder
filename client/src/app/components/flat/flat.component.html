@@ -6,7 +6,7 @@
 
     <div class="flat">
         <div class="photos">
-            <img *ngFor="let photo of (flat$ | async)?.downloadedPhotos"
+            <img *ngFor="let photo of flatDownloadedPhotos$ | async"
                  [src]="photo"
                  alt="Photo">
         </div>
@@ -14,16 +14,16 @@
             <button (click)="intrested()"><h2>I'm interested</h2></button>
             <button><h2>Mark as full</h2></button>
         </div>
-        <div class="flat-metadata" *ngIf="(flat$ | async)">
+        <div class="flat-metadata">
             <div class="header-one">
-                <h1>{{(flat$ | async)?.name}}</h1>
-                <h1>{{(flat$ | async)?.cost | currency: '$'}}</h1>
+                <h1>{{flatName$| async}}</h1>
+                <h1>{{(flatCost$ | async) | currency: '$'}}</h1>
             </div>
-            <h2 style="margin-bottom: 1rem">Adress: {{(flat$ | async)?.area}}</h2>
-            <h3>{{(flat$ | async)?.description}}</h3>
-            <h3 *ngIf="(flat$ | async)?.externalUrl" style="color: violet">
+            <h2 style="margin-bottom: 1rem">Adress: {{flatArea$ | async}}</h2>
+            <h3>{{flatDescription$ | async}}</h3>
+            <h3 *ngIf="flatExternalUrl$ | async" style="color: violet">
                 Description on the
-                <a href="{{(flat$ | async)?.externalUrl}}">3d-pary site</a>
+                <a href="{{flatExternalUrl$ | async}}">3d-pary site</a>
             </h3>
         </div>
         <div class="comments">
@@ -31,7 +31,7 @@
                 <div class="chat-overflow">
                     <div
                         class="chat-message"
-                        *ngFor="let comment of (flat$ | async)?.comments"
+                        *ngFor="let comment of flatComments$ | async"
                         [ngClass]="comment?.user?.id === '1' ? 'chat-message-left' : 'chat-message-right'">
                         <img [src]="comment?.user?.avatar" alt="">
                         <div>
@@ -52,7 +52,7 @@
         <div class="users">
             <div
                 class="user"
-                *ngFor="let user of (flat$ | async)?.interestedUsers"
+                *ngFor="let user of flatInterestedUsers$ | async"
                 (click)="onUserClick(user.id)">
                 <img [src]="user.avatar" alt="Avatar">
                 <h2>{{user?.name}}</h2>
@@ -61,9 +61,9 @@
         <h1 style="text-align: center">Owner</h1>
         <div class="owner">
             <img
-                [src]="(flat$ | async)?.owner?.avatar"
+                [src]="(flatOwner$ | async)?.avatar"
                 alt="Avatar">
-            <h2>{{(flat$ | async)?.owner?.name}}</h2>
+            <h2>{{(flatOwner$ | async)?.name}}</h2>
         </div>
     </div>
 </div>

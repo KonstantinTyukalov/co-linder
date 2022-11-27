@@ -4,7 +4,8 @@ import * as FlatsActions from '../actions/flat.actions';
 
 export interface FlatsState {
     flats: Flat[];
-    currentFlat?: Flat;
+    flat?: Flat;
+
     flatNotFoundErr?: string;
 }
 
@@ -15,10 +16,10 @@ export const initialState: FlatsState = {
 export const reducer = createReducer(
     initialState,
     on(FlatsActions.getFlatsSuccess, (state, { flats }) => ({ ...state, flats })),
-    on(FlatsActions.getFlatByIdSuccess, (state, { flat }) => ({ ...state, currentFlat: flat })),
+    on(FlatsActions.getFlatByIdSuccess, (state, { flat }) => ({ ...state, flat })),
     on(FlatsActions.updateFlatComments, (state, { comment }) => {
-        const thisComment = [...state.currentFlat!.comments!];
+        const thisComment = [...state.flat!.comments!];
         thisComment.push(comment);
-        return { ...state, currentFlat: { ...state.currentFlat!, comments: thisComment } };
+        return { ...state, flat: { ...state.flat!, comments: thisComment } };
     })
 );

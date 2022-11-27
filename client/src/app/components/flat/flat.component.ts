@@ -12,6 +12,7 @@ import { Location } from '@angular/common';
 import { FlatService } from '../../services/flat.service';
 import { FlatComment } from '../../dto/flatComment.dto';
 import { chats } from '../../store/selectors/chat.selectors';
+import { currentFlat } from '../../store/selectors/flat.selectors';
 
 @Component({
     selector: 'app-flat',
@@ -19,6 +20,16 @@ import { chats } from '../../store/selectors/chat.selectors';
     styleUrls: ['./flat.component.scss']
 })
 export class FlatComponent implements OnInit, OnDestroy {
+    public flatDownloadedPhotos$ = this.store.select(currentFlat.downloadedPhotos);
+    public flatName$ = this.store.select(currentFlat.name);
+    public flatCost$ = this.store.select(currentFlat.cost);
+    public flatArea$ = this.store.select(currentFlat.area);
+    public flatDescription$ = this.store.select(currentFlat.description);
+    public flatExternalUrl$ = this.store.select(currentFlat.externalUrl);
+    public flatComments$ = this.store.select(currentFlat.comments);
+    public flatInterestedUsers$ = this.store.select(currentFlat.interestedUsers);
+    public flatOwner$ = this.store.select(currentFlat.owner);
+
     public flat$ = this.store.select(FlatSelector.flat);
     public user$ = this.store.select(UserSelector.user);
     public chats$ = this.store.select(chats);

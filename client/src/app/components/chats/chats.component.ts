@@ -24,12 +24,7 @@ export class ChatsComponent implements OnInit, OnDestroy {
     private readonly subscriptions: Subscription = new Subscription();
 
     public onClickRedirect(chat: Chat): void {
-        const chatUser = chat.users?.find((u) => u.id !== this.localUser.id);
-        if (chatUser) {
-            this.router.navigate(['/chat', chatUser.id], { replaceUrl: true });
-        } else {
-            console.error('CANT REDIRECT TO CHAT');
-        }
+        this.router.navigate(['/chat', chat.id], { replaceUrl: true });
     }
 
     public ngOnInit(): void {
