@@ -1,8 +1,6 @@
 <div class="content">
     <div class="menu">
-        <button class="back" (click)="onBackClick()">
-            <h2 style="font-weight: normal;">Back</h2>
-        </button>
+        <app-left-sidebar [user$]="user$" [chats$]="chats$"></app-left-sidebar>
     </div>
     <div class="chat-content">
         <div class="users">

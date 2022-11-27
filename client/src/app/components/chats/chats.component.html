@@ -1,9 +1,7 @@
-<div class="content">
-    <div class="vertical-list">
-        <div *ngFor="let chat of chats$ | async">
-            <button (click)="onClickRedirect(chat)">
-                <h4>{{ chat.name }}</h4>
-            </button>
-        </div>
+<div class="line"></div>
+<button *ngFor="let chat of chats$ | async" (click)="onClickRedirect(chat)">
+    <h2>{{ chat.name }}</h2>
+    <div class="photos">
+        <img *ngFor="let user of chat.users" [src]="user.avatar" alt="Avatar">
     </div>
-</div>
+</button>

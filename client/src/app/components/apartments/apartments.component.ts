@@ -4,8 +4,10 @@ import { Store } from "@ngrx/store";
 import * as FlatActions from '../../store/actions/flat.actions'
 import { Flat } from "../../dto/flat.dto";
 
-import * as FlatSelector from '../../store/selectors/flat.selectors';
 import { Observable } from "rxjs";
+import { user } from "../../store/selectors/user.selectors";
+import { chats } from "../../store/selectors/chat.selectors";
+import { flats } from "../../store/selectors/flat.selectors";
 
 @Component({
     selector: 'app-apartments',
@@ -13,6 +15,9 @@ import { Observable } from "rxjs";
     styleUrls: ['./apartments.component.scss']
 })
 export class ApartmentsComponent implements OnInit {
+    public user$ = this.store.select(user);
+    public chats$ = this.store.select(chats);
+
     public area!: string;
     public name!: string;
     public costMax!: number
@@ -23,7 +28,7 @@ export class ApartmentsComponent implements OnInit {
     public readyToLiveMax!: number;
     public createdMin!: Date;
 
-    public flats$: Observable<Flat[]> = this.store.select(FlatSelector.flats);
+    public flats$: Observable<Flat[]> = this.store.select(flats);
 
     constructor(private readonly store: Store) {
     }

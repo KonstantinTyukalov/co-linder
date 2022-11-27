@@ -1,13 +1,19 @@
+:host {
+    overflow-y: hidden;
+}
+
 .content {
     width: 100vw;
-    height: 100vh;
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 6fr;
+    grid-template-rows: 100%;
 }
 
 .menu {
+    color: #b9b5ff;
     background-color: #b9b5ff;
-    min-width: 20rem;
-    height: 100%;
+    min-width: 18rem;
+    width: 100%;
 }
 
 .list-content {
@@ -16,11 +22,12 @@
     display: flex;
     align-items: center;
     flex-direction: column;
+    overflow-y: hidden;
 }
 
 .searching {
     border-radius: 1rem;
-    width: 100rem;
+    width: 70%;
     padding: 1rem;
     margin: 2rem 0 0 0;
     display: flex;
@@ -61,7 +68,7 @@
 }
 
 .list {
-    overflow-y: scroll;
+    overflow-y: auto;
     padding-top: 2rem;
     width: 100%;
     display: flex;

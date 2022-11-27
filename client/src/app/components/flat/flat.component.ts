@@ -11,6 +11,7 @@ import { ChatService } from 'src/app/services/chat.service';
 import { Location } from "@angular/common";
 import { FlatService } from "../../services/flat.service";
 import { FlatComment } from "../../dto/flatComment.dto";
+import { chats } from "../../store/selectors/chat.selectors";
 
 @Component({
     selector: 'app-flat',
@@ -20,6 +21,7 @@ import { FlatComment } from "../../dto/flatComment.dto";
 export class FlatComponent implements OnInit, OnDestroy {
     public flat$ = this.store.select(FlatSelector.flat);
     public user$ = this.store.select(UserSelector.user);
+    public chats$ = this.store.select(chats);
 
     public content = '';
 

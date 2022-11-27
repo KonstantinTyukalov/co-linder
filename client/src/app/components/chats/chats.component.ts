@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Store } from "@ngrx/store";
 
 import * as ChatActions from '../../store/actions/chat.actions'
@@ -14,10 +14,10 @@ import { User } from 'src/app/dto/user.dto';
     templateUrl: './chats.component.html',
     styleUrls: ['./chats.component.scss']
 })
-export class ChatsComponent implements OnInit {
+export class ChatsComponent implements OnInit, OnDestroy {
 
-    public user$ = this.store.select(UserSelector.user);
-    public chats$: Observable<Chat[]> = this.store.select(ChatSelector.chats);
+    @Input() public user$?: Observable<User | undefined>;
+    @Input() public chats$?: Observable<Chat[]>;
 
     public localUser: User = {} as User;
 
@@ -27,27 +27,26 @@ export class ChatsComponent implements OnInit {
     private subscriptions: Subscription = new Subscription();
 
     public onClickRedirect(chat: Chat): void {
-        console.log('onClickRedirect CALLED')
-        console.log('LOCAL USER STATE', this.localUser)
-        const chatUserId = chat.users?.find((u) => u.id !== this.localUser.id);
-        console.log('FILTERED USER', chatUserId)
-        if (chatUserId) {
-            this.router.navigate(['chat', chatUserId]);
-        }
-        else {
+        const chatUser = chat.users?.find((u) => u.id !== this.localUser.id);
+        if (chatUser) {
+            this.router.navigate(['/chat', chatUser.id], { replaceUrl: true });
+        } else {
             console.error("CANT REDIRECT TO CHAT")
         }
     }
 
     public ngOnInit(): void {
         this.subscriptions.add(
-            this.user$.subscribe((user) => {
-                console.log("CHATS COMPONENT")
+            this.user$?.subscribe((user) => {
                 if (user) {
                     this.localUser = user;
                     this.store.dispatch(ChatActions.getChatsByUserId({ id: user.id! }));
                 }
             }),
         );
+    }
+
+    ngOnDestroy(): void {
+        this.subscriptions.unsubscribe();
     }
 }
