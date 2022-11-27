@@ -5,4 +5,6 @@ export const registrationUser = createAction('REGISTRATION_USER', props<{ user: 
 export const registrationUserSuccess = createAction('REGISTRATION_USER_SUCCESS');
 
 export const userLogin = createAction('USER_LOGIN', props<{ login: string, password: string }>());
-export const userLoginSuccess = createAction('USER_LOGIN_SUCCESS', props<{ user: User }>());
+export const userCreateOrUpdateInStore = createAction('USER_LOGIN_SUCCESS', props<{ user: User }>());
+
+
