@@ -146,19 +146,45 @@ export class FlatService {
         return flatComment
     }
 
+    async getCommentWithSenderAvatar(comment: FlatComment) {
+        const senderId = (comment.user) as unknown as string
+
+        const sender = await this.pbService.getCollection('users').getOne(senderId) as User
+
+        const expandedAvatar = expandAvatar(sender);
+
+        const data: FlatComment = {
+            ...comment,
+            user: expandedAvatar
+        }
+
+        return data
+    }
+
     async subscribeToFlatComments(flatId: string) {
-        const collection = this.pbService.getCollection('flatComments');
-        collection.subscribe("*", (data: RecordSubscription<FlatComment>) => {
-            console.log("Got comment " + data.action + " in flat " + data.record.flat + ": " + data.record.content)
-            if (data.action == "create" && data.record.flat.toString() == flatId) {
-                let user;
+        const flatsCollection = this.pbService.getCollection('flats');
+
+        flatsCollection.subscribe(flatId, async (data: RecordSubscription<Flat>) => {
+            const flatRecord = data.record
+            console.log('New flat state ', flatRecord)
+            if (data.action == "update") {
+                const flatComments = flatRecord.comments as unknown as string[]
+
+                const lastcommentId = flatComments.pop()
+
+                const newComment = await this.pbService.getCollection('flatComments').getOne(lastcommentId!) as FlatComment
+
+                console.log('New flat comment: ', newComment)
+
+                const fullNewComment = await this.getCommentWithSenderAvatar(newComment)
+
                 this.store.select(FlatSelectors.flat).pipe(take(1)).subscribe((flat) => {
-                    data.record.user = flat!.interestedUsers!.find(e => e.id == (data.record.user as unknown as string))!;
-                    this.store.dispatch(updateFlatComments({ comment: data.record }));
+
+                    this.store.dispatch(updateFlatComments({ comment: fullNewComment }));
                 })
             }
         })
-        console.log('Subscribed to flatComments for ' + flatId + ' flatId', collection);
+        console.log('Subscribed to flatComments for ' + flatId + ' flatId', flatsCollection);
     }
 
     async getFlats(): Promise<Flat[]> {
