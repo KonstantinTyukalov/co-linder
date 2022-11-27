@@ -144,7 +144,7 @@ export class ChatService {
         this.pbService.getCollection('chats').subscribe(chatId, async (updatedChatRecord: RecordSubscription<Chat>) => {
             console.log('Got message ' + updatedChatRecord.action + ' in chat ' + updatedChatRecord.record.id);
 
-            if (updatedChatRecord.action == 'update') {
+            if (updatedChatRecord.action === 'update') {
                 const chatMessages = updatedChatRecord.record.messages as unknown as string[];
 
                 const lastMessageId = chatMessages.pop();
@@ -175,6 +175,7 @@ export class ChatService {
 
         const expandedChats = userChats as unknown as Chat[];
 
+        // eslint-disable-next-line @typescript-eslint/no-for-in-array
         for (const userChat in userChats) {
             const expandedUsers: User[] = [];
             const chatParticipants = userChats[userChat].expand?.users;
