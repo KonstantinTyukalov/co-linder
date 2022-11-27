@@ -103,16 +103,19 @@ export class ChatService {
 
         const createdChat = await this.createChatWithUser(currentUser, targetUser);
 
-        return createdChat;
+        return createdChat as unknown as Chat;
     }
 
-    private async createChatWithUser(loggedInUser: User, targetUser: User): Promise<Chat> {
+    private async createChatWithUser(loggedInUser: User, targetUser: User): Promise<ChatPb> {
         console.log('Trying to create chat between ', loggedInUser, ' and ', targetUser);
 
-        const res = await this.pbService.getCollection('chats').create({
+        const newChat: ChatPb = {
             name: `${loggedInUser.name}, ${targetUser.name}`,
-            users: [loggedInUser.id, targetUser.id]
-        }) as Chat;
+            users: [loggedInUser.id!, targetUser.id!],
+            messages: []
+        }
+
+        const res = await this.pbService.getCollection('chats').create(newChat) as ChatPb;
 
         console.log('Successfully created chat with: ', loggedInUser, ' and ', targetUser);
 
