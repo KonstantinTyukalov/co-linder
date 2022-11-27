@@ -115,7 +115,7 @@ export class ChatService {
         console.log('Trying to create chat between ', loggedInUser, ' and ', targetUser)
 
         const res = await this.pbService.getCollection('chats').create({
-            name: `${ loggedInUser.name } - ${ targetUser.name }`,
+            name: `${loggedInUser.name} - ${targetUser.name}`,
             users: [loggedInUser.id, targetUser.id]
         }) as Chat
 
@@ -125,7 +125,7 @@ export class ChatService {
     }
 
     private async getMessageWithPicture(message: ChatMessage): Promise<ChatMessage> {
-        const senderId = ( message.sender ) as unknown as string
+        const senderId = (message.sender) as unknown as string
 
         const sender = await this.pbService.getCollection('users').getOne(senderId) as User
 
@@ -142,10 +142,17 @@ export class ChatService {
     async subscribeToChatMessages(chatId: string) {
         const user = this.pbService.PocketBaseInstance.authStore.model;
 
-        this.pbService.getCollection('chatMessages').subscribe("*", async (data: RecordSubscription<ChatMessage>) => {
-            console.log("Got message " + data.action + " in chat " + data.record.chat + ": " + data.record.content)
-            if (data.action == "create" && data.record.chat == chatId) {
-                const message = await this.getMessageWithPicture(data.record)
+        this.pbService.getCollection('chats').subscribe(chatId, async (updatedChatRecord: RecordSubscription<Chat>) => {
+            console.log("Got message " + updatedChatRecord.action + " in chat " + updatedChatRecord.record.id)
+
+            if (updatedChatRecord.action == "update") {
+                const chatMessages = updatedChatRecord.record.messages as unknown as string[]
+
+                const lastMessageId = chatMessages.pop()
+
+                const newMessage = await this.pbService.getCollection('chatMessages').getOne(lastMessageId!) as ChatMessage
+
+                const message = await this.getMessageWithPicture(newMessage)
 
                 this.store.dispatch(updateChat({ chatMessage: message }));
             }
@@ -159,7 +166,7 @@ export class ChatService {
     async getChatsByUserId(userId: string) {
         const chatCollection = this.pbService.getCollection('chats');
 
-        const res = ( await chatCollection.getFullList() )
+        const res = (await chatCollection.getFullList())
             .filter((record: any) => record.users.includes(userId))
 
         console.log("FILTERED CHATS", res)
