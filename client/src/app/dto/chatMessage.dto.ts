@@ -1,5 +1,5 @@
-import { Chat } from "./chat.dto";
-import { User } from "./user.dto";
+import { Chat } from './chat.dto';
+import { User } from './user.dto';
 
 export interface ChatMessage {
     id?: string;

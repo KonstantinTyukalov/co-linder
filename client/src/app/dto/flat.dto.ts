@@ -1,5 +1,5 @@
-import { FlatComment } from "./flatComment.dto";
-import { User } from "./user.dto";
+import { FlatComment } from './flatComment.dto';
+import { User } from './user.dto';
 
 export interface Flat {
     id?: string;

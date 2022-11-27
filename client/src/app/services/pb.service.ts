@@ -1,15 +1,15 @@
 import PocketBase, { LocalAuthStore } from 'pocketbase';
-import { Injectable } from "@angular/core";
-import { environment } from "../../environments/environment";
+import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 
-export const STATIC_PATH = environment.serverUrl + "/api/files/"
+export const STATIC_PATH = environment.serverUrl + '/api/files/';
 
 export type CollectionNameType = CollectionName
-    | 'users'
-    | 'chats'
-    | 'chatMessages'
-    | 'flats'
-    | 'flatComments';
+| 'users'
+| 'chats'
+| 'chatMessages'
+| 'flats'
+| 'flatComments';
 
 export enum CollectionName {
     USERS = 'users',
@@ -19,16 +19,15 @@ export enum CollectionName {
     FLAT_COMMENTS = 'flatComments',
 }
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class PocketBaseService {
-
-    private pb: PocketBase;
+    private readonly pb: PocketBase;
 
     constructor() {
-        const authStore = new LocalAuthStore()
+        const authStore = new LocalAuthStore();
         // authStore.loadFromCookie()
-        console.log("AuthStore=", authStore)
-        this.pb = new PocketBase(environment.serverUrl, authStore)
+        console.log('AuthStore=', authStore);
+        this.pb = new PocketBase(environment.serverUrl, authStore);
     }
 
     get PocketBaseInstance(): PocketBase {
@@ -36,11 +35,11 @@ export class PocketBaseService {
     }
 
     getCollection(collectionName: CollectionNameType) {
-        return this.pb.collection(collectionName)
+        return this.pb.collection(collectionName);
     }
 
     async Logout() {
         console.log('Logging out');
-        await this.pb.authStore.clear()
+        await this.pb.authStore.clear();
     }
 }

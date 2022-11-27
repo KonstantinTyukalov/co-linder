@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { User } from "../../dto/user.dto";
-import { Store } from "@ngrx/store";
-import { COUNTRIES } from "../../utils/countries";
-import * as UserActions from "../../store/actions/user.actions";
-import { Router } from "@angular/router";
+import { User } from '../../dto/user.dto';
+import { Store } from '@ngrx/store';
+import { COUNTRIES } from '../../utils/countries';
+import * as UserActions from '../../store/actions/user.actions';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-registration',
@@ -12,11 +12,11 @@ import { Router } from "@angular/router";
 })
 export class RegistrationComponent {
     public countries = COUNTRIES;
-    private avatarForUpload?: File
+    private avatarForUpload?: File;
 
     public newUser: User = {
         email: '',
-        avatar: "",
+        avatar: '',
         password: '',
         name: '',
         age: NaN,
@@ -39,8 +39,8 @@ export class RegistrationComponent {
     }
 
     public picPhoto(e: Event) {
-        const files = ( <HTMLInputElement> e.target ).files
-        this.avatarForUpload = files ? files[0] : undefined
+        const files = (<HTMLInputElement> e.target).files;
+        this.avatarForUpload = files ? files[0] : undefined;
     }
 
     public registration() {

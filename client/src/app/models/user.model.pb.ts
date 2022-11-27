@@ -1,4 +1,4 @@
-import { BaseModelPb } from "./base.model.pb";
+import { BaseModelPb } from './base.model.pb';
 
 export interface UserPb extends BaseModelPb {
     avatar?: string;

@@ -9,7 +9,7 @@ export interface ChatsState {
 }
 
 export const initialState: ChatsState = {
-    chats: [],
+    chats: []
 };
 
 export const reducer = createReducer(
@@ -21,6 +21,6 @@ export const reducer = createReducer(
 
         return {
             ...state, currentChat: { ...state.currentChat, messages: [...messages, chatMessage] }
-        }
-    }),
+        };
+    })
 );

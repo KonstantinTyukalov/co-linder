@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Observable } from "rxjs";
-import { User } from "../../dto/user.dto";
+import { Component, Input } from '@angular/core';
+import { Observable } from 'rxjs';
+import { User } from '../../dto/user.dto';
 
 @Component({
     selector: 'app-user',
@@ -8,9 +8,5 @@ import { User } from "../../dto/user.dto";
     styleUrls: ['./user.component.scss']
 })
 export class UserComponent {
-    @Input() user$!: Observable<User | undefined>
-
-    constructor() {
-    }
-
+    @Input() user$!: Observable<User | undefined>;
 }

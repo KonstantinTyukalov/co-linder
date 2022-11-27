@@ -1,6 +1,6 @@
-import { BaseModelPb } from "./base.model.pb";
-import { FlatCommentPb } from "./flatComment.model.pb";
-import { UserPb } from "./user.model.pb";
+import { BaseModelPb } from './base.model.pb';
+import { FlatCommentPb } from './flatComment.model.pb';
+import { UserPb } from './user.model.pb';
 
 export interface FlatPb extends BaseModelPb {
     externalUrl: string;
@@ -14,9 +14,9 @@ export interface FlatPb extends BaseModelPb {
     readyToLiveUsers: string[];
     comments: string[];
     expand?: {
-        owner?: UserPb
-        interestedUsers?: UserPb[]
-        readyToLiveUsers?: UserPb[]
-        comments?: FlatCommentPb[]
-    }
+        owner?: UserPb;
+        interestedUsers?: UserPb[];
+        readyToLiveUsers?: UserPb[];
+        comments?: FlatCommentPb[];
+    };
 }

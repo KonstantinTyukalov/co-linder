@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from "@angular/router";
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-menu',
@@ -7,7 +7,6 @@ import { Router } from "@angular/router";
     styleUrls: ['./menu.component.scss']
 })
 export class MenuComponent implements OnInit {
-
     constructor(private readonly router: Router) {
     }
 
@@ -17,5 +16,4 @@ export class MenuComponent implements OnInit {
     public goToPlace() {
         this.router.navigate(['flats']);
     }
-
 }

@@ -1,17 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Store } from "@ngrx/store";
+import { Store } from '@ngrx/store';
 
-import * as ChatActions from '../../store/actions/chat.actions'
-import { Chat } from "../../dto/chat.dto";
+import * as ChatActions from '../../store/actions/chat.actions';
 
 import * as ChatSelector from '../../store/selectors/chat.selectors';
-import { combineLatest, Observable, Subscription, take } from "rxjs";
-import { ActivatedRoute, Router } from "@angular/router";
-import * as UserSelector from "../../store/selectors/user.selectors";
-import { ChatService } from "../../services/chat.service";
-import { ChatMessage } from "../../dto/chatMessage.dto";
-import { Location } from "@angular/common";
-import { chats } from "../../store/selectors/chat.selectors";
+import { combineLatest, Subscription, take } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import * as UserSelector from '../../store/selectors/user.selectors';
+import { ChatService } from '../../services/chat.service';
+import { ChatMessage } from '../../dto/chatMessage.dto';
+import { Location } from '@angular/common';
+import { chats } from '../../store/selectors/chat.selectors';
 
 @Component({
     selector: 'app-chat',
@@ -25,7 +24,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     public message: string = '';
 
-    private subscriptions: Subscription = new Subscription();
+    private readonly subscriptions: Subscription = new Subscription();
 
     constructor(
         private readonly store: Store,
@@ -46,7 +45,7 @@ export class ChatComponent implements OnInit, OnDestroy {
                 if (userId) {
                     this.store.dispatch(ChatActions.getChatById({ userId }));
                 }
-            }),
+            })
         );
     }
 
@@ -61,14 +60,13 @@ export class ChatComponent implements OnInit, OnDestroy {
                 this.user$
             ).pipe(take(1)).subscribe(([chat, user]) => {
                 this.chatService.sendMessage({
-                    chat: chat,
+                    chat,
                     sender: user,
                     content: this.message
-                } as ChatMessage)
+                } as ChatMessage);
 
-                this.message = ''
+                this.message = '';
             })
         );
-
     }
 }

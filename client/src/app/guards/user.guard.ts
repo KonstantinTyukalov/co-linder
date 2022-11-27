@@ -1,14 +1,13 @@
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from "@angular/router";
-import { Observable } from "rxjs";
-import { Store } from "@ngrx/store";
-import { user } from "../store/selectors/user.selectors";
-import { userCreateOrUpdateInStore } from "../store/actions/user.actions";
-import { map } from "rxjs/operators";
-import { Injectable } from "@angular/core";
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { user } from '../store/selectors/user.selectors';
+import { userCreateOrUpdateInStore } from '../store/actions/user.actions';
+import { map } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
 
 @Injectable()
 export class GetUserGuard implements CanActivate {
-
     private readonly user$ = this.store.select(user);
 
     constructor(

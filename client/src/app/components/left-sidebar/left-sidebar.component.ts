@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Observable } from "rxjs";
-import { User } from "../../dto/user.dto";
-import { Chat } from "../../dto/chat.dto";
-import { Location } from "@angular/common";
+import { Observable } from 'rxjs';
+import { User } from '../../dto/user.dto';
+import { Chat } from '../../dto/chat.dto';
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'app-left-sidebar',
@@ -22,5 +22,4 @@ export class LeftSidebarComponent implements OnInit {
     public onBackClick(): void {
         this.location.back();
     }
-
 }
