@@ -77,25 +77,30 @@ export class FlatService {
         return await this.pbService.getCollection('flats').create(flat);
     }
 
-    async addUserToInterested(userId: string, flatId: string) {
+    async addUserToInterested(userId: string, flatId: string): Promise<Flat> {
         const flatCollection = this.pbService.getCollection('flats')
 
-        const flat = await flatCollection.getOne(flatId) as FlatPb
-        const interestedUsers = flat.interestedUsers
+        const flat = await flatCollection.getOne(flatId, {
+            expand: 'interestedUsers'
+        }) as FlatPb
 
-        if (interestedUsers.includes(userId)) {
+        const interestedUsersIds = (flat?.expand!.interestedUsers?.map(user => user.id) ?? []) as string[]
+
+        if (interestedUsersIds?.includes(userId)) {
             console.log(`THIS USER WITH ID ${userId} already interested. Skipping`)
 
-            return flat;
+            return mapToFlat(flat);
         }
 
         const newFlatState: FlatPb = {
             ...flat,
-            interestedUsers: [...interestedUsers, userId]
+            interestedUsers: [...interestedUsersIds, userId]
         }
-        const result = await flatCollection.update(flatId, newFlatState)
+        const result = await flatCollection.update(flatId, newFlatState, {
+            expand: 'interestedUsers'
+        }) as FlatPb
 
-        return result
+        return mapToFlat(result)
     }
 
     async updateFlat(flat: Flat): Promise<Flat> {
