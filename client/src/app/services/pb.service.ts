@@ -1,9 +1,6 @@
 import PocketBase, { LocalAuthStore } from 'pocketbase';
 import { Injectable } from "@angular/core";
-
-const connectionUrl = 'http://172.16.101.93:3000';
-
-export const STATIC_PATH = connectionUrl + "/api/files/"
+import { environment } from "../../environments/environment";
 
 export type CollectionNameType = CollectionName
     | 'users'
@@ -31,7 +28,7 @@ export class PocketBaseService {
         const authStore = new LocalAuthStore()
         // authStore.loadFromCookie()
         console.log("AuthStore=", authStore)
-        this.pb = new PocketBase(connectionUrl, authStore)
+        this.pb = new PocketBase(environment.serverUrl, authStore)
     }
 
     get PocketBaseInstance(): PocketBase {

@@ -25,7 +25,10 @@
             </div>
             <h2 style="margin-bottom: 1rem">Adress: {{(flat$ | async)?.area}}</h2>
             <h3>{{(flat$ | async)?.description}}</h3>
-            <h3 *ngIf="(flat$ | async)?.externalUrl" style="color: violet">Description on the <a href="{{(flat$ | async)?.externalUrl}}">3d-pary site</a></h3>
+            <h3 *ngIf="(flat$ | async)?.externalUrl" style="color: violet">
+                Description on the
+                <a href="{{(flat$ | async)?.externalUrl}}">3d-pary site</a>
+            </h3>
         </div>
         <div class="comments">
             <div class="chat">

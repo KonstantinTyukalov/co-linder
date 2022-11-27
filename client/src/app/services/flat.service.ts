@@ -1,15 +1,15 @@
 import { Injectable } from "@angular/core";
 import { User } from "src/app/dto/user.dto";
 import { Flat } from "src/app/dto/flat.dto";
-import { PocketBaseService, STATIC_PATH } from "./pb.service";
+import { PocketBaseService } from "./pb.service";
 import { FlatComment } from "../dto/flatComment.dto";
-import { Logger } from "../utils/logger";
 import { expandAvatar } from "./user.service";
 import { Store } from "@ngrx/store";
 import { updateFlatComments } from "../store/actions/flat.actions";
 import { RecordSubscription } from "pocketbase";
 import * as FlatSelectors from "../store/selectors/flat.selectors"
 import { take } from "rxjs/operators";
+import { environment } from "../../environments/environment";
 
 export class FilterFlat {
     withPhoto?: boolean
@@ -36,7 +36,7 @@ function addAnd(str: string, suffix: string): string {
 }
 
 function toFilePath(id: string, fileName: string) {
-    return STATIC_PATH + "flats/" + id + "/" + fileName;
+    return environment.serverUrl + "flats/" + id + "/" + fileName;
 }
 
 function mapToFlat(flat: any): Flat {
