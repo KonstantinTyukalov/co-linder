@@ -3,11 +3,11 @@ import { User } from "../dto/user.dto";
 import { Chat } from "../dto/chat.dto";
 import { PocketBaseService } from "./pb.service";
 import { ChatMessage } from "../dto/chatMessage.dto";
-import { Logger } from "../utils/logger";
 import { expandAvatar } from "./user.service";
 import { RecordSubscription } from "pocketbase";
 import { Store } from "@ngrx/store";
 import { updateChat } from "../store/actions/chat.actions";
+import { ChatPb } from "../models/chats.model.pb";
 
 function mapToChat(chat: any): Chat {
     const result = {
@@ -163,17 +163,36 @@ export class ChatService {
         return true;
     }
 
-    async getChatsByUserId(userId: string) {
+    async getChatsByUserId(userId: string): Promise<Chat[]> {
         const chatCollection = this.pbService.getCollection('chats');
+        const usersCollection = this.pbService.getCollection('users');
 
-        const res = (await chatCollection.getFullList())
-            .filter((record: any) => record.users.includes(userId))
+        const allChats = await chatCollection.getFullList(50, {
+            expand: 'users'
+        }) as ChatPb[]
 
-        console.log("FILTERED CHATS", res)
+        const userChats = allChats.filter((record: any) => record.users.includes(userId))
 
-        Logger.SuccessfulQueryLog(res)
+        console.log('USER CHATS', userChats)
 
-        return res as unknown as Chat[];
+        const expandedChats = userChats as unknown as Chat[]
+
+        for (const userChat in userChats) {
+            const expandedUsers: User[] = []
+            const chatParticipants = userChats[userChat].expand?.users
+
+            if (chatParticipants) {
+                for (const participant of chatParticipants) {
+                    const participantWithAvatar = expandAvatar(participant)
+                    expandedUsers.push(participantWithAvatar)
+                }
+            }
+            expandedChats[userChat].users = expandedUsers
+        }
+
+        console.log("EXPANDED CHATS", userChats)
+
+        return expandedChats as unknown as Chat[];
     }
 
     async sendMessage(message: ChatMessage) {

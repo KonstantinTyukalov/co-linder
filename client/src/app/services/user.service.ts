@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { User } from "src/app/dto/user.dto";
 import { PocketBaseService, STATIC_PATH } from "./pb.service";
-import { environment } from "../../environments/environment";
+import { UserPb } from "../models/user.model.pb";
 
 @Injectable()
 export class UserService {
@@ -25,7 +25,7 @@ export class UserService {
         newUserFormData.append("passwordConfirm", userDto.password!);
         newUserFormData.append("name", userDto.name);
         newUserFormData.append("birthDate", new Date().toString());
-        newUserFormData.append("isWoman", ( userDto.isWoman ?? false ).toString());
+        newUserFormData.append("isWoman", (userDto.isWoman ?? false).toString());
         newUserFormData.append("country", userDto.country ?? '');
         newUserFormData.append("langs", JSON.stringify(langs));
         newUserFormData.append("hasPets", false.toString());
@@ -93,7 +93,7 @@ export class UserService {
     }
 }
 
-export function expandAvatar(user: User): User {
+export function expandAvatar(user: User | UserPb): User {
     if (user === undefined) {
         return user;
     }
