@@ -104,10 +104,20 @@ export class FlatComponent implements OnInit, OnDestroy {
         );
     }
 
-    public async onUserClick(userId: string | undefined) {
-        if (userId) {
-            this.router.navigate(['chat', userId]);
-        }
+    public async onUserClick(userId: string) {
+        this.subscriptions.add(
+            this.user$.pipe(
+            
+            )
+            
+            
+            ((user) => {
+                if (user) {
+                    const chat = this.chatService.tryGetChatWithUser(user, userId)
+                    this.router.navigate(['chat', chat.id]);
+                }
+            })
+        )
     }
 
     public ngOnDestroy(): void {
