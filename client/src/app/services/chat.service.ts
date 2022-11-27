@@ -106,37 +106,6 @@ export class ChatService {
         return createdChat as unknown as Chat;
     }
 
-    private async createChatWithUser(loggedInUser: User, targetUser: User): Promise<ChatPb> {
-        console.log('Trying to create chat between ', loggedInUser, ' and ', targetUser);
-
-        const newChat: ChatPb = {
-            name: `${loggedInUser.name}, ${targetUser.name}`,
-            users: [loggedInUser.id!, targetUser.id!],
-            messages: []
-        }
-
-        const res = await this.pbService.getCollection('chats').create(newChat) as ChatPb;
-
-        console.log('Successfully created chat with: ', loggedInUser, ' and ', targetUser);
-
-        return res;
-    }
-
-    private async getMessageWithPicture(message: ChatMessagesPb): Promise<ChatMessage> {
-        const senderId = message.sender
-
-        const sender = await this.pbService.getCollection('users').getOne(senderId) as UserPb;
-
-        const expandedAvatar = expandAvatar(sender);
-
-        const data: ChatMessage = {
-            ...message as unknown as ChatMessage,
-            sender: expandedAvatar
-        };
-
-        return data;
-    }
-
     async subscribeToChatMessages(chatId: string) {
         this.pbService.getCollection('chats').subscribe(chatId, async (updatedChatRecord: RecordSubscription<Chat>) => {
             console.log('Got message ' + updatedChatRecord.action + ' in chat ' + updatedChatRecord.record.id);
@@ -231,5 +200,36 @@ export class ChatService {
         const chatCollection = this.pbService.getCollection('chats');
         console.log('Leaving all chats');
         chatCollection.unsubscribe();
+    }
+
+    private async createChatWithUser(loggedInUser: User, targetUser: User): Promise<ChatPb> {
+        console.log('Trying to create chat between ', loggedInUser, ' and ', targetUser);
+
+        const newChat: ChatPb = {
+            name: `${loggedInUser.name}, ${targetUser.name}`,
+            users: [loggedInUser.id!, targetUser.id!],
+            messages: []
+        }
+
+        const res = await this.pbService.getCollection('chats').create(newChat) as ChatPb;
+
+        console.log('Successfully created chat with: ', loggedInUser, ' and ', targetUser);
+
+        return res;
+    }
+
+    private async getMessageWithPicture(message: ChatMessagesPb): Promise<ChatMessage> {
+        const senderId = message.sender
+
+        const sender = await this.pbService.getCollection('users').getOne(senderId) as UserPb;
+
+        const expandedAvatar = expandAvatar(sender);
+
+        const data: ChatMessage = {
+            ...message as unknown as ChatMessage,
+            sender: expandedAvatar
+        };
+
+        return data;
     }
 }
