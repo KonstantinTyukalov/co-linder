@@ -69,7 +69,7 @@ export class FlatComponent implements OnInit, OnDestroy {
             ).pipe(
                 take(1)
             ).subscribe(([flat, user]) => {
-                this.flatService.addFlatComment({
+                this.flatService.sendFlatComment({
                     flat,
                     user,
                     content: this.content

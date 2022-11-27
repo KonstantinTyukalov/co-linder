@@ -157,7 +157,7 @@ export class FlatService {
         return flat;
     }
 
-    async addFlatComment(flatComment: FlatComment): Promise<FlatComment> {
+    async sendFlatComment(flatComment: FlatComment): Promise<FlatComment> {
         const flatCollection = this.pbService.getCollection('flats');
 
         console.log('Trying add flat comment', flatComment);
