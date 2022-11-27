@@ -20,8 +20,8 @@ export class UserEffects {
     registrationUser$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(UserActions.registrationUser),
-            switchMap((action: { user: User }) => {
-                return from(this.userService.registerUser(action.user));
+            switchMap((action: { user: User, file?: File }) => {
+                return from(this.userService.registerUser(action.user, action.file));
             }),
             map(() => {
                 return UserActions.registrationUserSuccess()

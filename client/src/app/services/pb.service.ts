@@ -8,7 +8,6 @@ export type CollectionNameType = CollectionName
     | 'users'
     | 'chats'
     | 'chatMessages'
-    | 'interests'
     | 'flats'
     | 'flatComments';
 
@@ -16,7 +15,6 @@ export enum CollectionName {
     USERS = 'users',
     CHATS = 'chats',
     CHATMESSAGES = 'chatMessages',
-    INTERESTS = 'interests',
     FLATS = 'flats',
     FLAT_COMMENTS = 'flatComments',
 }

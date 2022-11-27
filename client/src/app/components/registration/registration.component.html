@@ -2,7 +2,11 @@
     <h1 class="registration-text">Registration</h1>
     <div class="photo">
         <img src="./assets/user-mock.jpg" class="user-photo" alt="your photo">
-        <input style="width: 22rem; horiz-align: center" class="file" type="file" name="file">
+        <input
+            class="file"
+            type="file"
+            name="file"
+            (change)="picPhoto($event)">
     </div>
     <input
         class="email"
