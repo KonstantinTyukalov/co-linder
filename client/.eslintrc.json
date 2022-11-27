@@ -1,0 +1,30 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": "standard-with-typescript",
+    "overrides": [
+    ],
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module",
+        "project": ["tsconfig.json"]
+    },
+    "rules": {
+        "@typescript-eslint/indent": ["error", 4],
+        "@typescript-eslint/semi": ["error", "always"],
+        "@typescript-eslint/member-delimiter-style": ["error", {
+            "multiline": {
+                "delimiter": "semi",
+                "requireLast": true
+            },
+            "singleline": {
+                "delimiter": "semi",
+                "requireLast": true
+            }
+          }],
+        "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
+        "curly": ["error", "all"]
+    }
+}
