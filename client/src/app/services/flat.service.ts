@@ -103,30 +103,6 @@ export class FlatService {
         return mapToFlat(result);
     }
 
-    async updateFlat(flat: Flat): Promise<Flat> {
-        const flatsCollection = this.pbService.getCollection('flats');
-
-        const interestedUsers = flat.interestedUsers?.filter(x => x).map(user => user?.id).filter(x => x) as string[];
-        const readyToLiveUsers = flat.readyToLiveUsers?.filter(x => x).map(user => user?.id).filter(x => x) as string[];
-
-        const newFlatState = {
-            area: flat.area,
-            capacity: flat.capacity,
-            cost: flat.cost,
-            owner: flat.owner.id!,
-            interestedUsers,
-            readyToLiveUsers
-        };
-
-        console.log('Trying to update flat with payload', newFlatState);
-
-        const res = await flatsCollection.update(flat.id!, newFlatState, {
-            expand: 'owner,interestedUsers,readyToLiveUsers'
-        }) as FlatPb;
-
-        return mapToFlat(res);
-    }
-
     async getFlatById(id: string): Promise<Flat> {
         console.log('Trying to get flat by id:', id);
         const res = await this.pbService.getCollection('flats').getOne(id, {
