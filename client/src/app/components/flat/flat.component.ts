@@ -5,7 +5,7 @@ import * as UserSelector from '../../store/selectors/user.selectors';
 import * as FlatActions from '../../store/actions/flat.actions';
 
 import * as FlatSelector from '../../store/selectors/flat.selectors';
-import { combineLatest, Subscription, take } from 'rxjs';
+import { combineLatest, EMPTY, from, Subscription, switchMap, take } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ChatService } from 'src/app/services/chat.service';
 import { Location } from '@angular/common';
@@ -107,17 +107,16 @@ export class FlatComponent implements OnInit, OnDestroy {
     public async onUserClick(userId: string) {
         this.subscriptions.add(
             this.user$.pipe(
-            
-            )
-            
-            
-            ((user) => {
-                if (user) {
-                    const chat = this.chatService.tryGetChatWithUser(user, userId)
-                    this.router.navigate(['chat', chat.id]);
-                }
+                switchMap((user) => {
+                    if (user) {
+                        return from(this.chatService.tryGetChatWithUser(user, userId));
+                    }
+                    return EMPTY;
+                })
+            ).subscribe((chat) => {
+                this.router.navigate(['chat', chat.id]);
             })
-        )
+        );
     }
 
     public ngOnDestroy(): void {

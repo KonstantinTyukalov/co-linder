@@ -53,7 +53,7 @@
             <div
                 class="user"
                 *ngFor="let user of flatInterestedUsers$ | async"
-                (click)="onUserClick(user.id)">
+                (click)="onUserClick(user.id!)">
                 <img [src]="user.avatar" alt="Avatar">
                 <h2>{{user?.name}}</h2>
             </div>
