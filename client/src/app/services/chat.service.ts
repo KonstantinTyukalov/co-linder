@@ -171,18 +171,37 @@ export class ChatService {
 
     async sendMessage(message: ChatMessage) {
         const chatMessagesCollection = this.pbService.getCollection('chatMessages');
+        const chatCollection = this.pbService.getCollection('chats');
+
+        const chatId = message.chat.id!
 
         const newMessage = {
             "content": message.content,
             "sender": message.sender.id,
-            "chat": message.chat.id
+            "chat": chatId
         }
         console.log('Trying to create new chat message: ', newMessage)
 
-        const res = await chatMessagesCollection.create(newMessage)
-        console.log('Added new chat message ', res)
+        const newMessageInCollection = await chatMessagesCollection.create(newMessage)
+        console.log('Added new chat message ', newMessageInCollection)
 
-        return res;
+        console.log('Trying to update chat: ', chatId)
+
+        const chat = await chatCollection.getOne(chatId) as Chat
+
+        const newChat = {
+            ...chat,
+            messages: [
+                ...(chat.messages as unknown as string[]),
+                newMessageInCollection.id
+            ]
+        }
+
+        const updatedChat = await chatCollection.update(chatId, newChat)
+
+        console.log('Successfully updated chat: ', updatedChat.id)
+
+        return newMessageInCollection;
     }
 
     // Not working
