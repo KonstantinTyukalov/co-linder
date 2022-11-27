@@ -1,10 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 
-import { Chat } from '../../dto/chat.dto';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { User } from 'src/app/dto/user.dto';
+import { User } from 'src/app/dto/user.dto'; import { chats } from '../../store/selectors/chat.selectors';
 
 @Component({
     selector: 'app-chats',
@@ -13,11 +12,12 @@ import { User } from 'src/app/dto/user.dto';
 })
 export class ChatsComponent {
     @Input() public user$?: Observable<User | undefined>;
-    @Input() public chats$?: Observable<Chat[]>;
+    public chats$ = this.store.select(chats);
 
     constructor(
         private readonly store: Store,
-        private readonly router: Router) {
+        private readonly router: Router
+    ) {
     }
 
     public onClickRedirect(chatId: string): void {

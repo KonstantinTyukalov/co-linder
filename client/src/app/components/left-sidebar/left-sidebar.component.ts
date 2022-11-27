@@ -4,7 +4,7 @@ import { User } from '../../dto/user.dto';
 
 import { Location } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { chats } from '../../store/selectors/chat.selectors'; import * as ChatActions from '../../store/actions/chat.actions';
+import * as ChatActions from '../../store/actions/chat.actions';
 
 @Component({
     selector: 'app-left-sidebar',
@@ -13,7 +13,6 @@ import { chats } from '../../store/selectors/chat.selectors'; import * as ChatAc
 })
 export class LeftSidebarComponent implements OnInit {
     @Input() user$!: Observable<User | undefined>;
-    public chats$ = this.store.select(chats);
 
     private readonly subscriptions = new Subscription();
 
