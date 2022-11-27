@@ -2,6 +2,8 @@ import PocketBase, { LocalAuthStore } from 'pocketbase';
 import { Injectable } from "@angular/core";
 import { environment } from "../../environments/environment";
 
+export const STATIC_PATH = environment.serverUrl + "/api/files/"
+
 export type CollectionNameType = CollectionName
     | 'users'
     | 'chats'

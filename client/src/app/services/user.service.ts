@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { User } from "src/app/dto/user.dto";
-import { PocketBaseService } from "./pb.service";
+import { PocketBaseService, STATIC_PATH } from "./pb.service";
 import { environment } from "../../environments/environment";
 
 @Injectable()
@@ -95,6 +95,6 @@ export function expandAvatar(user: User): User {
     if (user === undefined) {
         return user;
     }
-    user.avatar = user?.avatar ? environment.serverUrl + "users/" + user.id + "/" + user.avatar : undefined;
+    user.avatar = user?.avatar ? STATIC_PATH + "users/" + user.id + "/" + user.avatar : undefined;
     return user;
 }

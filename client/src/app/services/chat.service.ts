@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { Flat } from "../dto/flat.dto";
 import { User } from "../dto/user.dto";
 import { Chat } from "../dto/chat.dto";
 import { PocketBaseService } from "./pb.service";
@@ -9,7 +8,6 @@ import { expandAvatar } from "./user.service";
 import { RecordSubscription } from "pocketbase";
 import { Store } from "@ngrx/store";
 import { updateChat } from "../store/actions/chat.actions";
-import { chat } from "../store/selectors/chat.selectors";
 
 function mapToChat(chat: any): Chat {
     const result = {
@@ -116,7 +114,10 @@ export class ChatService {
     async createChatWithUser(loggedInUser: User, targetUser: User): Promise<Chat> {
         console.log('Trying to create chat between ', loggedInUser, ' and ', targetUser)
 
-        const res = await this.pbService.getCollection('chats').create({ name: `${loggedInUser.name} - ${targetUser.name}`, users: [loggedInUser.id, targetUser.id] }) as Chat
+        const res = await this.pbService.getCollection('chats').create({
+            name: `${ loggedInUser.name } - ${ targetUser.name }`,
+            users: [loggedInUser.id, targetUser.id]
+        }) as Chat
 
         console.log("Successfully created chat with: ", loggedInUser, ' and ', targetUser)
 
@@ -124,7 +125,7 @@ export class ChatService {
     }
 
     private async getMessageWithPicture(message: ChatMessage): Promise<ChatMessage> {
-        const senderId = (message.sender) as unknown as string
+        const senderId = ( message.sender ) as unknown as string
 
         const sender = await this.pbService.getCollection('users').getOne(senderId) as User
 
@@ -158,7 +159,7 @@ export class ChatService {
     async getChatsByUserId(userId: string) {
         const chatCollection = this.pbService.getCollection('chats');
 
-        const res = (await chatCollection.getFullList())
+        const res = ( await chatCollection.getFullList() )
             .filter((record: any) => record.users.includes(userId))
 
         console.log("FILTERED CHATS", res)
