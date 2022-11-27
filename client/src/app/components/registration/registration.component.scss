@@ -13,6 +13,11 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
+    .file {
+        width: 22rem;
+        horiz-align: center
+    }
 }
 
 .user-photo {

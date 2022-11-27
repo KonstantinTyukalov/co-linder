@@ -12,6 +12,7 @@ import { Router } from "@angular/router";
 })
 export class RegistrationComponent {
     public countries = COUNTRIES;
+    private avatarForUpload?: File
 
     public newUser: User = {
         email: '',
@@ -37,9 +38,14 @@ export class RegistrationComponent {
         console.log(this.newUser);
     }
 
+    public picPhoto(e: Event) {
+        const files = ( <HTMLInputElement> e.target ).files
+        this.avatarForUpload = files ? files[0] : undefined
+    }
+
     public registration() {
-        const u = { ...this.newUser };
-        this.store.dispatch(UserActions.registrationUser({ user: u }));
+        const user = { ...this.newUser };
+        this.store.dispatch(UserActions.registrationUser({ user, file: this.avatarForUpload }));
         this.router.navigate(['login']);
     }
 

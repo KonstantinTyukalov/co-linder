@@ -10,28 +10,28 @@ export class UserService {
     constructor(private pbService: PocketBaseService) {
     }
 
-    async registerUser(userDto: User, userAvatar: File) {
+    async registerUser(userDto: User, userAvatar?: File) {
 
         const newUserFormData = new FormData();
 
         // example create data
         const langs = userDto.languages!.split(',').map(s => s.trim());
 
-        newUserFormData.append('avatar', userAvatar)
-        newUserFormData.append("email", userDto.email)
-        newUserFormData.append("emailVisibility", true.toString())
+        userAvatar ? newUserFormData.append('avatar', userAvatar) : undefined;
+        newUserFormData.append("email", userDto.email);
+        newUserFormData.append("emailVisibility", true.toString());
 
-        newUserFormData.append("password", userDto.password!)
-        newUserFormData.append("passwordConfirm", userDto.password!)
-        newUserFormData.append("name", userDto.name)
-        newUserFormData.append("birthDate", new Date().toString())
-        newUserFormData.append("isWoman", userDto.isWoman!.toString())
-        newUserFormData.append("country", userDto.country!)
-        newUserFormData.append("langs", JSON.stringify(langs))
-        newUserFormData.append("hasPets", false.toString())
-        newUserFormData.append("aboutMyself", userDto.description!)
+        newUserFormData.append("password", userDto.password!);
+        newUserFormData.append("passwordConfirm", userDto.password!);
+        newUserFormData.append("name", userDto.name);
+        newUserFormData.append("birthDate", new Date().toString());
+        newUserFormData.append("isWoman", ( userDto.isWoman ?? false ).toString());
+        newUserFormData.append("country", userDto.country ?? '');
+        newUserFormData.append("langs", JSON.stringify(langs));
+        newUserFormData.append("hasPets", false.toString());
+        newUserFormData.append("aboutMyself", userDto.description ?? '');
 
-        console.log('Sending new user:', newUserFormData);
+        console.log('Sending new user:', JSON.stringify(newUserFormData));
 
         const record = await this.pbService.getCollection('users').create(newUserFormData);
 
