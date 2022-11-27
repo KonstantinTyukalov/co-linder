@@ -10,6 +10,7 @@ import { RecordSubscription } from 'pocketbase';
 import * as FlatSelectors from '../store/selectors/flat.selectors';
 import { take } from 'rxjs/operators';
 import { FlatPb } from '../models/flat.model.pb';
+import { FlatCommentPb } from '../models/flatComment.model.pb';
 
 export class FilterFlat {
     withPhoto?: boolean;
@@ -139,7 +140,7 @@ export class FlatService {
         console.log('Trying add flat comment', flatComment);
         const flatId = flatComment.flat.id!;
 
-        const data = {
+        const data: FlatCommentPb = {
             flat: flatId,
             user: flatComment.user.id!,
             content: flatComment.content
@@ -147,18 +148,18 @@ export class FlatService {
         console.log('ADD FLAT COMMENT, ', data);
         const newFlatComment = await this.pbService.getCollection('flatComments').create(data);
 
-        const flat = await flatCollection.getOne(flatId);
+        const flat = await flatCollection.getOne(flatId) as FlatPb;
 
         const flatComments = (flat as any).comments as string[];
 
-        const newFlatState = {
+        const newFlatState: FlatPb = {
             ...flat,
             comments: [...flatComments, newFlatComment.id]
         };
 
         console.log('Trying to update flat state. new state: ', newFlatState);
 
-        await flatCollection.update(newFlatState.id, newFlatState);
+        await flatCollection.update(newFlatState.id!, newFlatState);
 
         console.log('Flat comment successfully added.');
         return flatComment;
