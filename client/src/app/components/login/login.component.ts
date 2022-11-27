@@ -19,7 +19,8 @@ export class LoginComponent {
     }
 
     public doLogin() {
-        this.store.dispatch(UserActions.userLogin({ login: this.login, password: this.password }))
+        this.store.dispatch(UserActions.userLogin({ login: this.login, password: this.password }));
+        this.router.navigate(['menu']);
     }
 
     public redirectToRegistration() {

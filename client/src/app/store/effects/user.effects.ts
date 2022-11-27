@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { UserService } from "../../services/user.service";
 import * as UserActions from "../actions/user.actions";
-import { delayWhen, EMPTY, from, switchMap, tap } from "rxjs";
+import { catchError, delayWhen, EMPTY, from, switchMap, tap } from "rxjs";
 import { map } from 'rxjs/operators'
 import { User } from "../../dto/user.dto";
 import { Router } from "@angular/router";
@@ -33,11 +33,18 @@ export class UserEffects {
         return this.actions$.pipe(
             ofType(UserActions.userLogin),
             switchMap((action: { login: string, password: string }) => {
-                return from(this.userService.loginUser(action.login, action.password))
+                return from(this.userService.loginUser(action.login, action.password)).pipe(
+                    tap((user) => {
+                        localStorage.setItem('userMetaData', JSON.stringify(user));
+                    })
+                )
             }),
             map((user: User) => {
-                this.router.navigate(['menu']);
-                return UserActions.userLoginSuccess({ user })
+                return UserActions.userCreateOrUpdateInStore({ user })
+            }),
+            catchError((err) => {
+                console.log(err);
+                return EMPTY;
             })
         )
     });
