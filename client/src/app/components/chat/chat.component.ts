@@ -10,7 +10,6 @@ import * as UserSelector from '../../store/selectors/user.selectors';
 import { ChatService } from '../../services/chat.service';
 import { ChatMessage } from '../../dto/chatMessage.dto';
 import { Location } from '@angular/common';
-import { chats } from '../../store/selectors/chat.selectors';
 
 @Component({
     selector: 'app-chat',
@@ -18,7 +17,6 @@ import { chats } from '../../store/selectors/chat.selectors';
     styleUrls: ['./chat.component.scss']
 })
 export class ChatComponent implements OnInit, OnDestroy {
-    public chats$ = this.store.select(chats);
     public chat$ = this.store.select(ChatSelector.chat);
     public user$ = this.store.select(UserSelector.user);
 
@@ -41,9 +39,9 @@ export class ChatComponent implements OnInit, OnDestroy {
                 this.route.params,
                 this.user$
             ).subscribe(([param, user]) => {
-                const userId = param['id'];
-                if (userId) {
-                    this.store.dispatch(ChatActions.getChatById({ currentUser: user!, targetUserId: userId }));
+                const chatId = param['id'];
+                if (chatId) {
+                    this.store.dispatch(ChatActions.getChatById({ chatId }));
                 }
             })
         );

@@ -27,37 +27,41 @@ export class ChatService {
     constructor(private readonly pbService: PocketBaseService, private readonly store: Store) {
     }
 
-    async getChatWithMessageSendersAvatars(user: User, targetUserId: string): Promise<Chat> {
-        console.log('targetUserId in getChatWithMessageSendersAvatars = ', targetUserId);
+    async getChatById(chatId: string): Promise<Chat> {
+        const chatsCollection = this.pbService.getCollection('chats');
+        const usersCollection = this.pbService.getCollection('users');
 
-        console.log('LOGGED_IN_USER', user)
-        const chat = await this.tryGetChatWithUser(user, targetUserId);
-
-        console.log('GOT CHAT WITH TARGET USER ', chat);
+        const chat = await chatsCollection.getOne(chatId, {
+            expand: 'users, messages'
+        }) as ChatPb;
 
         const mappedChat = mapToChat(chat);
 
-        const allMessages = await this.pbService.getCollection('chatMessages').getFullList() as ChatMessage[];
-
-        console.log('ALL MESSAGES', allMessages);
-
-        const chatMessages = allMessages.filter(m => m.chat === chat.id);
-
-        console.log('CHAT MESSAGES', chatMessages);
+        const chatMessages = chat.expand?.messages;
 
         const data = {
             ...mappedChat,
-            messages: chatMessages
+            messages: chatMessages as unknown as ChatMessage[]
         };
 
         if (chatMessages) {
-            const expandedMessages = [];
-            for (const message of chatMessages) {
-                const messageSenderId = message.sender as unknown as string;
-                const sender = await this.pbService.getCollection('users').getOne(messageSenderId) as User;
+            const participantsId = chat.users;
+            const expandedParticipants: User[] = [];
 
-                const expandedMessage = {
+            for (const participantId of participantsId) {
+                const participant = usersCollection.getOne(participantId) as unknown as User;
+                const expandedParticipant = expandAvatar(participant);
+                expandedParticipants.push(expandedParticipant);
+            }
+
+            const expandedMessages: ChatMessage[] = [];
+            for (const message of chatMessages) {
+                const messageSenderId = message.sender;
+                const sender = expandedParticipants.find(user => user.id === messageSenderId)!;
+
+                const expandedMessage: ChatMessage = {
                     ...message,
+                    chat: message.chat as unknown as Chat,
                     sender: expandAvatar(sender)
                 };
 
@@ -96,8 +100,8 @@ export class ChatService {
         });
 
         if (existedChat) {
-            console.log('Found chat with user ', existedChat)
-            return existedChat as unknown as Chat
+            console.log('Found chat with user ', existedChat);
+            return existedChat as unknown as Chat;
         }
 
         console.log('No available chats found. Trying to create new.');
@@ -163,7 +167,7 @@ export class ChatService {
         return true;
     }
 
-    async getChatsByUserId(userId: string): Promise<Chat[]> {
+    async getAllChatsByUserId(userId: string): Promise<Chat[]> {
         const chatCollection = this.pbService.getCollection('chats');
 
         const allChats = await chatCollection.getFullList(50, {

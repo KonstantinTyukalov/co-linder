@@ -1,8 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { User } from '../../dto/user.dto';
-import { Chat } from '../../dto/chat.dto';
+
 import { Location } from '@angular/common';
+import { Store } from '@ngrx/store';
+import { chats } from '../../store/selectors/chat.selectors'; import * as ChatActions from '../../store/actions/chat.actions';
 
 @Component({
     selector: 'app-left-sidebar',
@@ -11,12 +13,24 @@ import { Location } from '@angular/common';
 })
 export class LeftSidebarComponent implements OnInit {
     @Input() user$!: Observable<User | undefined>;
-    @Input() chats$!: Observable<Chat[]>;
+    public chats$ = this.store.select(chats);
 
-    constructor(private readonly location: Location) {
+    private readonly subscriptions = new Subscription();
+
+    constructor(
+        private readonly location: Location,
+        private readonly store: Store
+    ) {
     }
 
     ngOnInit(): void {
+        this.subscriptions.add(
+            this.user$?.subscribe((user) => {
+                if (user) {
+                    this.store.dispatch(ChatActions.getAllChatsByUserId({ id: user.id! }));
+                }
+            })
+        );
     }
 
     public onBackClick(): void {

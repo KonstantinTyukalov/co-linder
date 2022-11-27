@@ -6,7 +6,6 @@ import { Flat } from '../../dto/flat.dto';
 
 import { Observable } from 'rxjs';
 import { user } from '../../store/selectors/user.selectors';
-import { chats } from '../../store/selectors/chat.selectors';
 import { flats } from '../../store/selectors/flat.selectors';
 
 @Component({
@@ -16,7 +15,6 @@ import { flats } from '../../store/selectors/flat.selectors';
 })
 export class ApartmentsComponent implements OnInit {
     public user$ = this.store.select(user);
-    public chats$ = this.store.select(chats);
 
     public area!: string;
     public name!: string;

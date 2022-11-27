@@ -6,7 +6,6 @@ import { from, switchMap } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Chat } from 'src/app/dto/chat.dto';
 import { Store } from '@ngrx/store';
-import { User } from 'src/app/dto/user.dto';
 
 @Injectable()
 export class ChatEffects {
@@ -17,14 +16,14 @@ export class ChatEffects {
     ) {
     }
 
-    getChatsByUserId$ = createEffect(() => {
+    getAllChatsByUserId$ = createEffect(() => {
         return this.actions$.pipe(
-            ofType(ChatActions.getChatsByUserId),
+            ofType(ChatActions.getAllChatsByUserId),
             switchMap((action: { id: string; }) => {
-                return from(this.chatService.getChatsByUserId(action.id));
+                return from(this.chatService.getAllChatsByUserId(action.id));
             }),
             map((chats: Chat[]) => {
-                return ChatActions.getChatsByUserIdSuccess({ chats });
+                return ChatActions.getAllChatsByUserIdSuccess({ chats });
             })
         );
     });
@@ -32,8 +31,8 @@ export class ChatEffects {
     getChatById$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(ChatActions.getChatById),
-            switchMap((action: { currentUser: User, targetUserId: string }) => {
-                return from(this.chatService.getChatWithMessageSendersAvatars(action.currentUser, action.targetUserId!));
+            switchMap((action: { chatId: string; }) => {
+                return from(this.chatService.getChatById(action.chatId));
             }),
             map((chat: Chat) => {
                 return ChatActions.getChatByIdSuccess({ chat });

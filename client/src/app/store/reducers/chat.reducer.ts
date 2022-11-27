@@ -14,7 +14,7 @@ export const initialState: ChatsState = {
 
 export const reducer = createReducer(
     initialState,
-    on(ChatsActions.getChatsByUserIdSuccess, (state, { chats }) => ({ ...state, chats })),
+    on(ChatsActions.getAllChatsByUserIdSuccess, (state, { chats }) => ({ ...state, chats })),
     on(ChatsActions.getChatByIdSuccess, (state, { chat }) => ({ ...state, currentChat: chat })),
     on(ChatsActions.updateChat, (state, { chatMessage }) => {
         const messages = state.currentChat?.messages ?? [];

@@ -38,7 +38,7 @@ export class TestComponent implements OnInit {
     }
 
     private testGettingChats() {
-        this.chatService.getChatsByUserId(user1.id!);
+        this.chatService.getAllChatsByUserId(user1.id!);
     }
 
     private sendMessageTest() {

@@ -3,5 +3,5 @@
         <h2>Back</h2>
     </button>
     <app-user [user$]="user$"></app-user>
-    <app-chats *ngIf="chats$ | async" [user$]="user$" [chats$]="chats$"></app-chats>
+    <app-chats [user$]="user$" [chats$]="chats$"></app-chats>
 </div>

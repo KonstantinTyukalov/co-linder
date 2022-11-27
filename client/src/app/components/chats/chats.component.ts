@@ -1,9 +1,8 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 
-import * as ChatActions from '../../store/actions/chat.actions';
 import { Chat } from '../../dto/chat.dto';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { User } from 'src/app/dto/user.dto';
 
@@ -12,33 +11,16 @@ import { User } from 'src/app/dto/user.dto';
     templateUrl: './chats.component.html',
     styleUrls: ['./chats.component.scss']
 })
-export class ChatsComponent implements OnInit, OnDestroy {
+export class ChatsComponent {
     @Input() public user$?: Observable<User | undefined>;
     @Input() public chats$?: Observable<Chat[]>;
 
-    public localUser: User = {} as User;
-
-    constructor(private readonly store: Store, private readonly router: Router) {
+    constructor(
+        private readonly store: Store,
+        private readonly router: Router) {
     }
-
-    private readonly subscriptions: Subscription = new Subscription();
 
     public onClickRedirect(chat: Chat): void {
         this.router.navigate(['/chat', chat.id], { replaceUrl: true });
-    }
-
-    public ngOnInit(): void {
-        this.subscriptions.add(
-            this.user$?.subscribe((user) => {
-                if (user) {
-                    this.localUser = user;
-                    this.store.dispatch(ChatActions.getChatsByUserId({ id: user.id! }));
-                }
-            })
-        );
-    }
-
-    ngOnDestroy(): void {
-        this.subscriptions.unsubscribe();
     }
 }
