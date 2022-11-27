@@ -1,5 +1,7 @@
 # match-shared-app
 
+Akvelon Hackaton 2022 application to find co-living place.
+
 ### Start back-end
 
 Database dump (from Hackaton 2022/11/26 end):
