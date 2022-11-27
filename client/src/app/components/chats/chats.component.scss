@@ -1,15 +1,39 @@
-.content {
+:host {
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-sizing: border-box;
+}
 
-    button {
-        border: 2px solid #000af9;
-        border-radius: 1rem;
-        background-color: #b9b5ff;
-        width: 70%;
+button {
+    padding: 1rem 0.5rem;
+    border-radius: 1rem;
+    border: none;
+    background-color: white;
+    box-shadow: 0 0 5px 1px #ffffff;
+    width: 90%;
+    margin-bottom: 2rem;
+    color: inherit;
+
+    .photos {
+        margin-top: 0.5rem;
+        display: flex;
+        justify-content: space-around;
+
+        img {
+            border-radius: 50%;
+            width: 3rem;
+        }
     }
+
+
+}
+
+.line {
+    background-color: #e8e8e8;
+    height: 0.1px;
+    width: 80%;
+    box-shadow: 0 0 5px 1px #ffffff;
+    margin-bottom: 2rem;
 }

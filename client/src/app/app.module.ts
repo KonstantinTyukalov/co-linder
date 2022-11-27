@@ -25,6 +25,8 @@ import { ChatService } from './services/chat.service';
 import { ChatComponent } from "./components/chat/chat.component";
 import { ChatEffects } from "./store/effects/chat.effects";
 import { ChatsComponent } from './components/chats/chats.component';
+import { UserComponent } from './components/user/user.component';
+import { LeftSidebarComponent } from './components/left-sidebar/left-sidebar.component';
 
 @NgModule({
     declarations: [
@@ -37,7 +39,9 @@ import { ChatsComponent } from './components/chats/chats.component';
         FlatComponent,
         FlatCardComponent,
         ChatComponent,
-        ChatsComponent
+        ChatsComponent,
+        UserComponent,
+        LeftSidebarComponent
     ],
     imports: [
         BrowserModule,

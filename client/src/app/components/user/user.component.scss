@@ -1,0 +1,33 @@
+:host {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 2rem;
+}
+
+.content {
+    margin-top: 2rem;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    box-shadow: 0 0 5px white;
+    border-radius: 1rem;
+    box-sizing: border-box;
+
+    img {
+        border-radius: 50%;
+        width: 10rem;
+        height: 10rem;
+        margin-bottom: 1rem;
+    }
+
+    h2 {
+        text-align: center;
+        width: 100%;
+        color: white;
+    }
+}

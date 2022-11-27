@@ -1,0 +1,26 @@
+.content {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    box-sizing: border-box;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    color: inherit;
+    overflow: hidden;
+
+    .back {
+        background-color: white;
+        border: none;
+        border-radius: 1rem;
+        width: 30%;
+        height: 4rem;
+        box-shadow: 0 0 5px 1px #ffffff;
+        color: inherit;
+
+        h2 {
+            color: inherit;
+        }
+    }
+}

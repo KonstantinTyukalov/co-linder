@@ -1,6 +1,6 @@
 <div class="content">
     <div class="menu">
-        <app-chats></app-chats>
+        <app-left-sidebar [user$]="user$" [chats$]="chats$"></app-left-sidebar>
     </div>
     <div class="list-content">
         <div class="searching">
@@ -15,7 +15,8 @@
                 <input placeholder="Interested MIN" type="number" [(ngModel)]="interestedMin" style="width: 11rem">
                 <input placeholder="Ready to live MIN" type="number" [(ngModel)]="readyToLiveMin" style="width: 13rem">
                 <input placeholder="Ready to live MAX" type="number" [(ngModel)]="readyToLiveMin" style="width: 13rem">
-                <span>Posted not later than</span><input placeholder="Not older than" type="date" [(ngModel)]="createdMin" style="width: 10rem">
+                <span>Posted not later than</span><input placeholder="Not older than" type="date"
+                                                         [(ngModel)]="createdMin" style="width: 10rem">
             </div>
             <button (click)="onClickFilter()"><h4>Apply Filters</h4></button>
         </div>

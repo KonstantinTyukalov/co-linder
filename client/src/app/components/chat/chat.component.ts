@@ -11,6 +11,7 @@ import * as UserSelector from "../../store/selectors/user.selectors";
 import { ChatService } from "../../services/chat.service";
 import { ChatMessage } from "../../dto/chatMessage.dto";
 import { Location } from "@angular/common";
+import { chats } from "../../store/selectors/chat.selectors";
 
 @Component({
     selector: 'app-chat',
@@ -18,7 +19,8 @@ import { Location } from "@angular/common";
     styleUrls: ['./chat.component.scss']
 })
 export class ChatComponent implements OnInit, OnDestroy {
-    public chat$: Observable<Chat | undefined> = this.store.select(ChatSelector.chat);
+    public chats$ = this.store.select(chats);
+    public chat$ = this.store.select(ChatSelector.chat);
     public user$ = this.store.select(UserSelector.user);
 
     public message: string = '';
@@ -50,10 +52,6 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy(): void {
         this.subscriptions.unsubscribe();
-    }
-
-    public onBackClick(): void {
-        this.location.back();
     }
 
     public onClickSend(): void {
