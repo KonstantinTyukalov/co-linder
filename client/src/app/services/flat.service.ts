@@ -70,7 +70,7 @@ export class FlatService {
 
     async createFlat(flat: Flat): Promise<Flat> {
         console.log('Trying to create flat', flat);
-        return await this.pbService.PocketBaseInstance.collection('flats').create(flat);
+        return await this.pbService.getCollection('flats').create(flat);
     }
 
     async updateFlat(flat: Flat): Promise<Flat> {
@@ -81,14 +81,14 @@ export class FlatService {
             readyToLiveUsers: flat.readyToLiveUsers?.map(user => user?.id).filter(x => x)
         }
         console.log('Trying to update flat with payload', payload);
-        return await mapToFlat(this.pbService.PocketBaseInstance.collection('flats').update(flat.id!, payload, {
+        return await mapToFlat(this.pbService.getCollection('flats').update(flat.id!, payload, {
             expand: "owner,interestedUsers,readyToLiveUsers"
         }));
     }
 
     async getFlatById(id: string): Promise<Flat> {
         console.log('Trying to get flat by id:', id);
-        const res = await this.pbService.PocketBaseInstance.collection('flats').getOne(id, {
+        const res = await this.pbService.getCollection('flats').getOne(id, {
             expand: "owner,interestedUsers,readyToLiveUsers"
         });
 
@@ -97,7 +97,7 @@ export class FlatService {
 
     async getFlatCommentsById(flatId: string): Promise<FlatComment[]> {
         console.log('Trying to get comments for flat by id:', flatId);
-        const result = await this.pbService.PocketBaseInstance.collection('flatComments').getFullList(200, {
+        const result = await this.pbService.getCollection('flatComments').getFullList(200, {
             filter: "flat = '" + flatId + "'",
             expand: 'user',
             sort: '+created'
@@ -125,11 +125,11 @@ export class FlatService {
             "content": flatComment.content
         }
         console.log("ADD FLAT COMMENT, ", data)
-        return await this.pbService.PocketBaseInstance.collection('flatComments').create(data);
+        return await this.pbService.getCollection('flatComments').create(data);
     }
 
     async subscribeToFlatComments(flatId: string) {
-        const collection = this.pbService.PocketBaseInstance.collection('flatComments');
+        const collection = this.pbService.getCollection('flatComments');
         collection.subscribe("*", (data: RecordSubscription<FlatComment>) => {
             console.log("Got comment " + data.action + " in flat " + data.record.flat + ": " + data.record.content)
             if (data.action == "create" && data.record.flat.toString() == flatId) {
@@ -145,7 +145,7 @@ export class FlatService {
 
     async getFlats(): Promise<Flat[]> {
         console.log('Trying to get flats');
-        const res = this.pbService.PocketBaseInstance.collection('flats').getFullList(200, {
+        const res = this.pbService.getCollection('flats').getFullList(200, {
             expand: "owner,interestedUsers,readyToLiveUsers"
         });
         return ( await res ).map(flat => mapToFlat(flat))
@@ -166,7 +166,7 @@ export class FlatService {
         if (filter.readyToLiveMin) filterStr = addAnd(filterStr, "created < \"" + filter.createdMin + "\"");
         // Remained filters are quite hard implement on server so do in front-end.
         console.log('Looking for flats with filterString=' + filterStr, filter);
-        const result = await this.pbService.PocketBaseInstance.collection('flats').getList(
+        const result = await this.pbService.getCollection('flats').getList(
             page,
             this.PER_PAGE,
             {

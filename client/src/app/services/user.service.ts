@@ -30,12 +30,12 @@ export class UserService {
 
         console.log('Sending new user:', data);
 
-        const record = await this.pbService.PocketBaseInstance.collection('users').create(data);
+        const record = await this.pbService.getCollection('users').create(data);
 
         console.log('Record created', record);
 
         // (optional) send an email verification request
-        const isVerified = await this.pbService.PocketBaseInstance.collection('users').requestVerification(userDto.email);
+        const isVerified = await this.pbService.getCollection('users').requestVerification(userDto.email);
 
         console.log("Email to verify sended:", isVerified)
     }
@@ -86,7 +86,7 @@ export class UserService {
 
     async getUserById(id: string): Promise<User> {
         console.log('Trying to get user by id:', id);
-        return await this.pbService.PocketBaseInstance.collection('users').getOne(id);
+        return await this.pbService.getCollection('users').getOne(id);
     }
 }
 

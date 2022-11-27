@@ -37,7 +37,7 @@ export class ChatService {
 
         const mappedChat = mapToChat(chat)
 
-        const allMessages = await this.pbService.PocketBaseInstance.collection('chatMessages').getFullList() as ChatMessage[]
+        const allMessages = await this.pbService.getCollection('chatMessages').getFullList() as ChatMessage[]
 
         console.log('ALL MESSAGES', allMessages)
 
@@ -54,7 +54,7 @@ export class ChatService {
             const expandedMessages = []
             for (const message of chatMessages) {
                 const messageSenderId = message.sender as unknown as string
-                const sender = await this.pbService.PocketBaseInstance.collection('users').getOne(messageSenderId) as User;
+                const sender = await this.pbService.getCollection('users').getOne(messageSenderId) as User;
 
                 const expandedMessage = {
                     ...message,
@@ -75,7 +75,7 @@ export class ChatService {
     }
 
     async tryGetChatWithUser(targetUserId: string): Promise<Chat> {
-        const chatsCollection = this.pbService.PocketBaseInstance.collection('chats')
+        const chatsCollection = this.pbService.getCollection('chats')
         const currentUser = this.pbService.PocketBaseInstance.authStore.model as unknown as User;
 
         console.log("Current user: ", currentUser)
@@ -106,7 +106,7 @@ export class ChatService {
 
         console.log("Getting user by Id ", targetUserId)
 
-        const targetUser = await this.pbService.PocketBaseInstance.collection('users').getOne(targetUserId) as User
+        const targetUser = await this.pbService.getCollection('users').getOne(targetUserId) as User
 
         const createdChat = await this.createChatWithUser(currentUser, targetUser)
 
@@ -116,7 +116,7 @@ export class ChatService {
     async createChatWithUser(loggedInUser: User, targetUser: User): Promise<Chat> {
         console.log('Trying to create chat between ', loggedInUser, ' and ', targetUser)
 
-        const res = await this.pbService.PocketBaseInstance.collection('chats').create({ name: `${loggedInUser.name} - ${targetUser.name}`, users: [loggedInUser.id, targetUser.id] }) as Chat
+        const res = await this.pbService.getCollection('chats').create({ name: `${loggedInUser.name} - ${targetUser.name}`, users: [loggedInUser.id, targetUser.id] }) as Chat
 
         console.log("Successfully created chat with: ", loggedInUser, ' and ', targetUser)
 
@@ -126,7 +126,7 @@ export class ChatService {
     private async getMessageWithPicture(message: ChatMessage): Promise<ChatMessage> {
         const senderId = (message.sender) as unknown as string
 
-        const sender = await this.pbService.PocketBaseInstance.collection('users').getOne(senderId) as User
+        const sender = await this.pbService.getCollection('users').getOne(senderId) as User
 
         const expandedAvatar = expandAvatar(sender);
 
@@ -141,7 +141,7 @@ export class ChatService {
     async subscribeToChatMessages(chatId: string) {
         const user = this.pbService.PocketBaseInstance.authStore.model;
 
-        this.pbService.PocketBaseInstance.collection('chatMessages').subscribe("*", async (data: RecordSubscription<ChatMessage>) => {
+        this.pbService.getCollection('chatMessages').subscribe("*", async (data: RecordSubscription<ChatMessage>) => {
             console.log("Got message " + data.action + " in chat " + data.record.chat + ": " + data.record.content)
             if (data.action == "create" && data.record.chat == chatId) {
                 const message = await this.getMessageWithPicture(data.record)
@@ -156,7 +156,7 @@ export class ChatService {
     }
 
     async getChatsByUserId(userId: string) {
-        const chatCollection = this.pbService.PocketBaseInstance.collection('chats');
+        const chatCollection = this.pbService.getCollection('chats');
 
         const res = (await chatCollection.getFullList())
             .filter((record: any) => record.users.includes(userId))
@@ -169,7 +169,7 @@ export class ChatService {
     }
 
     async sendMessage(message: ChatMessage) {
-        const chatMessagesCollection = this.pbService.PocketBaseInstance.collection('chatMessages');
+        const chatMessagesCollection = this.pbService.getCollection('chatMessages');
 
         const newMessage = {
             "content": message.content,
@@ -186,7 +186,7 @@ export class ChatService {
 
     // Not working
     async leaveChat() {
-        const chatCollection = this.pbService.PocketBaseInstance.collection('chats');
+        const chatCollection = this.pbService.getCollection('chats');
         console.log('Leaving all chats')
         chatCollection.unsubscribe();
     }
