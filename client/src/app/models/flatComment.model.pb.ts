@@ -4,7 +4,7 @@ import { UserPb } from './user.model.pb';
 
 export interface FlatCommentPb extends BaseModelPb {
     flat: string;
-    user: string;
+    sender: string;
     content: string;
     expand?: {
         flat?: FlatPb;

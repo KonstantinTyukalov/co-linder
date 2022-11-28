@@ -32,10 +32,10 @@
                     <div
                         class="chat-message"
                         *ngFor="let comment of flatComments$ | async"
-                        [ngClass]="comment?.user?.id === '1' ? 'chat-message-left' : 'chat-message-right'">
-                        <img [src]="comment?.user?.avatar" alt="">
+                        [ngClass]="comment?.sender?.id === '1' ? 'chat-message-left' : 'chat-message-right'">
+                        <img [src]="comment?.sender?.avatar" alt="">
                         <div>
-                            <h4>{{comment.user.name}}</h4>
+                            <h4>{{comment.sender.name}}</h4>
                             <h2 style="font-weight: normal">{{comment.content}}</h2>
                         </div>
                     </div>

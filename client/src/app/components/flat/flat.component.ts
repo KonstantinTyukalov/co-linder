@@ -71,7 +71,7 @@ export class FlatComponent implements OnInit, OnDestroy {
             ).subscribe(([flat, user]) => {
                 this.flatService.sendFlatComment({
                     flat,
-                    user,
+                    sender: user,
                     content: this.content
                 } as FlatComment);
             })

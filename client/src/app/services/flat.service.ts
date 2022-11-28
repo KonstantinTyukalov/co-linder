@@ -62,7 +62,7 @@ function mapToFlat(flat: FlatPb): Flat {
 function mapToFlatComment(comment: any): FlatComment {
     const result = {
         ...comment,
-        user: expandAvatar(comment.expand!.user!)
+        sender: expandAvatar(comment.expand!.sender!)
     };
     delete result.expand;
     return result;
@@ -119,7 +119,7 @@ export class FlatService {
         console.log('Trying to get comments for flat by id:', flatId);
         const result = await this.pbService.getCollection('flatComments').getFullList(200, {
             filter: "flat = '" + flatId + "'",
-            expand: 'user',
+            expand: 'sender',
             sort: '+created'
         });
         return result.map(comment => mapToFlatComment(comment));
@@ -144,7 +144,7 @@ export class FlatService {
 
         const data: FlatCommentPb = {
             flat: flatId,
-            user: flatComment.user.id!,
+            sender: flatComment.sender.id!,
             content: flatComment.content
         };
         console.log('ADD FLAT COMMENT, ', data);
@@ -169,15 +169,13 @@ export class FlatService {
 
     private async getCommentWithSenderAvatar(comment: FlatCommentPb): Promise<FlatComment> {
 
-        const senderId = comment.user
+        const senderId = comment.sender
 
         const sender = await this.pbService.getCollection('users').getOne(senderId) as UserPb;
 
-        const expandedAvatar = expandAvatar(sender);
-
         const data: FlatComment = {
             ...comment as unknown as FlatComment,
-            user: expandedAvatar
+            sender: expandAvatar(sender)
         };
 
         return data;
