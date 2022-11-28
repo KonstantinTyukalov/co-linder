@@ -28,8 +28,7 @@ export const reducer = createReducer(
     }),
     on(FlatsActions.updateFlatInterested, (state, { user }) => {
         console.log('updateFlatInterested: FLAT STATE', state)
-        const flatInterested = [...state.flat?.interestedUsers ?? []]
-
+        const flatInterested = state.flat?.interestedUsers ?? []
 
         if (!flatInterested.find(interested => interested.id === user.id)) {
             flatInterested.push(user);

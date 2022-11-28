@@ -6,7 +6,7 @@ import { ChatMessage } from '../dto/chatMessage.dto';
 import { expandAvatar } from './user.service';
 import { RecordSubscription } from 'pocketbase';
 import { Store } from '@ngrx/store';
-import { updateChat } from '../store/actions/chat.actions';
+import { updateChatMessages } from '../store/actions/chat.actions';
 import { ChatPb } from '../models/chats.model.pb';
 import { UserPb } from '../models/user.model.pb';
 import { ChatMessagesPb } from '../models/chatMessage.model.pb';
@@ -107,19 +107,20 @@ export class ChatService {
     }
 
     async subscribeToChatMessages(chatId: string) {
-        this.pbService.getCollection('chats').subscribe(chatId, async (updatedChatRecord: RecordSubscription<Chat>) => {
-            console.log('Got message ' + updatedChatRecord.action + ' in chat ' + updatedChatRecord.record.id);
+        this.pbService.getCollection('chats').subscribe(chatId, async (updatedChatRecord: RecordSubscription<ChatPb>) => {
+            console.log(`Got ${updatedChatRecord.action} for chat ` + updatedChatRecord.record.id);
 
             if (updatedChatRecord.action === 'update') {
-                const chatMessages = updatedChatRecord.record.messages as unknown as string[];
+                const chatMessages = updatedChatRecord.record.messages
 
                 const lastMessageId = chatMessages.pop();
 
-                const newMessage = await this.pbService.getCollection('chatMessages').getOne(lastMessageId!) as ChatMessagesPb;
+                if (lastMessageId) {
+                    const lastMessage = await this.pbService.getCollection('chatMessages').getOne(lastMessageId!) as ChatMessagesPb;
 
-                const message = await this.getMessageWithPicture(newMessage);
-
-                this.store.dispatch(updateChat({ chatMessage: message }));
+                    const fullLastMessage = await this.getMessageWithPicture(lastMessage);
+                    this.store.dispatch(updateChatMessages({ lastChatMessage: fullLastMessage }));
+                }
             }
         });
 
