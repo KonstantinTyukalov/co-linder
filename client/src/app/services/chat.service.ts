@@ -64,7 +64,7 @@ export class ChatService {
 
         console.log('Chat with message avatars: ', mappedChat);
 
-        this.subscribeToChatMessages(mappedChat.id!);
+        this.subscribeToChatUpdates(mappedChat.id!);
 
         return mappedChat;
     }
@@ -106,7 +106,7 @@ export class ChatService {
         return createdChat as unknown as Chat;
     }
 
-    async subscribeToChatMessages(chatId: string) {
+    async subscribeToChatUpdates(chatId: string) {
         this.pbService.getCollection('chats').subscribe(chatId, async (updatedChatRecord: RecordSubscription<ChatPb>) => {
             console.log(`Got ${updatedChatRecord.action} for chat ` + updatedChatRecord.record.id);
 
