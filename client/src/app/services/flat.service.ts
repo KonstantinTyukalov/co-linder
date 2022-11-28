@@ -11,6 +11,7 @@ import * as FlatSelectors from '../store/selectors/flat.selectors';
 import { take } from 'rxjs/operators';
 import { FlatPb } from '../models/flat.model.pb';
 import { FlatCommentPb } from '../models/flatComment.model.pb';
+import { UserPb } from '../models/user.model.pb';
 
 export class FilterFlat {
     withPhoto?: boolean;
@@ -165,15 +166,16 @@ export class FlatService {
         return flatComment;
     }
 
-    async getCommentWithSenderAvatar(comment: FlatComment) {
-        const senderId = (comment.user) as unknown as string;
+    private async getCommentWithSenderAvatar(comment: FlatCommentPb): Promise<FlatComment> {
 
-        const sender = await this.pbService.getCollection('users').getOne(senderId) as User;
+        const senderId = comment.user
+
+        const sender = await this.pbService.getCollection('users').getOne(senderId) as UserPb;
 
         const expandedAvatar = expandAvatar(sender);
 
         const data: FlatComment = {
-            ...comment,
+            ...comment as unknown as FlatComment,
             user: expandedAvatar
         };
 
@@ -183,23 +185,26 @@ export class FlatService {
     async subscribeToFlatComments(flatId: string) {
         const flatsCollection = this.pbService.getCollection('flats');
 
-        flatsCollection.subscribe(flatId, async (data: RecordSubscription<Flat>) => {
-            const flatRecord = data.record;
-            console.log('New flat state ', flatRecord);
+        flatsCollection.subscribe(flatId, async (data: RecordSubscription<FlatPb>) => {
+
+            const updatedFlat = data.record;
+            console.log('New flat state ', updatedFlat);
+
             if (data.action === 'update') {
-                const flatComments = flatRecord.comments as unknown as string[];
 
-                const lastcommentId = flatComments.pop();
+                const newestCommentId = updatedFlat.comments.pop()
 
-                const newComment = await this.pbService.getCollection('flatComments').getOne(lastcommentId!) as FlatComment;
+                if (newestCommentId) {
+                    const newestComment = await this.pbService.getCollection('flatComments').getOne(newestCommentId) as FlatCommentPb;
 
-                console.log('New flat comment: ', newComment);
+                    console.log('NEWEST COMMENT: ', newestComment);
 
-                const fullNewComment = await this.getCommentWithSenderAvatar(newComment);
+                    const fullNewestComment = await this.getCommentWithSenderAvatar(newestComment);
 
-                this.store.select(FlatSelectors.flat).pipe(take(1)).subscribe((flat) => {
-                    this.store.dispatch(updateFlatComments({ comment: fullNewComment }));
-                });
+                    this.store.select(FlatSelectors.flat).pipe(take(1)).subscribe((flat) => {
+                        this.store.dispatch(updateFlatComments({ comment: fullNewestComment }));
+                    });
+                }
             }
         });
         console.log('Subscribed to flatComments for ' + flatId + ' flatId', flatsCollection);

@@ -86,7 +86,7 @@ export class FlatComponent implements OnInit, OnDestroy {
             ).pipe(
                 take(1)
             ).subscribe(([flat, user]) => {
-                this.store.dispatch(FlatActions.updateFlat({ user: user!, flat: flat! }));
+                this.store.dispatch(FlatActions.updateFlatInterested({ user: user!, flat: flat! }));
             })
         );
     }
