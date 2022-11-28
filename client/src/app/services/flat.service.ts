@@ -6,7 +6,7 @@ import { FlatComment } from '../dto/flatComment.dto';
 import { expandAvatar } from './user.service';
 import { Store } from '@ngrx/store';
 import { updateFlatComments } from '../store/actions/flat.actions';
-import { RecordSubscription } from 'pocketbase';
+import { ListResult, RecordSubscription } from 'pocketbase';
 import * as FlatSelectors from '../store/selectors/flat.selectors';
 import { take } from 'rxjs/operators';
 import { FlatPb } from '../models/flat.model.pb';
@@ -41,18 +41,19 @@ function toFilePath(id: string, fileName: string) {
     return STATIC_PATH + 'flats/' + id + '/' + fileName;
 }
 
-function mapToFlat(flat: any): Flat {
+function mapToFlat(flat: FlatPb): Flat {
     console.log('MAPPING TO FLAT', flat);
 
-    const result = {
+    const result: Flat = {
         ...flat,
+        comments: flat.comments as unknown as FlatComment[],
         owner: expandAvatar(flat.expand?.owner!),
         interestedUsers: flat.expand?.interestedUsers?.map((user: User) => expandAvatar(user)),
-        readyToLiveUsers: flat.expand?.readyToLiveUsers?.map((user: User) => expandAvatar(user)),
-        downloadedPhotos: 'photo' in flat ? flat.photo.map((photo: string) => toFilePath(flat.id, photo)) : ''
+        readyToLiveUsers: flat.expand?.readyToLiveUsers?.map((user: User) => expandAvatar(user)) ?? [],
+        downloadedPhotos: 'photo' in flat ? flat.photo.map((photo: string) => toFilePath(flat.id!, photo)) : []
     };
-    delete result.expand;
-    delete result.photo;
+    delete (result as any).expand;
+    delete (result as any).photo;
 
     console.log('MAPPED TO FLAT', result);
     return result;
@@ -91,7 +92,7 @@ export class FlatService {
         if (interestedUsersIds?.includes(userId)) {
             console.log(`THIS USER WITH ID ${userId} already interested. Skipping`);
 
-            return mapToFlat(flat);
+            return flat as unknown as Flat;
         }
 
         const newFlatState: FlatPb = {
@@ -109,7 +110,7 @@ export class FlatService {
         console.log('Trying to get flat by id:', id);
         const res = await this.pbService.getCollection('flats').getOne(id, {
             expand: 'owner,interestedUsers,readyToLiveUsers'
-        });
+        }) as FlatPb;
 
         return mapToFlat(res);
     }
@@ -212,10 +213,12 @@ export class FlatService {
 
     async getFlats(): Promise<Flat[]> {
         console.log('Trying to get flats');
-        const res = this.pbService.getCollection('flats').getFullList(200, {
+
+        const flats = await this.pbService.getCollection('flats').getFullList(200, {
             expand: 'owner,interestedUsers,readyToLiveUsers'
-        });
-        return (await res).map(flat => mapToFlat(flat));
+        }) as FlatPb[]
+
+        return flats.map(flat => mapToFlat(flat));
     }
 
     async searchFlat(page: number, filter: FilterFlat) {
@@ -233,7 +236,7 @@ export class FlatService {
         if (filter.readyToLiveMin) filterStr = addAnd(filterStr, 'created < "' + filter.createdMin + '"');
         // Remained filters are quite hard implement on server so do in front-end.
         console.log('Looking for flats with filterString=' + filterStr, filter);
-        const result = await this.pbService.getCollection('flats').getList(
+        const foundFlats = await this.pbService.getCollection('flats').getList(
             page,
             this.PER_PAGE,
             {
@@ -241,9 +244,9 @@ export class FlatService {
                 sort: '-cost',
                 expand: 'owner,interestedUsers,readyToLiveUsers'
             }
-        );
+        ) as ListResult<FlatPb>
 
-        return (await result).items.map(res => mapToFlat(res)).filter(flat => {
+        return foundFlats.items.map(res => mapToFlat(res)).filter(flat => {
             if (filter.interestedMin && (flat.interestedUsers === undefined || flat.interestedUsers!.length < filter.interestedMin)) {
                 return false;
             }
