@@ -3,7 +3,7 @@ import { User } from '../dto/user.dto';
 import { Chat } from '../dto/chat.dto';
 import { PocketBaseService } from './pb.service';
 import { ChatMessage } from '../dto/chatMessage.dto';
-import { expandAvatar } from './user.service';
+import { expandAvatar, ghostUser } from './user.service';
 import { RecordSubscription } from 'pocketbase';
 import { Store } from '@ngrx/store';
 import { updateChatMessages } from '../store/actions/chat.actions';
@@ -11,13 +11,34 @@ import { ChatPb } from '../models/chats.model.pb';
 import { UserPb } from '../models/user.model.pb';
 import { ChatMessagesPb } from '../models/chatMessage.model.pb';
 
-function mapToChat(chat: any): Chat {
-    const result = {
+function mapToChat(chatPb: ChatPb): Chat {
+
+    const { expand, ...chat } = chatPb
+
+    const mappedChatUsers: User[] = expand?.users?.map((user: User) => expandAvatar(user)) ?? []
+
+    const mappedChatMessages: ChatMessage[] =
+        expand?.messages?.map(msg => {
+            const sender = mappedChatUsers.find(u => u.id === msg.sender)
+
+            if (sender) {
+                return {
+                    ...msg,
+                    sender
+                } as ChatMessage
+            }
+
+            return {
+                ...msg,
+                sender: ghostUser
+            } as ChatMessage
+        }) ?? []
+
+    const result: Chat = {
         ...chat,
-        users: chat.expand?.users?.map((user: User) => expandAvatar(user)),
-        messages: chat.expand?.messages
+        users: mappedChatUsers,
+        messages: mappedChatMessages
     };
-    delete result.expand;
 
     console.log('Mapped chat: ', result);
     return result;
@@ -38,33 +59,8 @@ export class ChatService {
         console.log('GOT CHAT FROM DB ', chat)
 
         const mappedChat = mapToChat(chat);
-        const expandedChatParticipants = mappedChat.users!
-        const chatMessages = chat.expand?.messages;
 
-        if (chatMessages) {
-
-            const expandedMessages: ChatMessage[] = [];
-
-            for (const message of chatMessages) {
-
-                const messageSenderId = message.sender;
-                const sender = expandedChatParticipants.find(user => user.id === messageSenderId)!;
-
-                const expandedMessage: ChatMessage = {
-                    ...message,
-                    chat: message.chat as unknown as Chat,
-                    sender: sender
-                };
-
-                expandedMessages.push(expandedMessage);
-            }
-
-            mappedChat.messages = expandedMessages;
-        }
-
-        console.log('Chat with message avatars: ', mappedChat);
-
-        this.subscribeToChatUpdates(mappedChat.id!);
+        this.subscribeToChatUpdates(chat.id!);
 
         return mappedChat;
     }

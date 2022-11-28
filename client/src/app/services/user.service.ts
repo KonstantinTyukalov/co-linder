@@ -3,6 +3,16 @@ import { User } from 'src/app/dto/user.dto';
 import { PocketBaseService, STATIC_PATH } from './pb.service';
 import { UserPb } from '../models/user.model.pb';
 
+
+export const ghostUser: User = {
+    email: 'no@mail.com',
+    age: 2000,
+    name: 'Ghost',
+    avatar: '',
+    isWoman: false,
+    country: 'No country',
+}
+
 @Injectable()
 export class UserService {
     readonly COOKIE_FOR_AUTH_DATA = 'pb_authData';
