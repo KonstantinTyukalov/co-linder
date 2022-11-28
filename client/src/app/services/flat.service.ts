@@ -148,15 +148,15 @@ export class FlatService {
             content: flatComment.content
         };
         console.log('ADD FLAT COMMENT, ', data);
-        const newFlatComment = await this.pbService.getCollection('flatComments').create(data);
+        const newFlatComment = await this.pbService.getCollection('flatComments').create(data) as FlatCommentPb
 
         const flat = await flatCollection.getOne(flatId) as FlatPb;
 
-        const flatComments = (flat as any).comments as string[];
+        const flatComments = flat.comments as string[];
 
         const newFlatState: FlatPb = {
             ...flat,
-            comments: [...flatComments, newFlatComment.id]
+            comments: [...flatComments, newFlatComment.id!]
         };
 
         console.log('Trying to update flat state. new state: ', newFlatState);
