@@ -17,10 +17,14 @@ export const reducer = createReducer(
     initialState,
     on(FlatsActions.getFlatsSuccess, (state, { flats }) => ({ ...state, flats })),
     on(FlatsActions.getFlatByIdSuccess, (state, { flat }) => ({ ...state, flat })),
-    on(FlatsActions.updateFlatComments, (state, { comment }) => {
-        const thisComment = [...state.flat!.comments!];
-        thisComment.push(comment);
-        return { ...state, flat: { ...state.flat!, comments: thisComment } };
+    on(FlatsActions.updateFlatComments, (state, { comment: newestComment }) => {
+        const updatedComments = [...state.flat!.comments ?? []];
+
+        if (!updatedComments.find(c => c.id === newestComment.id)) {
+            updatedComments.push(newestComment);
+        }
+
+        return { ...state, flat: { ...state.flat!, comments: updatedComments } };
     }),
     on(FlatsActions.updateFlatInterested, (state, { user }) => {
         console.log('updateFlatInterested: FLAT STATE', state)
