@@ -4,7 +4,8 @@ import { UserPb } from './user.model.pb';
 
 export interface FlatPb extends BaseModelPb {
     externalUrl?: string;
-    name?: string;
+    photo: string[];
+    name: string;
     owner: string;
     area: string;
     cost: number;

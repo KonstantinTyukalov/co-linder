@@ -10,7 +10,7 @@ export interface Flat {
     owner: User;
     area: string; // city or region in city
     cost: number;
-    capacity: number;
+    capacity?: number;
     description: string;
     interestedUsers?: User[];
     readyToLiveUsers: User[];
