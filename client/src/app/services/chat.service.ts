@@ -6,10 +6,11 @@ import { ChatMessage } from '../dto/chatMessage.dto';
 import { expandAvatar, ghostUser } from './user.service';
 import { RecordSubscription } from 'pocketbase';
 import { Store } from '@ngrx/store';
-import { updateChatMessages } from '../store/actions/chat.actions';
+import { addMessageToCurrentChat } from '../store/actions/chat.actions';
 import { ChatPb } from '../models/chats.model.pb';
 import { UserPb } from '../models/user.model.pb';
 import { ChatMessagesPb } from '../models/chatMessage.model.pb';
+import { chat } from '../store/selectors/chat.selectors';
 
 function mapToChat(chatPb: ChatPb): Chat {
 
@@ -46,7 +47,16 @@ function mapToChat(chatPb: ChatPb): Chat {
 
 @Injectable()
 export class ChatService {
-    constructor(private readonly pbService: PocketBaseService, private readonly store: Store) {
+
+    private chatState: Chat | undefined
+
+    constructor(
+        private readonly pbService: PocketBaseService,
+        private readonly store: Store
+    ) {
+        this.store.select(chat).subscribe((chat) => {
+            this.chatState = chat;
+        })
     }
 
     async getChatById(chatId: string): Promise<Chat> {
@@ -103,22 +113,28 @@ export class ChatService {
     }
 
     async subscribeToChatUpdates(chatId: string) {
-        this.pbService.getCollection('chats').subscribe(chatId, async (updatedChatRecord: RecordSubscription<ChatPb>) => {
-            console.log(`Got ${updatedChatRecord.action} for chat ` + updatedChatRecord.record.id);
 
-            if (updatedChatRecord.action === 'update') {
-                const chatMessages = updatedChatRecord.record.messages
+        this.pbService.getCollection('chats').subscribe(chatId,
+            async (updatedChatRecord: RecordSubscription<ChatPb>) => {
+                console.log(`Got ${updatedChatRecord.action} for chat ` + updatedChatRecord.record.id);
 
-                const lastMessageId = chatMessages.pop();
+                if (updatedChatRecord.action === 'update') {
+                    const chatMessages = updatedChatRecord.record.messages
 
-                if (lastMessageId) {
-                    const lastMessage = await this.pbService.getCollection('chatMessages').getOne(lastMessageId!) as ChatMessagesPb;
+                    const lastMessageId = chatMessages.pop();
 
-                    const fullLastMessage = await this.getMessageWithPicture(lastMessage);
-                    this.store.dispatch(updateChatMessages({ lastChatMessage: fullLastMessage }));
+                    if (lastMessageId) {
+                        const lastMessageFromPb = await this.pbService.getCollection('chatMessages').getOne(lastMessageId!) as ChatMessagesPb;
+
+                        const currentMessages = this.chatState?.messages ?? [];
+
+                        if (!currentMessages.find(msg => msg.id === lastMessageFromPb.id)) {
+                            const fullLastMessage = await this.getMessageWithPicture(lastMessageFromPb);
+                            this.store.dispatch(addMessageToCurrentChat({ lastChatMessage: fullLastMessage }));
+                        }
+                    }
                 }
-            }
-        });
+            });
 
         console.log('Subscribed to chatMessages for chat ' + chatId);
 

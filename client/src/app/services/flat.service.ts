@@ -216,6 +216,8 @@ export class FlatService {
             expand: 'owner,interestedUsers,readyToLiveUsers'
         }) as FlatPb[]
 
+        console.log('GOT FLATS FROM PB', flats)
+
         return flats.map(flat => mapToFlat(flat));
     }
 
