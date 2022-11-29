@@ -11,4 +11,4 @@ export const getAllChatsByUserIdSuccess = createAction('GET_CHATS_BY_USER_ID_SUC
 export const goToChatById = createAction('GO_TO_CHAT_BY_ID', props<{ userId: string; }>());
 export const goToChatByIdSuccess = createAction('GO_TO_CHAT_BY_ID_SUCCESS', props<{ chat: Chat; }>());
 
-export const updateChatMessages = createAction('UPDATE_CHAT_MESSAGES', props<{ lastChatMessage: ChatMessage; }>());
+export const addMessageToCurrentChat = createAction('UPDATE_CHAT_MESSAGES', props<{ lastChatMessage: ChatMessage; }>());

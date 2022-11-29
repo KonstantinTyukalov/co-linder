@@ -16,7 +16,7 @@ export const reducer = createReducer(
     initialState,
     on(ChatsActions.getAllChatsByUserIdSuccess, (state, { chats }) => ({ ...state, chats })),
     on(ChatsActions.getChatByIdSuccess, (state, { chat }) => ({ ...state, currentChat: chat })),
-    on(ChatsActions.updateChatMessages, (state, { lastChatMessage }) => ({
+    on(ChatsActions.addMessageToCurrentChat, (state, { lastChatMessage }) => ({
         ...state,
         currentChat: {
             ...state.currentChat,
