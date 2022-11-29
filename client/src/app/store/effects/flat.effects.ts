@@ -5,14 +5,12 @@ import * as FlatActions from '../actions/flat.actions';
 import { from, switchMap } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Flat } from 'src/app/dto/flat.dto';
-import { UserService } from '../../services/user.service';
 
 @Injectable()
 export class FlatEffects {
     constructor(
         private readonly actions$: Actions,
-        private readonly flatService: FlatService,
-        private readonly userService: UserService
+        private readonly flatService: FlatService
     ) {
     }
 
