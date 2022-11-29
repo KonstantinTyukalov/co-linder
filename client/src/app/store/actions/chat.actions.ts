@@ -8,7 +8,4 @@ export const getChatByIdSuccess = createAction('GET_CHAT_BY_ID_SUCCESS', props<{
 export const getAllChatsByUserId = createAction('GET_CHATS_BY_USER_ID', props<{ id: string; }>());
 export const getAllChatsByUserIdSuccess = createAction('GET_CHATS_BY_USER_ID_SUCCESS', props<{ chats: Chat[]; }>());
 
-export const goToChatById = createAction('GO_TO_CHAT_BY_ID', props<{ userId: string; }>());
-export const goToChatByIdSuccess = createAction('GO_TO_CHAT_BY_ID_SUCCESS', props<{ chat: Chat; }>());
-
 export const addMessageToCurrentChat = createAction('ADD_MESSAGE_TO_CURRENT_CHAT', props<{ lastChatMessage: ChatMessage; }>());

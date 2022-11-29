@@ -3,7 +3,7 @@
         <app-left-sidebar [user$]="user$"></app-left-sidebar>
     </div>
     <div class="list-content">
-        <div class="searching">
+        <div class="searching" *ngIf="false">
             <div class="search1">
                 <input placeholder="Address contains" type="text" [(ngModel)]="area">
                 <input placeholder="Name contains" type="text" [(ngModel)]="name">
