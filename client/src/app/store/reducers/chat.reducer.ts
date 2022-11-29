@@ -16,15 +16,11 @@ export const reducer = createReducer(
     initialState,
     on(ChatsActions.getAllChatsByUserIdSuccess, (state, { chats }) => ({ ...state, chats })),
     on(ChatsActions.getChatByIdSuccess, (state, { chat }) => ({ ...state, currentChat: chat })),
-    on(ChatsActions.updateChatMessages, (state, { lastChatMessage }) => {
-        const messages = state.currentChat?.messages ?? [];
-
-        if (!messages.find(msg => msg.id === lastChatMessage.id)) {
-            messages.push(lastChatMessage);
+    on(ChatsActions.updateChatMessages, (state, { lastChatMessage }) => ({
+        ...state,
+        currentChat: {
+            ...state.currentChat,
+            messages: [...(state.currentChat!.messages ?? []), lastChatMessage]
         }
-
-        return {
-            ...state, currentChat: { ...state.currentChat, messages }
-        };
-    })
+    }))
 );
