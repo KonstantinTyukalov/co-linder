@@ -3,7 +3,7 @@ import { User } from '../dto/user.dto';
 import { Chat } from '../dto/chat.dto';
 import { PocketBaseService } from './pb.service';
 import { ChatMessage } from '../dto/chatMessage.dto';
-import { expandAvatar, ghostUser } from './user.service';
+import { expandAvatar } from './user.service';
 import { RecordSubscription } from 'pocketbase';
 import { Store } from '@ngrx/store';
 import { addMessageToCurrentChat } from '../store/actions/chat.actions';
@@ -11,38 +11,7 @@ import { ChatPb } from '../models/chats.model.pb';
 import { UserPb } from '../models/user.model.pb';
 import { ChatMessagesPb } from '../models/chatMessage.model.pb';
 import { chat } from '../store/selectors/chat.selectors';
-
-function mapToChat(chatPb: ChatPb): Chat {
-    const { expand, ...chat } = chatPb;
-
-    const mappedChatUsers: User[] = expand?.users?.map((user: User) => expandAvatar(user)) ?? [];
-
-    const mappedChatMessages: ChatMessage[] =
-        expand?.messages?.map(msg => {
-            const sender = mappedChatUsers.find(u => u.id === msg.sender);
-
-            if (sender) {
-                return {
-                    ...msg,
-                    sender
-                } as ChatMessage;
-            }
-
-            return {
-                ...msg,
-                sender: ghostUser
-            } as ChatMessage;
-        }) ?? [];
-
-    const result: Chat = {
-        ...chat,
-        users: mappedChatUsers,
-        messages: mappedChatMessages
-    };
-
-    console.log('Mapped chat: ', result);
-    return result;
-}
+import { mapToChat } from '../utils/mapToChat';
 
 @Injectable()
 export class ChatService {
