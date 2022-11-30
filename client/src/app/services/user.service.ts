@@ -3,15 +3,14 @@ import { User } from 'src/app/dto/user.dto';
 import { PocketBaseService, STATIC_PATH } from './pb.service';
 import { UserPb } from '../models/user.model.pb';
 
-
 export const ghostUser: User = {
     email: 'no@mail.com',
     age: 2000,
     name: 'Ghost',
     avatar: '',
     isWoman: false,
-    country: 'No country',
-}
+    country: 'No country'
+};
 
 @Injectable()
 export class UserService {
@@ -82,7 +81,6 @@ export class UserService {
 }
 
 export function expandAvatar(user: User | UserPb): User {
-
     user.avatar = user?.avatar ? STATIC_PATH + 'users/' + user.id + '/' + user.avatar : undefined;
 
     return user;

@@ -89,7 +89,7 @@ export class FlatService {
 
         if (interestedUsersIds?.includes(userId)) {
             console.log(`THIS USER WITH ID ${userId} already interested. Skipping`);
-            return
+            return;
         }
 
         const newFlatState: FlatPb = {
@@ -143,7 +143,7 @@ export class FlatService {
             content: flatComment.content
         };
         console.log('ADD FLAT COMMENT, ', data);
-        const newFlatComment = await this.pbService.getCollection('flatComments').create(data) as FlatCommentPb
+        const newFlatComment = await this.pbService.getCollection('flatComments').create(data) as FlatCommentPb;
 
         const flat = await flatCollection.getOne(flatId) as FlatPb;
 
@@ -163,8 +163,7 @@ export class FlatService {
     }
 
     private async getCommentWithSenderAvatar(comment: FlatCommentPb): Promise<FlatComment> {
-
-        const senderId = comment.sender
+        const senderId = comment.sender;
 
         const sender = await this.pbService.getCollection('users').getOne(senderId) as UserPb;
 
@@ -180,13 +179,11 @@ export class FlatService {
         const flatsCollection = this.pbService.getCollection('flats');
 
         flatsCollection.subscribe(flatId, async (data: RecordSubscription<FlatPb>) => {
-
             const updatedFlat = data.record;
             console.log('New flat state ', updatedFlat);
 
             if (data.action === 'update') {
-
-                const newestCommentId = updatedFlat.comments.pop()
+                const newestCommentId = updatedFlat.comments.pop();
 
                 if (newestCommentId) {
                     const newestComment = await this.pbService.getCollection('flatComments').getOne(newestCommentId) as FlatCommentPb;
@@ -209,9 +206,9 @@ export class FlatService {
 
         const flats = await this.pbService.getCollection('flats').getFullList(200, {
             expand: 'owner,interestedUsers,readyToLiveUsers'
-        }) as FlatPb[]
+        }) as FlatPb[];
 
-        console.log('GOT FLATS FROM PB', flats)
+        console.log('GOT FLATS FROM PB', flats);
 
         return flats.map(flat => mapToFlat(flat));
     }
@@ -239,7 +236,7 @@ export class FlatService {
                 sort: '-cost',
                 expand: 'owner,interestedUsers,readyToLiveUsers'
             }
-        ) as ListResult<FlatPb>
+        ) as ListResult<FlatPb>;
 
         return foundFlats.items.map(res => mapToFlat(res)).filter(flat => {
             if (filter.interestedMin && (flat.interestedUsers === undefined || flat.interestedUsers!.length < filter.interestedMin)) {

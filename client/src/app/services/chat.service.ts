@@ -13,27 +13,26 @@ import { ChatMessagesPb } from '../models/chatMessage.model.pb';
 import { chat } from '../store/selectors/chat.selectors';
 
 function mapToChat(chatPb: ChatPb): Chat {
+    const { expand, ...chat } = chatPb;
 
-    const { expand, ...chat } = chatPb
-
-    const mappedChatUsers: User[] = expand?.users?.map((user: User) => expandAvatar(user)) ?? []
+    const mappedChatUsers: User[] = expand?.users?.map((user: User) => expandAvatar(user)) ?? [];
 
     const mappedChatMessages: ChatMessage[] =
         expand?.messages?.map(msg => {
-            const sender = mappedChatUsers.find(u => u.id === msg.sender)
+            const sender = mappedChatUsers.find(u => u.id === msg.sender);
 
             if (sender) {
                 return {
                     ...msg,
                     sender
-                } as ChatMessage
+                } as ChatMessage;
             }
 
             return {
                 ...msg,
                 sender: ghostUser
-            } as ChatMessage
-        }) ?? []
+            } as ChatMessage;
+        }) ?? [];
 
     const result: Chat = {
         ...chat,
@@ -47,8 +46,7 @@ function mapToChat(chatPb: ChatPb): Chat {
 
 @Injectable()
 export class ChatService {
-
-    private chatState: Chat | undefined
+    private chatState: Chat | undefined;
 
     constructor(
         private readonly pbService: PocketBaseService,
@@ -56,7 +54,7 @@ export class ChatService {
     ) {
         this.store.select(chat).subscribe((chat) => {
             this.chatState = chat;
-        })
+        });
     }
 
     async getChatById(chatId: string): Promise<Chat> {
@@ -66,7 +64,7 @@ export class ChatService {
             expand: 'users,messages'
         }) as ChatPb;
 
-        console.log('GOT CHAT FROM DB ', chat)
+        console.log('GOT CHAT FROM DB ', chat);
 
         const mappedChat = mapToChat(chat);
 
@@ -113,13 +111,12 @@ export class ChatService {
     }
 
     async subscribeToChatUpdates(chatId: string) {
-
         this.pbService.getCollection('chats').subscribe(chatId,
             async (updatedChatRecord: RecordSubscription<ChatPb>) => {
                 console.log(`Got ${updatedChatRecord.action} for chat ` + updatedChatRecord.record.id);
 
                 if (updatedChatRecord.action === 'update') {
-                    const chatMessages = updatedChatRecord.record.messages
+                    const chatMessages = updatedChatRecord.record.messages;
 
                     const lastMessageId = chatMessages.pop();
 
@@ -186,7 +183,7 @@ export class ChatService {
         };
         console.log('Trying to create new chat message: ', newMessage);
 
-        const newMessageInCollection = await chatMessagesCollection.create(newMessage) as ChatMessagesPb
+        const newMessageInCollection = await chatMessagesCollection.create(newMessage) as ChatMessagesPb;
         console.log('Added new chat message ', newMessageInCollection.id);
 
         console.log('Trying to update chat: ', chatId);
@@ -222,7 +219,7 @@ export class ChatService {
             name: `${loggedInUser.name}, ${targetUser.name}`,
             users: [loggedInUser.id!, targetUser.id!],
             messages: []
-        }
+        };
 
         const res = await this.pbService.getCollection('chats').create(newChat) as ChatPb;
 
@@ -232,7 +229,7 @@ export class ChatService {
     }
 
     private async getMessageWithPicture(message: ChatMessagesPb): Promise<ChatMessage> {
-        const senderId = message.sender
+        const senderId = message.sender;
 
         const sender = await this.pbService.getCollection('users').getOne(senderId) as UserPb;
 
