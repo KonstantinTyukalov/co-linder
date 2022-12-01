@@ -1,6 +1,8 @@
-module server
+module coliving-crew.xyz/server
 
-go 1.18
+go 1.19
+
+require github.com/pocketbase/pocketbase v0.8.0
 
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.6 // indirect
@@ -46,7 +48,6 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.16 // indirect
 	github.com/mgutz/ansi v0.0.0-20200706080929-d51e80ef957d // indirect
 	github.com/pocketbase/dbx v1.7.0 // indirect
-	github.com/pocketbase/pocketbase v0.8.0 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20220927061507-ef77025ab5aa // indirect
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/spf13/cobra v1.6.1 // indirect
