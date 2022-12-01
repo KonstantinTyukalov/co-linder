@@ -3,14 +3,14 @@ package main
 import (
 	"log"
 
-	"coliving-crew.com/server"
+	server "coliving-crew.xyz/server/internal"
 )
 
 func main() {
 
-	server := server.ServerApp
+	app := new(server.ServerApp)
 
-	if err := app.Start(); err != nil {
+	if err := app.Run(); err != nil {
 		log.Fatal(err)
 	}
 }
