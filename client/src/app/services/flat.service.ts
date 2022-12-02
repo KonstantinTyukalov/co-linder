@@ -52,6 +52,7 @@ function mapToFlat(flat: FlatPb): Flat {
         readyToLiveUsers: flat.expand?.readyToLiveUsers?.map((user: User) => expandAvatar(user)) ?? [],
         downloadedPhotos: 'photo' in flat ? flat.photo.map((photo: string) => toFilePath(flat.id!, photo)) : []
     };
+
     delete (result as any).expand;
     delete (result as any).photo;
 
@@ -64,6 +65,7 @@ function mapToFlatComment(comment: any): FlatComment {
         ...comment,
         sender: expandAvatar(comment.expand!.sender!)
     };
+
     delete result.expand;
     return result;
 }
@@ -96,9 +98,23 @@ export class FlatService {
             ...flat,
             interestedUsers: [...interestedUsersIds, userId]
         };
-        await flatCollection.update(flatId, newFlatState, {
-            expand: 'interestedUsers'
-        }) as FlatPb;
+
+        await flatCollection.update(flatId, newFlatState);
+    }
+
+    async removeUserFromInterested(userId: string, flatId: string): Promise<void> {
+        const flatCollection = this.pbService.getCollection('flats');
+
+        const flat = await flatCollection.getOne(flatId) as FlatPb;
+
+        const interestedUsersIds = flat?.interestedUsers.filter((uid) => uid !== userId);
+
+        const newFlatState: FlatPb = {
+            ...flat,
+            interestedUsers: interestedUsersIds
+        };
+
+        await flatCollection.update(flatId, newFlatState);
     }
 
     async getFlatById(id: string): Promise<Flat> {
@@ -117,6 +133,7 @@ export class FlatService {
             expand: 'sender',
             sort: '+created'
         });
+
         return result.map(comment => mapToFlatComment(comment));
     }
 
@@ -142,6 +159,7 @@ export class FlatService {
             sender: flatComment.sender.id!,
             content: flatComment.content
         };
+
         console.log('ADD FLAT COMMENT, ', data);
         const newFlatComment = await this.pbService.getCollection('flatComments').create(data) as FlatCommentPb;
 
@@ -180,6 +198,7 @@ export class FlatService {
 
         flatsCollection.subscribe(flatId, async (data: RecordSubscription<FlatPb>) => {
             const updatedFlat = data.record;
+
             console.log('New flat state ', updatedFlat);
 
             if (data.action === 'update') {
@@ -215,6 +234,7 @@ export class FlatService {
 
     async searchFlat(page: number, filter: FilterFlat) {
         let filterStr: string = '';
+
         if (filter.withPhoto) filterStr = addAnd(filterStr, 'photo > 1');
         if (filter.owner) filterStr = addAnd(filterStr, 'owner ~ "' + filter.owner.id + '"');
         if (filter.area) filterStr = addAnd(filterStr, 'area ~ "' + filter.area + '"');
