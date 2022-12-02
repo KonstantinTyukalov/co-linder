@@ -72,6 +72,8 @@ export class FlatComponent implements OnInit, OnDestroy {
                     sender: user,
                     content: this.content
                 } as FlatComment);
+
+                this.content = '';
             })
         );
     }

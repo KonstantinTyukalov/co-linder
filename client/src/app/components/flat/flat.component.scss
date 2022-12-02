@@ -93,10 +93,13 @@
         .chat {
             position: relative;
             width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column-reverse;
 
             .chat-message {
                 display: flex;
-                align-items: center;
                 width: 100%;
                 margin-bottom: 2rem;
 
