@@ -8,6 +8,6 @@ export interface FlatCommentPb extends BaseModelPb {
     content: string;
     expand?: {
         flat?: FlatPb;
-        user?: UserPb;
+        sender?: UserPb;
     };
 }
