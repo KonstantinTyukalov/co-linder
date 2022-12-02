@@ -1,20 +1,25 @@
 <div class="content">
-    <h1 class="header">Co-living Crew</h1>
+    <app-popups *ngIf="isUserLoading">
+        <app-popup-loading></app-popup-loading>
+    </app-popups>
+    <app-popups *ngIf="userError">
+        <app-popup-user-error [error]="userError" (onOkClick)="onOkClick()"></app-popup-user-error>
+    </app-popups>
+    <h1 class="main-color header">Co-living Crew</h1>
     <input
-        class="login"
+        class="input-global"
         type="text"
         placeholder="login"
         [(ngModel)]="login">
     <input
-        class="password"
+        class="input-global"
         type="password"
         placeholder="password"
         [(ngModel)]="password">
-    <button class="login" (click)="doLogin()">
+    <button class="button-global-purple" (click)="doLogin()">
         <h2>Login</h2>
     </button>
-    <h3 class="or-text">or</h3>
-    <button class="registration" (click)="redirectToRegistration()">
+    <button class="button-global-white registration" (click)="redirectToRegistration()">
         <h2>Registration</h2>
     </button>
 </div>

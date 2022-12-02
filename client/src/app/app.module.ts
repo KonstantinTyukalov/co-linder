@@ -27,6 +27,7 @@ import { ChatEffects } from './store/effects/chat.effects';
 import { ChatsComponent } from './components/chats/chats.component';
 import { UserComponent } from './components/user/user.component';
 import { LeftSidebarComponent } from './components/left-sidebar/left-sidebar.component';
+import { PopupModule } from './popups/popup-module.module';
 
 @NgModule({
     declarations: [
@@ -46,14 +47,14 @@ import { LeftSidebarComponent } from './components/left-sidebar/left-sidebar.com
     imports: [
         BrowserModule,
         AppRoutingModule,
-        StoreModule.forRoot({}),
         FormsModule,
         EffectsModule.forRoot([UserEffects, FlatEffects, ChatEffects]),
         StoreModule.forRoot({
             FLAT_STATE: FlatStore.reducer,
             CHAT_STATE: ChatStore.reducer,
             USER_STATE: UserStore.reducer
-        })
+        }),
+        PopupModule
     ],
     providers: [
         PocketBaseService,

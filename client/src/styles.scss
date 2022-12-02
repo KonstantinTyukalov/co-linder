@@ -2,3 +2,81 @@ h1, h2, h3, h4 {
     margin: 0;
     font-family: Arial;
 }
+
+.main-color {
+    color: #8064ff;
+}
+
+.main-background-color {
+    background-color: #8064ff;
+}
+
+.button {
+    height: 3.5rem;
+    border: none;
+    border-radius: 0.7rem;
+    transition: .2s;
+}
+
+.button-global-purple {
+    @extend .button, .main-background-color;
+    color: white;
+
+    &:hover {
+        transition: .2s;
+        background-color: #9784ff;
+
+        &:active {
+            transition: .2s;
+            background-color: #650eff;
+        }
+    }
+}
+
+.button-global-white {
+    @extend .button, .main-color;
+
+    background-color: #ffffff;
+    border: .5px solid #8064ff;
+
+    &:hover {
+        border: none;
+        color: white;
+        transition: .2s;
+        background-color: #9784ff;
+
+        &:active {
+            border: none;
+            color: white;
+            transition: .2s;
+            background-color: #650eff;
+        }
+    }
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill::first-line {
+    -webkit-box-shadow: 0 0 0 40rem #dcdcff inset;
+    -webkit-text-fill-color: #665bf0;
+}
+
+.input-global {
+    background-color: white;
+    border-radius: 0.7rem;
+    padding-left: 1rem;
+    font-size: 24px;
+    height: 3rem;
+    margin-bottom: 1rem;
+    transition: outline-color .5s ease-in-out, border-color .5s ease-in-out;
+    border: 1px solid #665bf0;
+    outline: none;
+    color: #650eff;
+
+    &:focus {
+        outline: 2px solid #665bf0;
+    }
+}
+
+
