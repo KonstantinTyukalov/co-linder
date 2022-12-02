@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 
 import * as UserSelector from '../../store/selectors/user.selectors';
@@ -37,6 +37,7 @@ export class FlatComponent implements OnInit, OnDestroy {
     private readonly subscriptions: Subscription = new Subscription();
 
     constructor(
+        private readonly elRef: ElementRef,
         private readonly store: Store,
         private readonly route: ActivatedRoute,
         private readonly router: Router,
@@ -50,15 +51,12 @@ export class FlatComponent implements OnInit, OnDestroy {
         this.subscriptions.add(
             this.route.params.subscribe(params => {
                 const flatId = params['id'];
+
                 if (flatId) {
                     this.store.dispatch(FlatActions.getFlatById({ id: flatId }));
                 }
             })
         );
-    }
-
-    public onBackClick(): void {
-        this.location.back();
     }
 
     public onSendClick(): void {
@@ -86,10 +84,8 @@ export class FlatComponent implements OnInit, OnDestroy {
             ).pipe(
                 take(1)
             ).subscribe(([flat, user]) => {
-                if (flat && user) {
-                    this.flatService.addUserToInterested(user?.id!, flat?.id!)
-                    this.store.dispatch(FlatActions.updateFlatInterested({ user: user! }));
-                }
+                this.flatService.addUserToInterested(user?.id!, flat?.id!);
+                this.store.dispatch(FlatActions.updateFlatInterested({ user: user! }));
             })
         );
     }

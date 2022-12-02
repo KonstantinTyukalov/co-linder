@@ -28,23 +28,23 @@
                 <a href="{{flatExternalUrl$ | async}}">3d-pary site</a>
             </h3>
         </div>
-        <div class="comments">
-            <div class="chat">
-                <div class="chat-overflow">
-                    <div
-                        class="chat-message"
-                        *ngFor="let comment of flatComments$ | async"
-                        [ngClass]="comment?.sender?.id === '1' ? 'chat-message-left' : 'chat-message-right'">
-                        <img [src]="comment?.sender?.avatar" alt="">
-                        <div>
-                            <h4>{{comment.sender.name}}</h4>
-                            <h2 style="font-weight: normal">{{comment.content}}</h2>
-                        </div>
+        <div class="comments" id="comments">
+            <div class="chat" id="chat">
+                <div class="chat-message"
+                     *ngFor="let comment of flatComments$ | async"
+                     [ngClass]="comment?.sender?.id === '1' ? 'chat-message-left' : 'chat-message-right'">
+                    <img [src]="comment?.sender?.avatar" alt="">
+                    <div>
+                        <h4>{{comment.sender.name}}</h4>
+                        <h2 style="font-weight: normal">{{comment.content}}</h2>
                     </div>
                 </div>
             </div>
-            <input type="text" [(ngModel)]="content">
-            <button (click)="onSendClick()">Send</button>
+        </div>
+
+        <div class="create-message">
+            <input class="input-global" type="text" [(ngModel)]="content">
+            <button class="button-global-purple" (click)="onSendClick()">Send</button>
         </div>
     </div>
 
