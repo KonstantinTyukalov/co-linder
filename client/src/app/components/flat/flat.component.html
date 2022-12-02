@@ -2,8 +2,6 @@
     <div class="menu">
         <app-left-sidebar [user$]="user$"></app-left-sidebar>
     </div>
-
-
     <div class="flat">
         <div class="photos">
             <img *ngFor="let photo of flatDownloadedPhotos$ | async"
@@ -11,8 +9,12 @@
                  alt="Photo">
         </div>
         <div class="buttons">
-            <button (click)="intrested()"><h2>I'm interested</h2></button>
-            <button><h2>Mark as full</h2></button>
+            <button class="button-global-purple" (click)="intrested()">
+                <h2>I'm interested</h2>
+            </button>
+            <button class="button-global-white">
+                <h2>Mark as full</h2>
+            </button>
         </div>
         <div class="flat-metadata">
             <div class="header-one">
@@ -48,8 +50,8 @@
 
 
     <div class="users-block">
-        <h1 style="text-align: center;">Interested</h1>
         <div class="users">
+            <h1 class="">Interested</h1>
             <div
                 class="user"
                 *ngFor="let user of flatInterestedUsers$ | async"
@@ -58,12 +60,14 @@
                 <h2>{{user?.name}}</h2>
             </div>
         </div>
-        <h1 style="text-align: center">Owner</h1>
-        <div class="owner">
-            <img
-                [src]="(flatOwner$ | async)?.avatar"
-                alt="Avatar">
-            <h2>{{(flatOwner$ | async)?.name}}</h2>
+        <div class="owner-block">
+            <h1 style="text-align: center">Owner</h1>
+            <div class="owner">
+                <img
+                    [src]="(flatOwner$ | async)?.avatar"
+                    alt="Avatar">
+                <h2>{{(flatOwner$ | async)?.name}}</h2>
+            </div>
         </div>
     </div>
 </div>
