@@ -1,18 +1,20 @@
+@use '../../../colors';
+
 :host {
     overflow-y: hidden;
+    width: 100%;
 }
 
 .content {
     height: 100%;
-    width: 100vw;
+    width: 100%;
     display: grid;
-    grid-template-columns: 1fr 6fr;
-    grid-template-rows: 100%;
+    grid-template-columns: 1fr 5fr;
+    grid-template-rows: 100vh;
 }
 
 .menu {
-    color: #b9b5ff;
-    background-color: #b9b5ff;
+    background-color: colors.$primary-main;
     min-width: 18rem;
     width: 100%;
 }
@@ -23,7 +25,6 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-    overflow-y: hidden;
 }
 
 .searching {
@@ -69,12 +70,17 @@
 }
 
 .list {
+    padding-top: 1rem;
     overflow-y: auto;
-    padding-top: 2rem;
-    width: 100%;
+    width: 80%;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-content: stretch;
     flex-wrap: wrap;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
 }
 

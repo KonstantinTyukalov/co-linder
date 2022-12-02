@@ -7,12 +7,9 @@
 }
 
 button {
-    font-size: 24px;
+    padding: 1rem;
     width: 20rem;
     height: 30rem;
-    border-radius: 1rem;
-    border: 2px solid #d0caff;
-    background-color: white;
     transition: 0.5s;
 
     &:nth-child(2) {
@@ -21,8 +18,7 @@ button {
     }
 
     &:hover {
-        background-color: #d0caff;
         transform: translateY(-20px);
-        transition: 0.5s;
+        transition: .2s;
     }
 }

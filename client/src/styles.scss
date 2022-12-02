@@ -1,55 +1,55 @@
+@use './colors';
+
 h1, h2, h3, h4 {
     margin: 0;
     font-family: Arial;
 }
 
-.main-color {
-    color: #8064ff;
+.primary-color {
+    color: colors.$primary-main;
 }
 
-.main-background-color {
-    background-color: #8064ff;
+.primary-background-color {
+    background-color: colors.$primary-main;
 }
 
 .button {
     height: 3.5rem;
     border: none;
     border-radius: 0.7rem;
-    transition: .2s;
+    transition: .2s ease-in-out;
 }
 
 .button-global-purple {
-    @extend .button, .main-background-color;
-    color: white;
+    @extend .button;
+    color: colors.$white;
+    background-color: colors.$primary-main;
 
     &:hover {
-        transition: .2s;
-        background-color: #9784ff;
+        background-color: colors.$primary-light;
 
         &:active {
-            transition: .2s;
-            background-color: #650eff;
+            background-color: colors.$primary-dark;
         }
     }
 }
 
 .button-global-white {
-    @extend .button, .main-color;
+    @extend .button;
 
-    background-color: #ffffff;
-    border: .5px solid #8064ff;
+    color: colors.$primary-main;
+    background-color: colors.$secondary-main;
+    border: 1px solid colors.$primary-main;
 
     &:hover {
-        border: none;
-        color: white;
-        transition: .2s;
-        background-color: #9784ff;
+        transition: .2s ease-in-out;
+        border: 1px solid transparent;
+        background-color: colors.$secondary-light;
 
         &:active {
-            border: none;
-            color: white;
-            transition: .2s;
-            background-color: #650eff;
+            border: 1px solid transparent;
+            ransition: .2s ease-in-out;
+            background-color: colors.$secondary-dark;
         }
     }
 }
@@ -58,24 +58,28 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill::first-line {
-    -webkit-box-shadow: 0 0 0 40rem #dcdcff inset;
-    -webkit-text-fill-color: #665bf0;
+    -webkit-box-shadow: 0 0 0 40rem colors.$secondary-main inset;
+    -webkit-text-fill-color: colors.$primary-main;
 }
 
 .input-global {
-    background-color: white;
+    color: colors.$primary-main;
+    background-color: colors.$white;
     border-radius: 0.7rem;
     padding-left: 1rem;
     font-size: 24px;
     height: 3rem;
     margin-bottom: 1rem;
     transition: outline-color .5s ease-in-out, border-color .5s ease-in-out;
-    border: 1px solid #665bf0;
+    border: 1px solid colors.$primary-main;
     outline: none;
-    color: #650eff;
+
+    &::placeholder {
+        color: colors.$primary-light;
+    }
 
     &:focus {
-        outline: 2px solid #665bf0;
+        outline: 1.5px solid colors.$primary-main;
     }
 }
 
