@@ -34,6 +34,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.subscriptions.add(
             this.route.params.subscribe((param) => {
                 const chatId = param['id'];
+
                 if (chatId) {
                     this.store.dispatch(ChatActions.getChatById({ chatId }));
                 }

@@ -27,9 +27,8 @@
                 }
             }
         ],
-        "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
+        "brace-style": ["error", "1tbs", {"allowSingleLine": true}],
         "newline-after-var": ["warn", "always"],
-        
         "curly": "off",
         "no-duplicate-imports": ["error", {"includeExports": true}],
         "@typescript-eslint/no-floating-promises": "off",
