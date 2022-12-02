@@ -26,6 +26,7 @@
             }
           }],
         "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
+        "newline-after-var": ["warn", "always"],
         "curly": "off",
         "@typescript-eslint/no-floating-promises": "off",
         "@typescript-eslint/consistent-type-assertions": "off",
