@@ -27,32 +27,10 @@
                 }
             }
         ],
-        "brace-style": [
-            "error", "1tbs", {
-                "allowSingleLine": true
-            }
-        ],
+        "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
+        "newline-after-var": ["warn", "always"],
+        
         "curly": "off",
-        "object-curly-newline": [
-            "error", {
-                "ObjectExpression": {
-                    "multiline": true,
-                    "minProperties": 2
-                },
-                "ObjectPattern": {
-                    "multiline": true,
-                    "minProperties": 2
-                },
-                "ImportDeclaration": {
-                    "multiline": true,
-                    "minProperties": 5
-                },
-                "ExportDeclaration": {
-                    "multiline": true,
-                    "minProperties": 2
-                }
-            }
-        ],
         "no-duplicate-imports": ["error", {"includeExports": true}],
         "@typescript-eslint/no-floating-promises": "off",
         "@typescript-eslint/consistent-type-assertions": "off",
