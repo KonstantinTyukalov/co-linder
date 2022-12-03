@@ -10,7 +10,9 @@ import (
 
 type TestService struct{}
 
-func (*TestService) CreateCollection(dao *daos.Dao) {
+func (*TestService) CreateCollection(dao *daos.Dao) error {
+
+	log.Printf("TRYING TO CREATE TEST COLLECTION")
 
 	collection := &models.Collection{
 		Name:       "example",
@@ -36,7 +38,13 @@ func (*TestService) CreateCollection(dao *daos.Dao) {
 		),
 	}
 
+	if err := dao.SaveCollection(collection); err != nil {
+		return err
+	}
+
 	log.Println(collection)
+
+	return nil
 }
 
 // func (*TestService) InsertTestMessage(dao *daos.Dao) {

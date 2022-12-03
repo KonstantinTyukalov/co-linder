@@ -16,7 +16,7 @@ func RegisterTestRoutes(se *core.ServeEvent, pbi *pocketbase.PocketBase) error {
 	th := new(handlers.TestHandler)
 
 	// or you can also use the shorter e.Router.GET("/articles/:slug", handler, middlewares...)
-	routerInfo, err := se.Router.AddRoute(echo.Route{
+	_, err := se.Router.AddRoute(echo.Route{
 		Method:  http.MethodGet,
 		Path:    rootPath + "/hello",
 		Handler: th.HandleHello,
@@ -27,7 +27,10 @@ func RegisterTestRoutes(se *core.ServeEvent, pbi *pocketbase.PocketBase) error {
 		return err
 	}
 
-	log.Println(routerInfo)
+	se.Router.GET(rootPath+"/collection", func(c echo.Context) error {
+		th.HandleCreateCollection(c, pbi.Dao())
+		return nil
+	})
 
 	return nil
 }
