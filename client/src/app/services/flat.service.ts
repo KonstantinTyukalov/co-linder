@@ -98,12 +98,11 @@ export class FlatService {
             return;
         }
 
-        const newFlatState: FlatPb = {
-            ...flat,
+        const updatedInterestedList = {
             interestedUsers: [...interestedUsersIds, userId]
         };
 
-        await flatCollection.update(flatId, newFlatState);
+        await flatCollection.update(flatId, updatedInterestedList);
     }
 
     async removeUserFromInterested(userId: string, flatId: string): Promise<void> {
@@ -113,12 +112,11 @@ export class FlatService {
 
         const interestedUsersIds = flat?.interestedUsers.filter((uid) => uid !== userId);
 
-        const newFlatState: FlatPb = {
-            ...flat,
+        const updatedInterestedList = {
             interestedUsers: interestedUsersIds
         };
 
-        await flatCollection.update(flatId, newFlatState);
+        await flatCollection.update(flatId, updatedInterestedList);
     }
 
     async getFullFlatWithCommentsById(flatId: string): Promise<Flat> {
