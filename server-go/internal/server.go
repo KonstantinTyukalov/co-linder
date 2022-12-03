@@ -53,7 +53,7 @@ func (app *ServerApp) RegisterRoutes() error {
 	log.Println("Registering routes...")
 	app.pbi.OnBeforeServe().
 		Add(func(e *core.ServeEvent) error {
-			err := routes.RegisterTestRoutes(e, app.pbi)
+			err := routes.RegisterFlatRoutes(e, app.pbi)
 
 			if err != nil {
 				return err
