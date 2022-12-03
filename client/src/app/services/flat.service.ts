@@ -5,7 +5,7 @@ import { PocketBaseService, STATIC_PATH } from './pb.service';
 import { FlatComment } from '../dto/flatComment.dto';
 import { expandAvatar } from './user.service';
 import { Store } from '@ngrx/store';
-import { updateFlatComments } from '../store/actions/flat.actions';
+import { updateFlatComments, updateFlatInterested } from '../store/actions/flat.actions';
 import { ListResult, RecordSubscription } from 'pocketbase';
 import * as FlatSelectors from '../store/selectors/flat.selectors';
 import { take } from 'rxjs/operators';
@@ -86,18 +86,16 @@ export class FlatService {
         return await this.pbService.getCollection('flats').create(flat);
     }
 
-    async addUserToInterested(userId: string, flatId: string): Promise<User[]> {
+    async addUserToInterested(userId: string, flatId: string): Promise<void> {
         const flatCollection = this.pbService.getCollection('flats');
 
-        const flat = await flatCollection.getOne(flatId, {
-            expand: 'interestedUsers'
-        }) as FlatPb;
+        const flat = await flatCollection.getOne(flatId) as FlatPb;
 
         const interestedUsersIds = flat?.interestedUsers;
 
         if (interestedUsersIds?.includes(userId)) {
             console.log(`THIS USER WITH ID ${userId} already interested. Skipping`);
-            return flat.expand?.interestedUsers?.map(user => expandAvatar(user))!;
+            return;
         }
 
         const updatedInterestedList = {
@@ -110,10 +108,10 @@ export class FlatService {
 
         const expandedInterestedUsers = res.expand?.interestedUsers?.map(user => expandAvatar(user))!;
 
-        return expandedInterestedUsers;
+        this.store.dispatch(updateFlatInterested({ users: expandedInterestedUsers }));
     }
 
-    async removeUserFromInterested(userId: string, flatId: string): Promise<User[]> {
+    async removeUserFromInterested(userId: string, flatId: string): Promise<void> {
         const flatCollection = this.pbService.getCollection('flats');
 
         const flat = await flatCollection.getOne(flatId) as FlatPb;
@@ -130,7 +128,7 @@ export class FlatService {
 
         const expandedInterestedUsers = res.expand?.interestedUsers?.map(user => expandAvatar(user))!;
 
-        return expandedInterestedUsers;
+        this.store.dispatch(updateFlatInterested({ users: expandedInterestedUsers }));
     }
 
     async getFullFlatWithCommentsById(flatId: string): Promise<Flat> {
