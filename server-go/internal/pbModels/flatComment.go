@@ -1,6 +1,7 @@
 package pbModels
 
 import (
+	"coliving-crew.xyz/server/internal/constants"
 	"github.com/pocketbase/pocketbase/models"
 )
 
@@ -15,5 +16,5 @@ type FlatComment struct {
 }
 
 func (m *FlatComment) TableName() string {
-	return "flatComments"
+	return constants.FLAT_COMMENTS_COLLECTION
 }

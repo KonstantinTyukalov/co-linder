@@ -9,9 +9,9 @@ import (
 	"github.com/pocketbase/pocketbase/models"
 )
 
-type FlatCommentHandler struct{}
+type FlatHandler struct{}
 
-func (hf *FlatCommentHandler) AddNewComment(dao *daos.Dao, fc *pbModels.FlatComment) (*pbModels.FlatComment, error) {
+func (hf *FlatHandler) AddNewComment(dao *daos.Dao, fc *pbModels.FlatComment) (*pbModels.FlatComment, error) {
 
 	resultCommentRecord := &pbModels.FlatComment{}
 

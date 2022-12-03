@@ -1,6 +1,7 @@
 package pbModels
 
 import (
+	"coliving-crew.xyz/server/internal/constants"
 	"github.com/pocketbase/pocketbase/models"
 	"github.com/pocketbase/pocketbase/tools/types"
 )
@@ -20,7 +21,7 @@ type User struct {
 }
 
 func (m *User) TableName() string {
-	return "users" // the name of your collection
+	return constants.USERS_COLLECTION
 }
 
 func (m *User) IsAuth() bool {

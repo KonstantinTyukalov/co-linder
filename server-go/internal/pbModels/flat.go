@@ -1,6 +1,7 @@
 package pbModels
 
 import (
+	"coliving-crew.xyz/server/internal/constants"
 	"github.com/pocketbase/pocketbase/models"
 )
 
@@ -20,5 +21,5 @@ type Flat struct {
 }
 
 func (m *Flat) TableName() string {
-	return "flats" // the name of your collection
+	return constants.FLATS_COLLECTION
 }

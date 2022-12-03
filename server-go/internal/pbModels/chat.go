@@ -1,6 +1,7 @@
 package pbModels
 
 import (
+	"coliving-crew.xyz/server/internal/constants"
 	"github.com/pocketbase/pocketbase/models"
 )
 
@@ -15,5 +16,5 @@ type Chat struct {
 }
 
 func (m *Chat) TableName() string {
-	return "chats" // the name of your collection
+	return constants.CHATS_COLLECTION // the name of your collection
 }
