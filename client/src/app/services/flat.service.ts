@@ -12,6 +12,8 @@ import { take } from 'rxjs/operators';
 import { FlatPb } from '../models/flat.model.pb';
 import { FlatCommentPb } from '../models/flatComment.model.pb';
 import { UserPb } from '../models/user.model.pb';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 export class FilterFlat {
     withPhoto?: boolean;
@@ -78,7 +80,11 @@ function mapToFlatComment(commentPb: FlatCommentPb): FlatComment {
 export class FlatService {
     readonly PER_PAGE = 20;
 
-    constructor(private readonly pbService: PocketBaseService, private readonly store: Store) {
+    constructor(
+        private readonly http: HttpClient,
+        private readonly pbService: PocketBaseService,
+        private readonly store: Store
+    ) {
     }
 
     async createFlat(flat: Flat): Promise<Flat> {
@@ -156,36 +162,18 @@ export class FlatService {
         return mappedComments;
     }
 
-    async sendFlatComment(flatComment: FlatComment): Promise<FlatComment> {
-        const flatCollection = this.pbService.getCollection('flats');
+    sendFlatComment(flatComment: FlatComment) {
+        const url = environment.serverUrl + '/api/flat/transactions/flatComments';
 
-        console.log('Trying add flat comment', flatComment);
-        const flatId = flatComment.flat.id!;
-
-        const data: FlatCommentPb = {
-            flat: flatId,
-            sender: flatComment.sender.id!,
+        const body = {
+            flat: flatComment.flat.id,
+            sender: flatComment.sender.id,
             content: flatComment.content
         };
 
-        console.log('ADD FLAT COMMENT, ', data);
-        const newFlatComment = await this.pbService.getCollection('flatComments').create(data) as FlatCommentPb;
-
-        const flat = await flatCollection.getOne(flatId) as FlatPb;
-
-        const flatComments = flat.comments as string[];
-
-        const newFlatState: FlatPb = {
-            ...flat,
-            comments: [...flatComments, newFlatComment.id!]
-        };
-
-        console.log('Trying to update flat state. new state: ', newFlatState);
-
-        await flatCollection.update(newFlatState.id!, newFlatState);
-
-        console.log('Flat comment successfully added.');
-        return flatComment;
+        return this.http.post(url, body).subscribe(res => {
+            console.log('Response on new message post: ', res);
+        });
     }
 
     private async getCommentWithSenderAvatar(comment: FlatCommentPb): Promise<FlatComment> {

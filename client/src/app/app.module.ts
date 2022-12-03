@@ -28,6 +28,7 @@ import { ChatsComponent } from './components/chats/chats.component';
 import { UserComponent } from './components/user/user.component';
 import { LeftSidebarComponent } from './components/left-sidebar/left-sidebar.component';
 import { PopupModule } from './popups/popup-module.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
     declarations: [
@@ -46,6 +47,7 @@ import { PopupModule } from './popups/popup-module.module';
     ],
     imports: [
         BrowserModule,
+        HttpClientModule,
         AppRoutingModule,
         FormsModule,
         EffectsModule.forRoot([UserEffects, FlatEffects, ChatEffects]),
