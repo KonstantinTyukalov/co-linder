@@ -15,18 +15,22 @@
     "rules": {
         "@typescript-eslint/indent": ["error", 4],
         "@typescript-eslint/semi": ["error", "always"],
-        "@typescript-eslint/member-delimiter-style": ["error", {
-            "multiline": {
-                "delimiter": "semi",
-                "requireLast": true
-            },
-            "singleline": {
-                "delimiter": "semi",
-                "requireLast": true
+        "@typescript-eslint/member-delimiter-style": [
+            "error", {
+                "multiline": {
+                    "delimiter": "semi",
+                    "requireLast": true
+                },
+                "singleline": {
+                    "delimiter": "semi",
+                    "requireLast": true
+                }
             }
-          }],
-        "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
+        ],
+        "brace-style": ["error", "1tbs", {"allowSingleLine": true}],
+        "newline-after-var": ["warn", "always"],
         "curly": "off",
+        "no-duplicate-imports": ["error", {"includeExports": true}],
         "@typescript-eslint/no-floating-promises": "off",
         "@typescript-eslint/consistent-type-assertions": "off",
         "@typescript-eslint/strict-boolean-expressions": "off",

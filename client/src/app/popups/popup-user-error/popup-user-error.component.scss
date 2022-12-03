@@ -1,0 +1,29 @@
+.content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 50rem;
+
+    h2 {
+        margin-bottom: 2rem;
+    }
+
+    .error {
+        overflow: hidden;
+        height-max: 20rem;
+        color: #ff0000;
+        margin-bottom: 2rem;
+    }
+
+    button {
+        width: 12rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        h2 {
+            margin: 0;
+        }
+    }
+}

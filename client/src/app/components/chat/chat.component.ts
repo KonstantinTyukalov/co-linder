@@ -5,11 +5,10 @@ import * as ChatActions from '../../store/actions/chat.actions';
 
 import * as ChatSelector from '../../store/selectors/chat.selectors';
 import { combineLatest, Subscription, take } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import * as UserSelector from '../../store/selectors/user.selectors';
 import { ChatService } from '../../services/chat.service';
 import { ChatMessage } from '../../dto/chatMessage.dto';
-import { Location } from '@angular/common';
 
 @Component({
     selector: 'app-chat',
@@ -27,19 +26,15 @@ export class ChatComponent implements OnInit, OnDestroy {
     constructor(
         private readonly store: Store,
         private readonly route: ActivatedRoute,
-        private readonly chatService: ChatService,
-        private readonly router: Router,
-        private readonly location: Location
+        private readonly chatService: ChatService
     ) {
     }
 
     public ngOnInit(): void {
         this.subscriptions.add(
-            combineLatest(
-                this.route.params,
-                this.user$
-            ).subscribe(([param, user]) => {
+            this.route.params.subscribe((param) => {
                 const chatId = param['id'];
+
                 if (chatId) {
                     this.store.dispatch(ChatActions.getChatById({ chatId }));
                 }

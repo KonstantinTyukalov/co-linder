@@ -1,14 +1,10 @@
 <div class="content" (click)="onClick()">
-    <img [src]="photo"
-         alt="image">
+    <img [src]="photo" alt="image">
     <div class="flat-data">
         <h3>{{flat.name}}</h3>
         <h3>{{flat.cost | currency: '$'}}</h3>
     </div>
     <div class="flat-description">
         <h4 style="font-weight: normal">{{flat.area}}</h4>
-    </div>
-    <div *ngIf="true">
-
     </div>
 </div>

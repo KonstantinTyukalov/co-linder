@@ -41,17 +41,18 @@ function toFilePath(id: string, fileName: string) {
     return STATIC_PATH + 'flats/' + id + '/' + fileName;
 }
 
-function mapToFlat(flat: FlatPb): Flat {
+function mapToFlat(flat: FlatPb, comments?: FlatComment[]): Flat {
     console.log('MAPPING TO FLAT', flat);
 
     const result: Flat = {
         ...flat,
-        comments: flat.comments as unknown as FlatComment[],
+        comments: comments ?? flat.comments as unknown as FlatComment[],
         owner: expandAvatar(flat.expand?.owner!),
         interestedUsers: flat.expand?.interestedUsers?.map((user: User) => expandAvatar(user)),
         readyToLiveUsers: flat.expand?.readyToLiveUsers?.map((user: User) => expandAvatar(user)) ?? [],
         downloadedPhotos: 'photo' in flat ? flat.photo.map((photo: string) => toFilePath(flat.id!, photo)) : []
     };
+
     delete (result as any).expand;
     delete (result as any).photo;
 
@@ -59,13 +60,18 @@ function mapToFlat(flat: FlatPb): Flat {
     return result;
 }
 
-function mapToFlatComment(comment: any): FlatComment {
-    const result = {
+function mapToFlatComment(commentPb: FlatCommentPb): FlatComment {
+    const { expand, ...comment } = commentPb;
+    const sender = commentPb.expand!.sender!;
+    const flat = comment.flat as unknown as Flat;
+
+    const mappedComment: FlatComment = {
         ...comment,
-        sender: expandAvatar(comment.expand!.sender!)
+        flat,
+        sender: expandAvatar(sender)
     };
-    delete result.expand;
-    return result;
+
+    return mappedComment;
 }
 
 @Injectable()
@@ -96,39 +102,48 @@ export class FlatService {
             ...flat,
             interestedUsers: [...interestedUsersIds, userId]
         };
-        await flatCollection.update(flatId, newFlatState, {
-            expand: 'interestedUsers'
-        }) as FlatPb;
+
+        await flatCollection.update(flatId, newFlatState);
     }
 
-    async getFlatById(id: string): Promise<Flat> {
-        console.log('Trying to get flat by id:', id);
-        const res = await this.pbService.getCollection('flats').getOne(id, {
+    async removeUserFromInterested(userId: string, flatId: string): Promise<void> {
+        const flatCollection = this.pbService.getCollection('flats');
+
+        const flat = await flatCollection.getOne(flatId) as FlatPb;
+
+        const interestedUsersIds = flat?.interestedUsers.filter((uid) => uid !== userId);
+
+        const newFlatState: FlatPb = {
+            ...flat,
+            interestedUsers: interestedUsersIds
+        };
+
+        await flatCollection.update(flatId, newFlatState);
+    }
+
+    async getFullFlatWithCommentsById(flatId: string): Promise<Flat> {
+        const flat = await this.pbService.getCollection('flats').getOne(flatId, {
             expand: 'owner,interestedUsers,readyToLiveUsers'
         }) as FlatPb;
 
-        return mapToFlat(res);
+        const comments = await this.getFlatCommentsById(flatId);
+
+        this.subscribeToFlatComments(flatId);
+
+        return mapToFlat(flat, comments);
     }
 
     async getFlatCommentsById(flatId: string): Promise<FlatComment[]> {
         console.log('Trying to get comments for flat by id:', flatId);
-        const result = await this.pbService.getCollection('flatComments').getFullList(200, {
+        const comments = await this.pbService.getCollection('flatComments').getFullList(200, {
             filter: "flat = '" + flatId + "'",
             expand: 'sender',
             sort: '+created'
-        });
-        return result.map(comment => mapToFlatComment(comment));
-    }
+        }) as FlatCommentPb[];
 
-    async getFlatWithComments(id: string): Promise<Flat> {
-        const flat = await this.getFlatById(id);
-        const comments = await this.getFlatCommentsById(id);
+        const mappedComments = comments.map(comment => mapToFlatComment(comment));
 
-        // Subscribe to updates
-        this.subscribeToFlatComments(id);
-
-        flat.comments = comments;
-        return flat;
+        return mappedComments;
     }
 
     async sendFlatComment(flatComment: FlatComment): Promise<FlatComment> {
@@ -142,6 +157,7 @@ export class FlatService {
             sender: flatComment.sender.id!,
             content: flatComment.content
         };
+
         console.log('ADD FLAT COMMENT, ', data);
         const newFlatComment = await this.pbService.getCollection('flatComments').create(data) as FlatCommentPb;
 
@@ -180,6 +196,7 @@ export class FlatService {
 
         flatsCollection.subscribe(flatId, async (data: RecordSubscription<FlatPb>) => {
             const updatedFlat = data.record;
+
             console.log('New flat state ', updatedFlat);
 
             if (data.action === 'update') {
@@ -215,6 +232,7 @@ export class FlatService {
 
     async searchFlat(page: number, filter: FilterFlat) {
         let filterStr: string = '';
+
         if (filter.withPhoto) filterStr = addAnd(filterStr, 'photo > 1');
         if (filter.owner) filterStr = addAnd(filterStr, 'owner ~ "' + filter.owner.id + '"');
         if (filter.area) filterStr = addAnd(filterStr, 'area ~ "' + filter.area + '"');

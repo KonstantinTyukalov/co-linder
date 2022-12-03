@@ -1,12 +1,15 @@
 <div class="content">
-    <h1 class="registration-text">Registration</h1>
-    <div class="photo">
-        <img src="./assets/user-mock.jpg" class="user-photo" alt="your photo">
+    <h1 class="registration-text primary-color">Registration</h1>
+    <div class="photo" [ngClass]="imagePath ? 'photo-in-row' : 'photo-in-column'">
+        <img [src]="imagePath || './assets/user-mock.jpg'" class="user-photo" alt="your photo">
         <input
             class="file"
             type="file"
-            name="file"
+            id="file"
             (change)="picPhoto($event)">
+        <label [ngClass]="imagePath ? 'label-relative' : 'label-fixed'" for="file" class="button-global-purple">
+            <h3>Pick an avatar</h3>
+        </label>
     </div>
     <input
         class="email"
@@ -46,10 +49,9 @@
     <textarea
         placeholder="Description"
         class="description"
-        [ngModel]="newUser.description"
-        (ngModelChange)="descriptionshanged($event)">
+        [(ngModel)]="newUser.description">
     </textarea>
-    <button class="registration" (click)="registration()">
+    <button class="button-global-purple" (click)="registration()">
         <h3>Les't registration</h3>
     </button>
 </div>

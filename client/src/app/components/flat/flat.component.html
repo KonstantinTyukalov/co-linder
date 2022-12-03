@@ -2,8 +2,6 @@
     <div class="menu">
         <app-left-sidebar [user$]="user$"></app-left-sidebar>
     </div>
-
-
     <div class="flat">
         <div class="photos">
             <img *ngFor="let photo of flatDownloadedPhotos$ | async"
@@ -11,8 +9,12 @@
                  alt="Photo">
         </div>
         <div class="buttons">
-            <button (click)="intrested()"><h2>I'm interested</h2></button>
-            <button><h2>Mark as full</h2></button>
+            <button class="button-global-purple" (click)="intrested()">
+                <h2>I'm interested</h2>
+            </button>
+            <button class="button-global-white">
+                <h2>Mark as full</h2>
+            </button>
         </div>
         <div class="flat-metadata">
             <div class="header-one">
@@ -26,30 +28,30 @@
                 <a href="{{flatExternalUrl$ | async}}">3d-pary site</a>
             </h3>
         </div>
-        <div class="comments">
-            <div class="chat">
-                <div class="chat-overflow">
-                    <div
-                        class="chat-message"
-                        *ngFor="let comment of flatComments$ | async"
-                        [ngClass]="comment?.sender?.id === '1' ? 'chat-message-left' : 'chat-message-right'">
-                        <img [src]="comment?.sender?.avatar" alt="">
-                        <div>
-                            <h4>{{comment.sender.name}}</h4>
-                            <h2 style="font-weight: normal">{{comment.content}}</h2>
-                        </div>
+        <div class="comments" id="comments">
+            <div class="chat" id="chat">
+                <div class="chat-message"
+                     *ngFor="let comment of flatComments$ | async"
+                     [ngClass]="comment?.sender?.id === '1' ? 'chat-message-left' : 'chat-message-right'">
+                    <img [src]="comment?.sender?.avatar" alt="">
+                    <div>
+                        <h4>{{comment.sender.name}}</h4>
+                        <h2 style="font-weight: normal">{{comment.content}}</h2>
                     </div>
                 </div>
             </div>
-            <input type="text" [(ngModel)]="content">
-            <button (click)="onSendClick()">Send</button>
+        </div>
+
+        <div class="create-message">
+            <input class="input-global" type="text" [(ngModel)]="content">
+            <button class="button-global-purple" (click)="onSendClick()">Send</button>
         </div>
     </div>
 
 
     <div class="users-block">
-        <h1 style="text-align: center;">Interested</h1>
         <div class="users">
+            <h1 class="">Interested</h1>
             <div
                 class="user"
                 *ngFor="let user of flatInterestedUsers$ | async"
@@ -58,12 +60,14 @@
                 <h2>{{user?.name}}</h2>
             </div>
         </div>
-        <h1 style="text-align: center">Owner</h1>
-        <div class="owner">
-            <img
-                [src]="(flatOwner$ | async)?.avatar"
-                alt="Avatar">
-            <h2>{{(flatOwner$ | async)?.name}}</h2>
+        <div class="owner-block">
+            <h1 style="text-align: center">Owner</h1>
+            <div class="owner">
+                <img
+                    [src]="(flatOwner$ | async)?.avatar"
+                    alt="Avatar">
+                <h2>{{(flatOwner$ | async)?.name}}</h2>
+            </div>
         </div>
     </div>
 </div>

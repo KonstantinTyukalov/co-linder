@@ -1,4 +1,85 @@
+@use './colors';
+
 h1, h2, h3, h4 {
     margin: 0;
     font-family: Arial;
 }
+
+.primary-color {
+    color: colors.$primary-main;
+}
+
+.primary-background-color {
+    background-color: colors.$primary-main;
+}
+
+.button {
+    height: 3.5rem;
+    border: none;
+    border-radius: 0.7rem;
+    transition: .2s ease-in-out;
+}
+
+.button-global-purple {
+    @extend .button;
+    color: colors.$white;
+    background-color: colors.$primary-main;
+
+    &:hover {
+        background-color: colors.$primary-light;
+
+        &:active {
+            background-color: colors.$primary-dark;
+        }
+    }
+}
+
+.button-global-white {
+    @extend .button;
+
+    color: colors.$primary-main;
+    background-color: colors.$secondary-main;
+    border: 1px solid colors.$primary-main;
+
+    &:hover {
+        transition: .2s ease-in-out;
+        border: 1px solid transparent;
+        background-color: colors.$secondary-light;
+
+        &:active {
+            border: 1px solid transparent;
+            transition: .2s ease-in-out;
+            background-color: colors.$secondary-dark;
+        }
+    }
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill::first-line {
+    -webkit-box-shadow: 0 0 0 40rem colors.$secondary-main inset;
+    -webkit-text-fill-color: colors.$primary-main;
+}
+
+.input-global {
+    color: colors.$primary-main;
+    background-color: colors.$white;
+    border-radius: 0.7rem;
+    padding-left: 1rem;
+    font-size: 24px;
+    height: 3rem;
+    transition: outline-color .5s ease-in-out, border-color .5s ease-in-out;
+    border: 1px solid colors.$primary-main;
+    outline: none;
+
+    &::placeholder {
+        color: colors.$secondary-dark;
+    }
+
+    &:focus {
+        outline: 1.5px solid colors.$primary-main;
+    }
+}
+
+
