@@ -3,9 +3,7 @@ package server
 import (
 	"log"
 
-	// "coliving-crew.xyz/server/internal/routes"
 	"coliving-crew.xyz/server/internal/routes"
-	"coliving-crew.xyz/server/internal/services"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/core"
 )
@@ -28,18 +26,9 @@ func NewServerApp() *ServerApp {
 
 func (app *ServerApp) Run() error {
 
-	app.pbi.Bootstrap()
-
-	log.Println("Configured pocketbase instance")
-
-	// cs := new(services.ChatService)
-
-	ts := new(services.TestService)
-
-	ts.CreateCollection(app.pbi.Dao())
-
-	// cs.SaveNewChatMessage(app.pocketbase.Dao(), )
-	// SaveNewChatMessage
+	if app.pbi == nil {
+		log.Fatal("PocketBase instance not initialized")
+	}
 
 	bootstrapErr := app.pbi.Bootstrap()
 	if bootstrapErr != nil {
@@ -51,12 +40,12 @@ func (app *ServerApp) Run() error {
 
 func (app *ServerApp) RegisterRoutes() error {
 	log.Println("Registering routes...")
-	app.pbi.OnBeforeServe().
-		Add(func(e *core.ServeEvent) error {
-			err := routes.RegisterFlatRoutes(e, app.pbi)
 
-			if err != nil {
-				return err
+	app.pbi.OnBeforeServe().
+		Add(func(se *core.ServeEvent) error {
+
+			if flatRoutesErr := routes.RegisterFlatRoutes(se, app.pbi); flatRoutesErr != nil {
+				return flatRoutesErr
 			}
 
 			return nil
