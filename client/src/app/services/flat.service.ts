@@ -163,7 +163,7 @@ export class FlatService {
     }
 
     sendFlatComment(flatComment: FlatComment) {
-        const url = environment.serverUrl + '/api/flat/transactions/flatComments';
+        const url = environment.serverUrl + '/api/flatComments';
 
         const body = {
             flat: flatComment.flat.id,
