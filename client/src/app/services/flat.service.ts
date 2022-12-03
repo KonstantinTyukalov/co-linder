@@ -86,26 +86,34 @@ export class FlatService {
         return await this.pbService.getCollection('flats').create(flat);
     }
 
-    async addUserToInterested(userId: string, flatId: string): Promise<void> {
+    async addUserToInterested(userId: string, flatId: string): Promise<User[]> {
         const flatCollection = this.pbService.getCollection('flats');
 
-        const flat = await flatCollection.getOne(flatId) as FlatPb;
+        const flat = await flatCollection.getOne(flatId, {
+            expand: 'interestedUsers'
+        }) as FlatPb;
 
         const interestedUsersIds = flat?.interestedUsers;
 
         if (interestedUsersIds?.includes(userId)) {
             console.log(`THIS USER WITH ID ${userId} already interested. Skipping`);
-            return;
+            return flat.expand?.interestedUsers?.map(user => expandAvatar(user))!;
         }
 
         const updatedInterestedList = {
             interestedUsers: [...interestedUsersIds, userId]
         };
 
-        await flatCollection.update(flatId, updatedInterestedList);
+        const res = await flatCollection.update(flatId, updatedInterestedList, {
+            expand: 'interestedUsers'
+        }) as FlatPb;
+
+        const expandedInterestedUsers = res.expand?.interestedUsers?.map(user => expandAvatar(user))!;
+
+        return expandedInterestedUsers;
     }
 
-    async removeUserFromInterested(userId: string, flatId: string): Promise<void> {
+    async removeUserFromInterested(userId: string, flatId: string): Promise<User[]> {
         const flatCollection = this.pbService.getCollection('flats');
 
         const flat = await flatCollection.getOne(flatId) as FlatPb;
@@ -116,7 +124,13 @@ export class FlatService {
             interestedUsers: interestedUsersIds
         };
 
-        await flatCollection.update(flatId, updatedInterestedList);
+        const res = await flatCollection.update(flatId, updatedInterestedList, {
+            expand: 'interestedUsers'
+        }) as FlatPb;
+
+        const expandedInterestedUsers = res.expand?.interestedUsers?.map(user => expandAvatar(user))!;
+
+        return expandedInterestedUsers;
     }
 
     async getFullFlatWithCommentsById(flatId: string): Promise<Flat> {
