@@ -4,11 +4,10 @@ import { Store } from '@ngrx/store';
 import * as ChatActions from '../../store/actions/chat.actions';
 
 import * as ChatSelector from '../../store/selectors/chat.selectors';
-import { combineLatest, Subscription, take } from 'rxjs';
+import { Subscription, take } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import * as UserSelector from '../../store/selectors/user.selectors';
 import { ChatService } from '../../services/chat.service';
-import { ChatMessage } from '../../dto/chatMessage.dto';
+import { ChatMessage } from '../../dto/chatMessage.dto'; import { user } from '../../store/selectors/user.selectors'; import { User } from '../../dto/user.dto';
 
 @Component({
     selector: 'app-chat',
@@ -16,8 +15,9 @@ import { ChatMessage } from '../../dto/chatMessage.dto';
     styleUrls: ['./chat.component.scss']
 })
 export class ChatComponent implements OnInit, OnDestroy {
+    public user?: User;
+
     public chat$ = this.store.select(ChatSelector.chat);
-    public user$ = this.store.select(UserSelector.user);
 
     public message: string = '';
 
@@ -28,6 +28,9 @@ export class ChatComponent implements OnInit, OnDestroy {
         private readonly route: ActivatedRoute,
         private readonly chatService: ChatService
     ) {
+        this.store.select(user).subscribe((user) => {
+            this.user = user;
+        });
     }
 
     public ngOnInit(): void {
@@ -42,24 +45,29 @@ export class ChatComponent implements OnInit, OnDestroy {
         );
     }
 
-    public ngOnDestroy(): void {
-        this.subscriptions.unsubscribe();
+    public onKeyDown(event: KeyboardEvent) {
+        console.log(event);
+        if (event.key === 'Enter') {
+            this.onClickSend();
+        }
     }
 
     public onClickSend(): void {
         this.subscriptions.add(
-            combineLatest(
-                this.chat$,
-                this.user$
-            ).pipe(take(1)).subscribe(([chat, user]) => {
-                this.chatService.sendMessage({
-                    chat,
-                    sender: user,
-                    content: this.message
-                } as ChatMessage);
+            this.chat$.pipe(take(1))
+                .subscribe((chat) => {
+                    this.chatService.sendMessage({
+                        chat,
+                        sender: this.user,
+                        content: this.message
+                    } as ChatMessage);
 
-                this.message = '';
-            })
+                    this.message = '';
+                })
         );
+    }
+
+    public ngOnDestroy(): void {
+        this.subscriptions.unsubscribe();
     }
 }

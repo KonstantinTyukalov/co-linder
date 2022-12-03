@@ -1,17 +1,12 @@
 import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-
-import * as UserSelector from '../../store/selectors/user.selectors';
 import * as FlatActions from '../../store/actions/flat.actions';
-
-import * as FlatSelector from '../../store/selectors/flat.selectors';
-import { combineLatest, EMPTY, from, Subscription, switchMap, take } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ChatService } from 'src/app/services/chat.service';
 import { Location } from '@angular/common';
 import { FlatService } from '../../services/flat.service';
 import { FlatComment } from '../../dto/flatComment.dto';
-import { currentFlat } from '../../store/selectors/flat.selectors';
+import { currentFlat, flat } from '../../store/selectors/flat.selectors'; import { User } from '../../dto/user.dto'; import { Store } from '@ngrx/store'; import { Flat } from '../../dto/flat.dto'; import { user } from '../../store/selectors/user.selectors';
 
 @Component({
     selector: 'app-flat',
@@ -19,18 +14,18 @@ import { currentFlat } from '../../store/selectors/flat.selectors';
     styleUrls: ['./flat.component.scss']
 })
 export class FlatComponent implements OnInit, OnDestroy {
-    public flatDownloadedPhotos$ = this.store.select(currentFlat.downloadedPhotos);
-    public flatName$ = this.store.select(currentFlat.name);
-    public flatCost$ = this.store.select(currentFlat.cost);
-    public flatArea$ = this.store.select(currentFlat.area);
-    public flatDescription$ = this.store.select(currentFlat.description);
-    public flatExternalUrl$ = this.store.select(currentFlat.externalUrl);
-    public flatComments$ = this.store.select(currentFlat.comments);
-    public flatInterestedUsers$ = this.store.select(currentFlat.interestedUsers);
-    public flatOwner$ = this.store.select(currentFlat.owner);
+    public flatName?: string;
+    public flatDownloadedPhotos?: string[];
+    public flatCost?: number;
+    public flatArea?: string;
+    public flatDescription?: string;
+    public flatExternalUrl?: string;
+    public flatComments?: FlatComment[];
+    public flatInterestedUsers?: User[];
+    public flatOwner?: User;
 
-    public flat$ = this.store.select(FlatSelector.flat);
-    public user$ = this.store.select(UserSelector.user);
+    public flat?: Flat;
+    public user?: User;
 
     public content = '';
 
@@ -45,6 +40,18 @@ export class FlatComponent implements OnInit, OnDestroy {
         private readonly location: Location,
         private readonly flatService: FlatService
     ) {
+        this.subscribeOn(currentFlat.name, 'flatName');
+        this.subscribeOn(currentFlat.cost, 'flatDownloadedPhotos');
+        this.subscribeOn(currentFlat.downloadedPhotos, 'flatDownloadedPhotos');
+        this.subscribeOn(currentFlat.area, 'flatArea');
+        this.subscribeOn(currentFlat.description, 'flatDescription');
+        this.subscribeOn(currentFlat.externalUrl, 'flatExternalUrl');
+        this.subscribeOn(currentFlat.comments, 'flatComments');
+        this.subscribeOn(currentFlat.interestedUsers, 'flatInterestedUsers');
+        this.subscribeOn(currentFlat.owner, 'flatOwner');
+
+        this.subscribeOn(user, 'user');
+        this.subscribeOn(flat, 'flat');
     }
 
     public ngOnInit(): void {
@@ -60,62 +67,46 @@ export class FlatComponent implements OnInit, OnDestroy {
     }
 
     public onSendClick(): void {
-        this.subscriptions.add(
-            combineLatest(
-                this.flat$,
-                this.user$
-            ).pipe(
-                take(1)
-            ).subscribe(([flat, user]) => {
-                this.flatService.sendFlatComment({
-                    flat,
-                    sender: user,
-                    content: this.content
-                } as FlatComment);
-
-                this.content = '';
-            })
-        );
+        if (this.flat && this.user && this.content) {
+            this.flatService.sendFlatComment({
+                flat: this.flat,
+                sender: this.user,
+                content: this.content
+            } as FlatComment);
+        }
     }
 
-    public intrested(): void {
-        this.subscriptions.add(
-            combineLatest(
-                this.flat$,
-                this.user$
-            ).pipe(
-                take(1)
-            ).subscribe(([flat, user]) => {
-                this.flatService.addUserToInterested(user?.id!, flat?.id!);
-                this.store.dispatch(FlatActions.updateFlatInterested({ user: user! }));
-            })
-        );
-    }
-
-    public readyToLive(): void {
-        this.subscriptions.add(
-            combineLatest(
-                this.flat$,
-                this.user$
-            ).pipe(
-                take(1)
-            ).subscribe(([flat, user]) => {
-                this.store.dispatch(FlatActions.updateFlat({ user: user!, flat: flat! }));
-            })
-        );
+    public setMeAsInterested(): void {
+        if (this.flat?.id && this.user?.id) {
+            this.flatService.addUserToInterested(this.user.id, this.flat.id);
+        }
     }
 
     public async onUserClick(userId: string) {
-        this.subscriptions.add(
-            this.user$.pipe(
-                switchMap((user) => {
-                    if (user) {
-                        return from(this.chatService.tryGetChatWithUser(user, userId));
-                    }
-                    return EMPTY;
-                })
-            ).subscribe((chat) => {
+        if (this.user) {
+            const chat = await this.chatService.tryGetChatWithUser(this.user, userId);
+
+            if (chat) {
                 this.router.navigate(['chat', chat.id]);
+            }
+        }
+    }
+
+    public onKeyDown(event: KeyboardEvent) {
+        if (event.key === 'Enter') {
+            this.onSendClick();
+        }
+    }
+
+    private subscribeOn(
+        selector: any,
+        field: keyof FlatComponent
+    ): void {
+        this.subscriptions.add(
+            this.store.select(selector).subscribe((obj) => {
+                // @ts-expect-error
+                this[field] = obj;
+                console.log(this.flatName);
             })
         );
     }

@@ -1,34 +1,31 @@
+@use '../../../styles';
+@use '../../../colors';
+
 .content {
     width: 100vw;
     height: 100%;
     display: grid;
-    grid-template-columns: 1fr 6fr;
+    grid-template-columns: 1fr 5fr;
     box-sizing: border-box;
-}
-
-.menu {
-    color: black;
-    background-color: #c2c2c2;
 }
 
 .chat-content {
+    background-color: colors.$primary-main;
     box-sizing: border-box;
-    padding: 3rem;
+    padding: 2rem;
     width: 100%;
 }
 
 .users {
-    background-color: white;
+    @extend .block;
+    background-color: colors.$white;
     padding: 0.5rem;
-    border-radius: 1rem;
     display: flex;
     margin-bottom: 2rem;
-    box-shadow: 0 0 10px #c5c5c5;
 
     div.user {
         padding: 0 0.5rem;
         border-radius: 2rem;
-        border: 0.5px solid #e3e3e3;
         margin: 0.5rem;
         display: flex;
         align-items: center;
@@ -43,12 +40,11 @@
 }
 
 .chat {
-    background-color: white;
+    background-color: colors.$white;
     padding: 1rem;
     border-radius: 1rem;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 0 10px #c5c5c5;
 
     .chat-messages-box {
         width: 100%;
@@ -76,25 +72,15 @@
     }
 
     .message-area {
-        height: 5rem;
+        margin-top: 1rem;
         width: 100%;
-        display: flex;
-        justify-content: space-between;
-
-        textarea {
-            background-color: #fafafa;
-            width: 100%;
-            font-size: 24px;
-            border: none;
-            border-bottom: 1px solid #c2c2c2;
-        }
+        display: grid;
+        grid-template-columns: 12fr 1fr;
 
         button.send {
-            background-color: #665bf0;
-            color: white;
-            border: none;
+            @extend .button-global-purple;
+            height: 100%;
             width: 10rem;
-            border-radius: 1rem;
             margin-left: 1rem;
         }
     }

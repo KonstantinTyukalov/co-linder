@@ -1,7 +1,5 @@
 <div class="content">
-    <div class="menu">
-        <app-left-sidebar [user$]="user$"></app-left-sidebar>
-    </div>
+    <app-left-sidebar [user]="user"></app-left-sidebar>
     <div class="chat-content">
         <div class="users">
             <div
@@ -24,9 +22,11 @@
                 </div>
             </div>
             <div class="message-area">
-                <textarea [(ngModel)]="message" placeholder="Type the message">                    
-                </textarea>
-                <button class="send" (click)="onClickSend()"><h2>Send</h2></button>
+                <input class="input-global" [(ngModel)]="message" type="text" placeholder="Type the message"
+                       (keydown)="onKeyDown($event)">
+                <button class="send" (click)="onClickSend()">
+                    <h2>Send</h2>
+                </button>
             </div>
         </div>
     </div>

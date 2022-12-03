@@ -7,6 +7,7 @@ import { Flat } from '../../dto/flat.dto';
 import { Observable } from 'rxjs';
 import { user } from '../../store/selectors/user.selectors';
 import { flats } from '../../store/selectors/flat.selectors';
+import { User } from '../../dto/user.dto';
 
 @Component({
     selector: 'app-apartments',
@@ -14,7 +15,7 @@ import { flats } from '../../store/selectors/flat.selectors';
     styleUrls: ['./apartments.component.scss']
 })
 export class ApartmentsComponent implements OnInit {
-    public user$ = this.store.select(user);
+    public user?: User;
 
     public area!: string;
     public name!: string;
@@ -29,6 +30,9 @@ export class ApartmentsComponent implements OnInit {
     public flats$: Observable<Flat[]> = this.store.select(flats);
 
     constructor(private readonly store: Store) {
+        this.store.select(user).subscribe((user) => {
+            this.user = user;
+        });
     }
 
     public ngOnInit(): void {

@@ -26,14 +26,7 @@ export const reducer = createReducer(
 
         return { ...state, flat: { ...state.flat!, comments: updatedComments } };
     }),
-    on(FlatsActions.updateFlatInterested, (state, { user }) => {
-        console.log('updateFlatInterested: FLAT STATE', state)
-        const flatInterested = state.flat?.interestedUsers ?? []
-
-        if (!flatInterested.find(interested => interested.id === user.id)) {
-            flatInterested.push(user);
-        }
-
-        return { ...state, flat: { ...state.flat!, interestedUsers: flatInterested } }
+    on(FlatsActions.updateFlatInterested, (state, { users }) => {
+        return { ...state, flat: { ...state.flat!, interestedUsers: users } };
     })
 );

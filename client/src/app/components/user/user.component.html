@@ -1,4 +1,4 @@
 <div class="content">
-    <img [src]="(user$ | async)?.avatar" alt="Avatar">
-    <h2>{{(user$ | async)?.name || 'Guset'}}</h2>
+    <img [src]="user?.avatar" alt="Avatar">
+    <h2>{{user?.name || 'Guset'}}</h2>
 </div>

@@ -8,7 +8,6 @@ export const flats = createSelector(state, state => state.flats);
 export const flat = createSelector(state, state => state.flat);
 
 export const currentFlat = {
-
     name: createSelector(state, state => state.flat?.name),
     cost: createSelector(state, state => state.flat?.cost),
     description: createSelector(state, state => state.flat?.description),

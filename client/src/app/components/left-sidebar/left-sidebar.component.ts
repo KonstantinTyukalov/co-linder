@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
 import { User } from '../../dto/user.dto';
 
 import { Location } from '@angular/common';
@@ -12,9 +11,7 @@ import * as ChatActions from '../../store/actions/chat.actions';
     styleUrls: ['./left-sidebar.component.scss']
 })
 export class LeftSidebarComponent implements OnInit {
-    @Input() user$!: Observable<User | undefined>;
-
-    private readonly subscriptions = new Subscription();
+    @Input() user?: User;
 
     constructor(
         private readonly location: Location,
@@ -23,13 +20,9 @@ export class LeftSidebarComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.subscriptions.add(
-            this.user$?.subscribe((user) => {
-                if (user) {
-                    this.store.dispatch(ChatActions.getAllChatsByUserId({ id: user.id! }));
-                }
-            })
-        );
+        if (this.user?.id) {
+            this.store.dispatch(ChatActions.getAllChatsByUserId({ id: this.user.id }));
+        }
     }
 
     public onBackClick(): void {

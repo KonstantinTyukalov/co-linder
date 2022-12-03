@@ -13,7 +13,7 @@ export const updateFlatComments = createAction('UPDATE_FLAT_COMMENTS', props<{ c
 
 export const updateFlat = createAction('UPDATE_FLAT', props<{ flat: Flat; user: User; }>());
 
-export const updateFlatInterested = createAction('UPDATE_FLAT_INTERESTED', props<{ user: User; }>());
+export const updateFlatInterested = createAction('UPDATE_FLAT_INTERESTED', props<{ users: User[]; }>());
 
 export const getFlatsByFilters = createAction('GET_FLATS_BY_FILTERS', props<{
     area: string;

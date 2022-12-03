@@ -1,9 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
-
-import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { User } from 'src/app/dto/user.dto'; import { chats } from '../../store/selectors/chat.selectors';
+
+import { User } from 'src/app/dto/user.dto';
+import { chats } from '../../store/selectors/chat.selectors';
 
 @Component({
     selector: 'app-chats',
@@ -11,7 +11,7 @@ import { User } from 'src/app/dto/user.dto'; import { chats } from '../../store/
     styleUrls: ['./chats.component.scss']
 })
 export class ChatsComponent {
-    @Input() public user$?: Observable<User | undefined>;
+    @Input() public user?: User;
     public chats$ = this.store.select(chats);
 
     constructor(
