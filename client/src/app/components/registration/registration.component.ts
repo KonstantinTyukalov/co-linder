@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 })
 export class RegistrationComponent {
     public countries = COUNTRIES;
-    private avatarForUpload?: File;
+    public imagePath: string = '';
 
     public newUser: User = {
         email: '',
@@ -26,25 +26,32 @@ export class RegistrationComponent {
         description: ''
     };
 
+    private avatarForUpload?: File;
+
     constructor(
         private readonly store: Store,
         private readonly router: Router
-    ) {
-
-    }
-
-    public descriptionshanged(event: string) {
-        this.newUser.description = event;
-        console.log(this.newUser);
-    }
+    ) {}
 
     public picPhoto(e: Event) {
+        const reader = new FileReader();
+
+        reader.onload = (event: any) => {
+            console.log(event);
+            this.imagePath = event.target.result;
+        };
+
         const files = (<HTMLInputElement> e.target).files;
-        this.avatarForUpload = files ? files[0] : undefined;
+
+        if (files?.[0]) {
+            this.avatarForUpload = files[0];
+            reader.readAsDataURL(this.avatarForUpload!);
+        }
     }
 
     public registration() {
         const user = { ...this.newUser };
+
         this.store.dispatch(UserActions.registrationUser({ user, file: this.avatarForUpload }));
         this.router.navigate(['login']);
     }

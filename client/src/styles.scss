@@ -74,7 +74,7 @@ input:-webkit-autofill::first-line {
     outline: none;
 
     &::placeholder {
-        color: colors.$primary-light;
+        color: colors.$secondary-dark;
     }
 
     &:focus {

@@ -1,3 +1,5 @@
+@use '../../../styles';
+
 .content {
     width: 25rem;
     height: 100%;
@@ -7,75 +9,66 @@
     justify-content: center;
 }
 
+.registration-text {
+    text-align: center;
+}
+
+.photo-in-column {
+    transition: .5s ease-in-out;
+    flex-direction: column;
+}
+
+.photo-in-row {
+    transition: .5s ease-in-out;
+    flex-direction: row;
+}
+
 .photo {
     width: 100%;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
 
     .file {
-        width: 22rem;
-        horiz-align: center
+        display: none;
+    }
+
+    .user-photo {
+        border-radius: 50%;
+        width: 12rem;
+        height: 12rem;
+        padding: 1rem 0;
+    }
+
+    .label-fixed {
+        transition: .5s ease-in-out;
+        position: fixed;
+    }
+
+    .label-relative {
+        transition: .5s ease-in-out;
+        margin-left: 2rem;
+        position: relative;
+    }
+
+    label {
+        background-color: rgba(108, 97, 255, 0.51);
+        width: 10rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &:hover {
+            @extend .primary-background-color;
+        }
     }
 }
 
-.user-photo {
-    border-radius: 50%;
-    width: 10rem;
+.email, .name, .age, .sex, .country, .languages, .password, .description {
     margin-bottom: 1rem;
 }
 
-.registration-text {
-    text-align: center;
-    margin-bottom: 1rem;
-}
-
-.email, .name, .age, .sex, .country, .languages, .password {
-    margin-bottom: 1rem;
-}
-
-select {
-    border: 2px solid #c2c2c2;
-    border-top: none;
-    border-left: none;
-    border-right: none;
-    padding-left: 1rem;
-    font-size: 24px;
-    height: 3rem;
-    margin-bottom: 1rem;
-}
-
-input {
-    border: 2px solid #c2c2c2;
-    border-top: none;
-    border-left: none;
-    border-right: none;
-    padding-left: 1rem;
-    font-size: 24px;
-    height: 3rem;
-    margin-bottom: 1rem;
-}
-
-textarea {
-    border: 2px solid #c2c2c2;
-    border-top: none;
-    border-left: none;
-    border-right: none;
-    padding-left: 1rem;
-    font-size: 24px;
-    height: 3rem;
-    margin-bottom: 1rem;
-}
-
-button.registration {
-    margin-bottom: 1rem;
-    height: 3rem;
-    border: 2px solid #d2d2d2;
-    background-color: transparent;
-
-    &:hover {
-        background-color: #e0e0e0;
-    }
+input, select, textarea {
+    @extend .input-global;
 }
 
