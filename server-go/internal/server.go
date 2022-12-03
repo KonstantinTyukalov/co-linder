@@ -44,8 +44,11 @@ func (app *ServerApp) RegisterRoutes() error {
 	app.pbi.OnBeforeServe().
 		Add(func(se *core.ServeEvent) error {
 
-			if flatRoutesErr := routes.RegisterFlatRoutes(se, app.pbi); flatRoutesErr != nil {
-				return flatRoutesErr
+			if err := routes.RegisterFlatRoutes(se, app.pbi); err != nil {
+				return err
+			}
+			if err := routes.RegisterFlatCommentRoutes(se, app.pbi); err != nil {
+				return err
 			}
 
 			return nil
