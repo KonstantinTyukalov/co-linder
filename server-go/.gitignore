@@ -2,3 +2,4 @@ pb_data
 gin-bin
 *.exe
 secrets
+db_dumps
