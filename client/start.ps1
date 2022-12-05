@@ -1,1 +1,3 @@
-npm run start -- --allowed-hosts all --host 172.16.101.93
+$localIpAddr = (Get-NetIPAddress -InterfaceAlias Wi-Fi -AddressFamily IPv4).IPAddress
+
+npm run start -- --allowed-hosts all --host $localIpAddr
