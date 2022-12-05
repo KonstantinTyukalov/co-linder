@@ -13,24 +13,24 @@ import (
 	"github.com/pocketbase/pocketbase/core"
 )
 
-func RegisterFlatCommentRoutes(se *core.ServeEvent, pbi *pocketbase.PocketBase) error {
+func RegisterChatMessageRoutes(se *core.ServeEvent, pbi *pocketbase.PocketBase) error {
 
-	rootPath := constants.API_BASE_ROUTE + "/flatComments"
-	fch := new(handlers.FlatCommentHandler)
+	rootPath := constants.API_BASE_ROUTE + "/chatMessages"
+	cmh := new(handlers.ChatMessageHandler)
 
-	se.Router.Validator = &validators.FlatCommentValidator{Validator: validator.New()}
+	se.Router.Validator = &validators.ChatMessageValidator{Validator: validator.New()}
 
 	se.Router.POST(rootPath, func(c echo.Context) error {
 
-		fc := new(pbModels.FlatComment)
-		if err := c.Bind(fc); err != nil {
+		cm := new(pbModels.ChatMessage)
+		if err := c.Bind(cm); err != nil {
 			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 		}
-		if err := c.Validate(fc); err != nil {
+		if err := c.Validate(cm); err != nil {
 			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 		}
 
-		res, err := fch.AddNewComment(pbi.Dao(), fc)
+		res, err := cmh.AddNewMessage(pbi.Dao(), cm)
 		if err != nil {
 			return err
 		}

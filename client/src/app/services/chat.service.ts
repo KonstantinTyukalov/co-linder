@@ -12,6 +12,8 @@ import { UserPb } from '../models/user.model.pb';
 import { ChatMessagesPb } from '../models/chatMessage.model.pb';
 import { chat } from '../store/selectors/chat.selectors';
 import { mapToChat } from '../utils/mapToChat';
+import { environment } from 'src/environments/environment';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class ChatService {
@@ -19,7 +21,8 @@ export class ChatService {
 
     constructor(
         private readonly pbService: PocketBaseService,
-        private readonly store: Store
+        private readonly store: Store,
+        private readonly http: HttpClient
     ) {
         this.store.select(chat).subscribe((chat) => {
             this.chatState = chat;
@@ -56,9 +59,11 @@ export class ChatService {
         const existedChat = chatsList?.find((chat) => {
             console.log('Checking chat', chat);
             const userIds = chat.users;
+
             console.log(userIds);
             const isCurrentUserPresent = chat.users?.includes(currentUser.id!);
             const isTargetUserPresent = chat.users?.includes(targetUserId);
+
             console.log(isCurrentUserPresent, isTargetUserPresent);
             return isCurrentUserPresent && isTargetUserPresent;
         });
@@ -96,6 +101,7 @@ export class ChatService {
 
                         if (!currentMessages.find(msg => msg.id === lastMessageFromPb.id)) {
                             const fullLastMessage = await this.getMessageWithPicture(lastMessageFromPb);
+
                             this.store.dispatch(addMessageToCurrentChat({ lastChatMessage: fullLastMessage }));
                         }
                     }
@@ -128,6 +134,7 @@ export class ChatService {
             if (chatParticipants) {
                 for (const participant of chatParticipants) {
                     const participantWithAvatar = expandAvatar(participant);
+
                     expandedUsers.push(participantWithAvatar);
                 }
             }
@@ -139,44 +146,24 @@ export class ChatService {
         return expandedChats as unknown as Chat[];
     }
 
-    async sendMessage(message: ChatMessage) {
-        const chatMessagesCollection = this.pbService.getCollection('chatMessages');
-        const chatCollection = this.pbService.getCollection('chats');
+    async sendMessage(message: ChatMessage): Promise<void> {
+        const url = environment.serverUrl + '/api/chatMessages';
 
-        const chatId = message.chat.id!;
-
-        const newMessage: ChatMessagesPb = {
-            content: message.content,
-            sender: message.sender.id!,
-            chat: chatId
-        };
-        console.log('Trying to create new chat message: ', newMessage);
-
-        const newMessageInCollection = await chatMessagesCollection.create(newMessage) as ChatMessagesPb;
-        console.log('Added new chat message ', newMessageInCollection.id);
-
-        console.log('Trying to update chat: ', chatId);
-
-        const chat = await chatCollection.getOne(chatId) as ChatPb;
-
-        const newChatState: ChatPb = {
-            ...chat,
-            messages: [
-                ...chat.messages,
-                newMessageInCollection.id!
-            ]
+        const body = {
+            chat: message.chat.id,
+            sender: message.sender.id,
+            content: message.content
         };
 
-        const updatedChat = await chatCollection.update(chatId, newChatState);
-
-        console.log('Successfully updated chat: ', updatedChat.id);
-
-        return newMessageInCollection;
+        this.http.post(url, body).subscribe(res => {
+            console.log('Response on new message post: ', res);
+        });
     }
 
     // Not working
     async leaveChat() {
         const chatCollection = this.pbService.getCollection('chats');
+
         console.log('Leaving all chats');
         chatCollection.unsubscribe();
     }
