@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { User } from 'src/app/dto/user.dto';
+
+import { UserPb } from '@models/user.model.pb';
+import { User } from '@dto/user.dto';
+
 import { PocketBaseService, STATIC_PATH } from './pb.service';
-import { UserPb } from '../models/user.model.pb';
 
 export const ghostUser: User = {
     email: 'no@mail.com',

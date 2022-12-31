@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Router } from '@angular/router';
-import * as UserActions from '../../store/actions/user.actions';
-import { isUserLoading, userError } from '../../store/selectors/user.selectors';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
+
+import * as UserActions from '@store/actions/user.actions';
+import { isUserLoading, userError } from '@store/selectors/user.selectors';
 
 @Component({
     selector: 'app-login',

@@ -1,5 +1,7 @@
-import { Chat } from '../../dto/chat.dto';
 import { createReducer, on } from '@ngrx/store';
+
+import { Chat } from '@dto/chat.dto';
+
 import * as ChatsActions from '../actions/chat.actions';
 
 export interface ChatsState {

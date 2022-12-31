@@ -1,12 +1,17 @@
 import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
-import * as FlatActions from '../../store/actions/flat.actions';
 import { Subscription } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ChatService } from 'src/app/services/chat.service';
 import { Location } from '@angular/common';
-import { FlatService } from '../../services/flat.service';
-import { FlatComment } from '../../dto/flatComment.dto';
-import { currentFlat, flat } from '../../store/selectors/flat.selectors'; import { User } from '../../dto/user.dto'; import { Store } from '@ngrx/store'; import { Flat } from '../../dto/flat.dto'; import { user } from '../../store/selectors/user.selectors';
+import { Store } from '@ngrx/store';
+import { ActivatedRoute, Router } from '@angular/router';
+
+import { ChatService } from '@services/chat.service';
+import { FlatComment } from '@dto/flatComment.dto';
+import { User } from '@dto/user.dto';
+import { Flat } from '@dto/flat.dto';
+import { currentFlat, flat } from '@store/selectors/flat.selectors';
+import { FlatService } from '@services/flat.service';
+import { user } from '@store/selectors/user.selectors';
+import * as FlatActions from '@store/actions/flat.actions';
 
 @Component({
     selector: 'app-flat',

@@ -1,9 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { User } from '../../dto/user.dto';
-
 import { Location } from '@angular/common';
 import { Store } from '@ngrx/store';
-import * as ChatActions from '../../store/actions/chat.actions';
+
+import { User } from '@dto/user.dto';
+import * as ChatActions from '@store/actions/chat.actions';
 
 @Component({
     selector: 'app-left-sidebar',

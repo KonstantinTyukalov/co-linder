@@ -1,8 +1,8 @@
-import { Chat } from '../dto/chat.dto';
-import { ChatMessage } from '../dto/chatMessage.dto';
-import { User } from '../dto/user.dto';
-import { ChatPb } from '../models/chats.model.pb';
-import { expandAvatar, ghostUser } from '../services/user.service';
+import { Chat } from '@dto/chat.dto';
+import { ChatMessage } from '@dto/chatMessage.dto';
+import { User } from '@dto/user.dto';
+import { ChatPb } from '@models/chats.model.pb';
+import { expandAvatar, ghostUser } from '@services/user.service';
 
 export const mapToChat = (chatPb: ChatPb): Chat => {
     const { expand, ...chat } = chatPb;

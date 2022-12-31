@@ -1,5 +1,7 @@
-import { User } from '../../dto/user.dto';
 import { createReducer, on } from '@ngrx/store';
+
+import { User } from '@dto/user.dto';
+
 import * as UserActions from '../actions/user.actions';
 
 export interface UserState {

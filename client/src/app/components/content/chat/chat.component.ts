@@ -1,13 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-
-import * as ChatActions from '../../store/actions/chat.actions';
-
-import * as ChatSelector from '../../store/selectors/chat.selectors';
 import { Subscription, take } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { ChatService } from '../../services/chat.service';
-import { ChatMessage } from '../../dto/chatMessage.dto'; import { user } from '../../store/selectors/user.selectors'; import { User } from '../../dto/user.dto';
+
+import * as ChatActions from '@store/actions/chat.actions';
+import * as ChatSelector from '@store/selectors/chat.selectors';
+import { ChatService } from '@services/chat.service';
+import { ChatMessage } from '@dto/chatMessage.dto';
+import { user } from '@store/selectors/user.selectors';
+import { User } from '@dto/user.dto';
 
 @Component({
     selector: 'app-chat',

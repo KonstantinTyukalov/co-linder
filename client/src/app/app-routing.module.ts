@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { RegistrationComponent } from './components/registration/registration.component';
-import { LoginComponent } from './components/login/login.component';
-import { ApartmentsComponent } from './components/apartments/apartments.component';
-import { MenuComponent } from './components/menu/menu.component';
-import { TestComponent } from './components/test/test.component';
-import { FlatComponent } from './components/flat/flat.component';
-import { ChatComponent } from './components/chat/chat.component';
+import { RegistrationComponent } from '@components/registration/registration.component';
+import { LoginComponent } from '@components/login/login.component';
+import { ApartmentsComponent } from '@components/content/apartments/apartments.component';
+import { MenuComponent } from '@components/menu/menu.component';
+import { TestComponent } from '@components/test/test.component';
+import { ChatComponent } from '@components/content/chat/chat.component';
 import { GetUserGuard } from './guards/user.guard';
+import { FlatComponent } from '@components/content/flat/flat.component';
 
 const routes: Routes = [
     { path: '', component: MenuComponent },

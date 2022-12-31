@@ -2,8 +2,8 @@ import { Component, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 
-import { User } from 'src/app/dto/user.dto';
-import { chats } from '../../store/selectors/chat.selectors';
+import { chats } from '@store/selectors/chat.selectors';
+import { User } from '@dto/user.dto';
 
 @Component({
     selector: 'app-chats',

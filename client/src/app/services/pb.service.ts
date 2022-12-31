@@ -1,6 +1,8 @@
-import PocketBase, { LocalAuthStore } from 'pocketbase';
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
+
+import PocketBase, { LocalAuthStore } from 'pocketbase';
+
+import { environment } from '@env/environment';
 
 export const STATIC_PATH = environment.serverUrl + '/api/files/';
 
@@ -26,6 +28,7 @@ export class PocketBaseService {
     constructor() {
         const authStore = new LocalAuthStore();
         // authStore.loadFromCookie()
+
         console.log('AuthStore=', authStore);
         this.pb = new PocketBase(environment.serverUrl, authStore);
     }

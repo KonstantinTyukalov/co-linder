@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { User } from '../../dto/user.dto';
+import { User } from '@dto/user.dto';
 import { Store } from '@ngrx/store';
-import { COUNTRIES } from '../../utils/countries';
-import * as UserActions from '../../store/actions/user.actions';
+import { COUNTRIES } from '@utils/countries';
+import * as UserActions from '@store/actions/user.actions';
 import { Router } from '@angular/router';
 
 @Component({

@@ -22,12 +22,21 @@
         "lib": [
             "es2020",
             "dom"
-        ]
+        ],
+        "paths": {
+            "@env/*": ["src/environments/*"],
+            "@services/*": ["src/app/services/*"],
+            "@dto/*": ["src/app/dto/*"],
+            "@utils/*": ["src/app/utils/*"],
+            "@models/*": ["src/app/models/*"],
+            "@store/*": ["src/app/store/*"],
+            "@components/*": ["src/app/components/*"]
+        }
     },
     "angularCompilerOptions": {
         "enableI18nLegacyMessageIdFormat": false,
         "strictInjectionParameters": true,
         "strictInputAccessModifiers": true,
         "strictTemplates": true
-    }
+    },
 }

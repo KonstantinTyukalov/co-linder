@@ -1,7 +1,7 @@
 import { createAction, props } from '@ngrx/store';
-import { FlatComment } from 'src/app/dto/flatComment.dto';
-import { Flat } from '../../dto/flat.dto';
-import { User } from '../../dto/user.dto';
+import { FlatComment } from '@dto/flatComment.dto';
+import { Flat } from '@dto/flat.dto';
+import { User } from '@dto/user.dto';
 
 export const getFlats = createAction('GET_FLATS');
 export const getFlatsSuccess = createAction('GET_FLATS_SUCCESS', props<{ flats: Flat[]; }>());

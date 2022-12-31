@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { FlatService } from '../../services/flat.service';
-import * as FlatActions from '../actions/flat.actions';
 import { from, switchMap } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Flat } from 'src/app/dto/flat.dto';
+
+import { FlatService } from '@services/flat.service';
+import { Flat } from '@dto/flat.dto';
+
+import * as FlatActions from '../actions/flat.actions';
 
 @Injectable()
 export class FlatEffects {

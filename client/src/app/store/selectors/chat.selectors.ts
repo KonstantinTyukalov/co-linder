@@ -1,4 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
+
 import { ChatsState } from '../reducers/chat.reducer';
 
 export const state = createFeatureSelector<ChatsState>('CHAT_STATE');

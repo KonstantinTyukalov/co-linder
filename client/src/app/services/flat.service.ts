@@ -1,19 +1,22 @@
 import { Injectable } from '@angular/core';
-import { User } from 'src/app/dto/user.dto';
-import { Flat } from 'src/app/dto/flat.dto';
-import { PocketBaseService, STATIC_PATH } from './pb.service';
-import { FlatComment } from '../dto/flatComment.dto';
-import { expandAvatar } from './user.service';
 import { Store } from '@ngrx/store';
-import { updateFlatComments, updateFlatInterested } from '../store/actions/flat.actions';
-import { ListResult, RecordSubscription } from 'pocketbase';
-import * as FlatSelectors from '../store/selectors/flat.selectors';
 import { take } from 'rxjs/operators';
-import { FlatPb } from '../models/flat.model.pb';
-import { FlatCommentPb } from '../models/flatComment.model.pb';
-import { UserPb } from '../models/user.model.pb';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
+
+import { ListResult, RecordSubscription } from 'pocketbase';
+
+import { User } from '@dto/user.dto';
+import { Flat } from '@dto/flat.dto';
+import { FlatComment } from '@dto/flatComment.dto';
+import { updateFlatComments, updateFlatInterested } from '@store/actions/flat.actions';
+import * as FlatSelectors from '@store/selectors/flat.selectors';
+import { FlatPb } from '@models/flat.model.pb';
+import { FlatCommentPb } from '@models/flatComment.model.pb';
+import { UserPb } from '@models/user.model.pb';
+import { environment } from '@env/environment';
+
+import { PocketBaseService, STATIC_PATH } from './pb.service';
+import { expandAvatar } from './user.service';
 
 export class FilterFlat {
     withPhoto?: boolean;
@@ -67,13 +70,11 @@ function mapToFlatComment(commentPb: FlatCommentPb): FlatComment {
     const sender = commentPb.expand!.sender!;
     const flat = comment.flat as unknown as Flat;
 
-    const mappedComment: FlatComment = {
+    return {
         ...comment,
         flat,
         sender: expandAvatar(sender)
     };
-
-    return mappedComment;
 }
 
 @Injectable()
@@ -157,9 +158,7 @@ export class FlatService {
             sort: '+created'
         }) as FlatCommentPb[];
 
-        const mappedComments = comments.map(comment => mapToFlatComment(comment));
-
-        return mappedComments;
+        return comments.map(comment => mapToFlatComment(comment));
     }
 
     sendFlatComment(flatComment: FlatComment) {
@@ -181,12 +180,10 @@ export class FlatService {
 
         const sender = await this.pbService.getCollection('users').getOne(senderId) as UserPb;
 
-        const data: FlatComment = {
+        return {
             ...comment as unknown as FlatComment,
             sender: expandAvatar(sender)
         };
-
-        return data;
     }
 
     async subscribeToFlatComments(flatId: string) {
@@ -207,7 +204,7 @@ export class FlatService {
 
                     const fullNewestComment = await this.getCommentWithSenderAvatar(newestComment);
 
-                    this.store.select(FlatSelectors.flat).pipe(take(1)).subscribe((flat) => {
+                    this.store.select(FlatSelectors.flat).pipe(take(1)).subscribe(() => {
                         this.store.dispatch(updateFlatComments({ comment: fullNewestComment }));
                     });
                 }
@@ -264,10 +261,7 @@ export class FlatService {
             if (filter.readyToLiveMin && (flat.readyToLiveUsers === undefined || flat.readyToLiveUsers!.length < filter.readyToLiveMin)) {
                 return false;
             }
-            if (filter.readyToLiveMax && (flat.readyToLiveUsers && flat.readyToLiveUsers!.length > filter.readyToLiveMax)) {
-                return false;
-            }
-            return true;
+            return !(filter.readyToLiveMax && (flat.readyToLiveUsers && flat.readyToLiveUsers!.length > filter.readyToLiveMax));
         });
     }
 }

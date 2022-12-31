@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-
-import * as FlatActions from '../../store/actions/flat.actions';
-import { Flat } from '../../dto/flat.dto';
-
 import { Observable } from 'rxjs';
-import { user } from '../../store/selectors/user.selectors';
-import { flats } from '../../store/selectors/flat.selectors';
-import { User } from '../../dto/user.dto';
+
+import * as FlatActions from '@store/actions/flat.actions';
+import { Flat } from '@dto/flat.dto';
+import { User } from '@dto/user.dto';
+import { user } from '@store/selectors/user.selectors';
+import { flats } from '@store/selectors/flat.selectors';
 
 @Component({
     selector: 'app-apartments',

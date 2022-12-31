@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Flat } from '../../dto/flat.dto';
 import { Router } from '@angular/router';
+
+import { Flat } from '@dto/flat.dto';
 
 @Component({
     selector: 'app-flat-card',

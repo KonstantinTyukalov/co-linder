@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { UserService } from '../../services/user.service';
-import * as UserActions from '../actions/user.actions';
+import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import {
     catchError, from, of, switchMap, tap
 } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { User } from '../../dto/user.dto';
-import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+
+import { UserService } from '@services/user.service';
+import { User } from '@dto/user.dto';
+
+import * as UserActions from '../actions/user.actions';
 import { userLoading } from '../actions/user.actions';
 
 @Injectable()

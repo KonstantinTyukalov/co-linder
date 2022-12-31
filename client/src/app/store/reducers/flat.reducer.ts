@@ -1,5 +1,7 @@
-import { Flat } from '../../dto/flat.dto';
 import { createReducer, on } from '@ngrx/store';
+
+import { Flat } from '@dto/flat.dto';
+
 import * as FlatsActions from '../actions/flat.actions';
 
 export interface FlatsState {

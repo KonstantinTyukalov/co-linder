@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { ChatService } from '../../services/chat.service';
-import * as ChatActions from '../actions/chat.actions';
 import { from, switchMap } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Chat } from 'src/app/dto/chat.dto';
-import { Store } from '@ngrx/store';
+
+import { Chat } from '@dto/chat.dto';
+import { ChatService } from '@services/chat.service';
+
+import * as ChatActions from '../actions/chat.actions';
 
 @Injectable()
 export class ChatEffects {
     constructor(
         private readonly actions$: Actions,
-        private readonly chatService: ChatService,
-        private readonly store: Store
+        private readonly chatService: ChatService
     ) {
     }
 

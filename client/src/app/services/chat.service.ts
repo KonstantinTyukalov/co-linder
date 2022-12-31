@@ -1,17 +1,20 @@
 import { Injectable } from '@angular/core';
-import { User } from '../dto/user.dto';
-import { Chat } from '../dto/chat.dto';
-import { PocketBaseService } from './pb.service';
-import { ChatMessage } from '../dto/chatMessage.dto';
-import { expandAvatar } from './user.service';
-import { RecordSubscription } from 'pocketbase';
 import { Store } from '@ngrx/store';
-import { addMessageToCurrentChat } from '../store/actions/chat.actions';
-import { ChatPb } from '../models/chats.model.pb';
-import { UserPb } from '../models/user.model.pb';
-import { ChatMessagesPb } from '../models/chatMessage.model.pb';
-import { chat } from '../store/selectors/chat.selectors';
-import { mapToChat } from '../utils/mapToChat';
+
+import { RecordSubscription } from 'pocketbase';
+
+import { User } from '@dto/user.dto';
+import { Chat } from '@dto/chat.dto';
+import { ChatMessage } from '@dto/chatMessage.dto';
+import { addMessageToCurrentChat } from '@store/actions/chat.actions';
+import { ChatPb } from '@models/chats.model.pb';
+import { UserPb } from '@models/user.model.pb';
+import { ChatMessagesPb } from '@models/chatMessage.model.pb';
+import { chat } from '@store/selectors/chat.selectors';
+import { mapToChat } from '@utils/mapToChat';
+
+import { PocketBaseService } from './pb.service';
+import { expandAvatar } from './user.service';
 
 @Injectable()
 export class ChatService {
@@ -56,9 +59,11 @@ export class ChatService {
         const existedChat = chatsList?.find((chat) => {
             console.log('Checking chat', chat);
             const userIds = chat.users;
+
             console.log(userIds);
             const isCurrentUserPresent = chat.users?.includes(currentUser.id!);
             const isTargetUserPresent = chat.users?.includes(targetUserId);
+
             console.log(isCurrentUserPresent, isTargetUserPresent);
             return isCurrentUserPresent && isTargetUserPresent;
         });
@@ -96,6 +101,7 @@ export class ChatService {
 
                         if (!currentMessages.find(msg => msg.id === lastMessageFromPb.id)) {
                             const fullLastMessage = await this.getMessageWithPicture(lastMessageFromPb);
+
                             this.store.dispatch(addMessageToCurrentChat({ lastChatMessage: fullLastMessage }));
                         }
                     }
@@ -128,6 +134,7 @@ export class ChatService {
             if (chatParticipants) {
                 for (const participant of chatParticipants) {
                     const participantWithAvatar = expandAvatar(participant);
+
                     expandedUsers.push(participantWithAvatar);
                 }
             }
@@ -150,9 +157,11 @@ export class ChatService {
             sender: message.sender.id!,
             chat: chatId
         };
+
         console.log('Trying to create new chat message: ', newMessage);
 
         const newMessageInCollection = await chatMessagesCollection.create(newMessage) as ChatMessagesPb;
+
         console.log('Added new chat message ', newMessageInCollection.id);
 
         console.log('Trying to update chat: ', chatId);
@@ -177,6 +186,7 @@ export class ChatService {
     // Not working
     async leaveChat() {
         const chatCollection = this.pbService.getCollection('chats');
+
         console.log('Leaving all chats');
         chatCollection.unsubscribe();
     }
@@ -204,11 +214,9 @@ export class ChatService {
 
         const expandedAvatar = expandAvatar(sender);
 
-        const data: ChatMessage = {
+        return {
             ...message as unknown as ChatMessage,
             sender: expandedAvatar
         };
-
-        return data;
     }
 }

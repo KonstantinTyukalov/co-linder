@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
-import { Chat } from '../../dto/chat.dto';
-import { ChatMessage } from '../../dto/chatMessage.dto';
+import { Chat } from '@dto/chat.dto';
+import { ChatMessage } from '@dto/chatMessage.dto';
 
 export const getChatById = createAction('GET_CHAT_BY_ID', props<{ chatId: string; }>());
 export const getChatByIdSuccess = createAction('GET_CHAT_BY_ID_SUCCESS', props<{ chat: Chat; }>());
