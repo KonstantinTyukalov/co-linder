@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { HttpClient } from '@angular/common/http';
 
 import { RecordSubscription } from 'pocketbase';
 
@@ -12,6 +13,7 @@ import { UserPb } from '@models/user.model.pb';
 import { ChatMessagesPb } from '@models/chatMessage.model.pb';
 import { chat } from '@store/selectors/chat.selectors';
 import { mapToChat } from '@utils/mapToChat';
+import { environment } from '@env/environment';
 
 import { PocketBaseService } from './pb.service';
 import { expandAvatar } from './user.service';
