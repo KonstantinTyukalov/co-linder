@@ -1,0 +1,9 @@
+pb_data*
+bin
+build
+readme.*
+.git*
+.vscode
+secrets
+
+Dockerfile

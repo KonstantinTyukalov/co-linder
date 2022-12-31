@@ -22,7 +22,8 @@ export class ChatService {
 
     constructor(
         private readonly pbService: PocketBaseService,
-        private readonly store: Store
+        private readonly store: Store,
+        private readonly http: HttpClient
     ) {
         this.store.select(chat).subscribe((chat) => {
             this.chatState = chat;
@@ -146,41 +147,18 @@ export class ChatService {
         return expandedChats as unknown as Chat[];
     }
 
-    async sendMessage(message: ChatMessage) {
-        const chatMessagesCollection = this.pbService.getCollection('chatMessages');
-        const chatCollection = this.pbService.getCollection('chats');
+    async sendMessage(message: ChatMessage): Promise<void> {
+        const url = environment.serverUrl + '/api/chatMessages';
 
-        const chatId = message.chat.id!;
-
-        const newMessage: ChatMessagesPb = {
-            content: message.content,
-            sender: message.sender.id!,
-            chat: chatId
+        const body = {
+            chat: message.chat.id,
+            sender: message.sender.id,
+            content: message.content
         };
 
-        console.log('Trying to create new chat message: ', newMessage);
-
-        const newMessageInCollection = await chatMessagesCollection.create(newMessage) as ChatMessagesPb;
-
-        console.log('Added new chat message ', newMessageInCollection.id);
-
-        console.log('Trying to update chat: ', chatId);
-
-        const chat = await chatCollection.getOne(chatId) as ChatPb;
-
-        const newChatState: ChatPb = {
-            ...chat,
-            messages: [
-                ...chat.messages,
-                newMessageInCollection.id!
-            ]
-        };
-
-        const updatedChat = await chatCollection.update(chatId, newChatState);
-
-        console.log('Successfully updated chat: ', updatedChat.id);
-
-        return newMessageInCollection;
+        this.http.post(url, body).subscribe(res => {
+            console.log('Response on new message post: ', res);
+        });
     }
 
     // Not working

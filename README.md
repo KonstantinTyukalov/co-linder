@@ -1,14 +1,14 @@
 # match-shared-app
 
-Akvelon Hackaton 2022 application to find co-living place.
+Akvelon Hackathon 2022 application to find co-living place and flatmates.
+Currently under active development in spare time, for fun.
 
-### Back-end
+Hackathon state branch: <https://github.com/KonstantinTyukalov/match-shared-app/tree/hackvelon-2022>
+
+## Back-end
 
 Server using PocketBase framework written in GoLang.
 
-# Start front-end
+## Front-end
 
-- Go to "client" folder.
-- `npm install`
-- `npm start`
-- Go to localhost:4200/login
+SPA client app written using Angular.

@@ -50,6 +50,9 @@ func (app *ServerApp) RegisterRoutes() error {
 			if err := routes.RegisterFlatCommentRoutes(se, app.pbi); err != nil {
 				return err
 			}
+			if err := routes.RegisterChatMessageRoutes(se, app.pbi); err != nil {
+				return err
+			}
 
 			return nil
 		})
