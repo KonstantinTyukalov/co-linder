@@ -20,6 +20,8 @@ import { ContentModule } from '@components/content/content.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PopupModule } from './popups/popup-module.module';
+import { SERVER_URL } from './symbols/serverUrl.token';
+import { environment } from '@env/environment';
 
 @NgModule({
     declarations: [
@@ -46,6 +48,10 @@ import { PopupModule } from './popups/popup-module.module';
         PopupModule
     ],
     providers: [
+        {
+            provide: SERVER_URL,
+            useValue: environment.serverUrl
+        },
         PocketBaseService,
         UserService
     ],
